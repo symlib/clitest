@@ -288,6 +288,7 @@ VAAIsupport: Disabled                   SSDTrimSupport: Enabled
                             tolog("Fail: verify %s" %key)
 
 
+
 def verifyCtrlL(c):
 
     FailFlag = False

@@ -109,7 +109,7 @@ def nonBlockingRawInput(prompt='', timeout=5):
 
 if __name__ == "__main__":
 
-    lname=nonBlockingRawInput("Only the test cases assgined to you will be executed, please input your name:",25)
+    lname=nonBlockingRawInput("Only the test cases assgined to you will be executed, please input your name:",1)
 
     jacky = 'bc473e34c21e2fe7161dc8374274744b'
     zach="1e2a6e7af20e5c274174ff68e2ba63a2"
@@ -131,7 +131,11 @@ if __name__ == "__main__":
 
     # test case notes
     Notes = 'testlink.notes'
-    c,ssh=ssh_conn()
+    exectype={"g":-1, "a":0,"c":-2}
+    execinputtype=raw_input("please input what test cases you are going to execute, g --- GUI, a ---- API, c ---- CLI")
+    if execinputtype=="c":
+        c,ssh=ssh_conn()
+
     # print tls.whatArgs('getTestCase')
 
     # build names to be updated before run this script
@@ -161,8 +165,11 @@ if __name__ == "__main__":
             # get test suites for the project
             #
             #print tls.getFirstLevelTestSuitesForTestProject(project['id'])
+            # -2 refers to CLIexecution
+            # -1 refers to GUIexecution
+            # 0 refers to APIexecution
 
-            testsuiteID= tls.getFirstLevelTestSuitesForTestProject(project['id'])[-2]['id']
+            testsuiteID= tls.getFirstLevelTestSuitesForTestProject(project['id'])[exectype[execinputtype]]['id']
             hastestsuite=False
             testsuite=tls.getTestCasesForTestSuite(testsuiteID,True,'full')
 
@@ -233,7 +240,7 @@ if __name__ == "__main__":
 
                             buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
                             buildname = buildnamelist[-1]['name']
-                            newbuildnum = open("/home/work/jackyl/Scripts/clitest/buildnum", "r").readline().rstrip()
+                            newbuildnum = open("./buildnum", "r").readline().rstrip()
                             # print "newbuildnum is %s, currentbuild is %s" %(newbuildnum,buildname)
 
                             if buildname != newbuildnum:
@@ -307,12 +314,15 @@ if __name__ == "__main__":
                                             # if there's restart action in the function
                                             # the c is changed
                                             # 2016-12-30 to reestablish the ssh connection
-                                            if ssh.get_transport().is_active()!=True:
-                                                c,ssh=ssh_conn()
-                                            if parameter:
-                                                abc(c,parameter)
+                                            if execinputtype=="c":
+                                                if ssh.get_transport().is_active()!=True:
+                                                    c,ssh=ssh_conn()
+                                                if parameter:
+                                                    abc(c,parameter)
+                                                else:
+                                                    abc(c)
                                             else:
-                                                abc(c)
+                                                abc()
 
                                             # read testcase notes from Notes
                                             fp= open(Notes,'r')
@@ -400,5 +410,5 @@ if __name__ == "__main__":
                                                 s.login(u, p)
                                                 s.sendmail(msg['From'], rec, msg.as_string())
 
-
-    ssh.close()
+    if execinputtype=="c":
+        ssh.close()
