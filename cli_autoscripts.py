@@ -251,7 +251,7 @@ if __name__ == "__main__":
                             testplanexec = tls.getTestCasesForTestPlan(testplan['id'])
                             exec_onbuild = testplanexec[TC_Platform['tcase_id']]['12']['exec_on_build']
 
-                            if buildnamelist[-1]['id'] > exec_onbuild:
+                            if buildnamelist[-1]['id'] >= exec_onbuild:
                                 NeedRun=True
                             # added this part on April 15th, 2017
                             # for build acceptance testing
