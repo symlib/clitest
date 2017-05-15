@@ -7,7 +7,7 @@ def tolog(strinfo):
 
 
         if strinfo!="'result': 'p'" or strinfo!="'result': 'f'":
-            with open("/home/work/jackyl/Scripts/clitest/cli_scripts.log", "r+") as f:
+            with open("./cli_scripts.log", "r+") as f:
             #with open("./cli_scripts.log", "r+") as f:
                 content = f.read()
                 f.seek(0, 0)
@@ -17,7 +17,7 @@ def tolog(strinfo):
                 f.close()
             print(strinfo)
         # for testlink steps populate
-        fout=open("/home/work/jackyl/Scripts/clitest/testlink.notes","a")
+        fout=open("./testlink.notes","a")
         fout.write(strinfo+ '\n')
 
         fout.close()

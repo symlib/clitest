@@ -1424,9 +1424,15 @@ def clonedelete(c):
         for i in range(0, clonenum + 1):
             SendCmd(c, "clone -a del -i " + str(i))
             count+=1
-
+        # if there's only one clone cannot be deleted
+        # all cloneids will be deleted once again.
+        # 2017-05-15
         if count>clonenum+1:
             tolog("Some clones cannot be deleted.")
+            clonenotdelete=infodictret(c,"clone")
+            for value in clonenotdelete.values():
+                SendCmd(c, "clone -a del -i " + value)
+
             Failflag=True
             break
         cloneinfo = SendCmd(c, "clone")
