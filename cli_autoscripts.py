@@ -111,7 +111,7 @@ if __name__ == "__main__":
 
     lname=nonBlockingRawInput("Only the test cases assgined to you will be executed, please input your name:",1)
 
-    jacky = 'bc473e34c21e2fe7161dc8374274744b'
+    jacky = '2e99a3e8bb235adb1c0c06c7e17b13a2'
     zach="1e2a6e7af20e5c274174ff68e2ba63a2"
     hulda='bc473e34c21e2fe7161dc8374274744b'
     robot="31c13726fc2bae727aa02faaaa574892"
@@ -170,57 +170,60 @@ if __name__ == "__main__":
             # 0 refers to APIexecution
 
             testsuiteID= tls.getFirstLevelTestSuitesForTestProject(project['id'])[exectype[execinputtype]]['id']
+            testsuiteName = tls.getFirstLevelTestSuitesForTestProject(project['id'])[exectype[execinputtype]]['name']
+            print testsuiteName
             hastestsuite=False
             testsuite=tls.getTestCasesForTestSuite(testsuiteID,True,'full')
 
 
-            for testplan in tls.getProjectTestPlans(1426):
+            for testplan in tls.getProjectTestPlans(project['id']):
                 # changed from 821 to 1426 on April 13th, 2017
 
                 #if testplan['name'] == '0cli cmd testcases sequence issue':  # 2016.11.24 represent the active test plan testplan['active']=='1' and
 
                 #print testplan['name']
-
-                tcdict = tls.getTestCasesForTestPlan(testplan['id'])
-                # list each test case ID
-
-
-                # list each test case by it's test case ID
-
-                if type(tcdict) == dict:
-                    tcdict_x = sorted(tcdict.items())
+                if "BuildVerification" not in testplan["name"]:
+                    tcdict = tls.getTestCasesForTestPlan(testplan['id'])
+                    # list each test case ID
+                    print testplan["name"]
 
 
-                    for eachtestcase in tcdict_x:
+                    # list each test case by it's test case ID
+
+                    if tcdict:
+                        #tcdict_x = sorted(tcdict.items())
 
 
-                        #print tcdict.get(eachtestcase)
-                        # list test cases by platform
-                        # 2016-12-20
-                        # http://192.168.252.175:8888/browse/AUT-4
-                        # The test cases in one test case suite should be executed in original order. Otherwise,
-                        # some cmd cannot be executed successfully because no requisites are met.
+                        for vaule in tcdict.values():
 
-                        # print eachtestcase[1]['6']['platform_id']
-                        testcaseid=eachtestcase[0]
-                        # print eachtestcase
-                        #modified on April 13th, 2017
-                        #TC_Platform = eachtestcase[1]['6']
-                        #
-
-                        for key in eachtestcase[1]:
-                            if key!='12':
-                                continue
-                            else:
-                                TC_Platform = eachtestcase[1]['12']
-
-                                Platform_Name = TC_Platform['platform_name']
-                                TC_Name = TC_Platform['tcase_name']
-                                TC_execution = TC_Platform['exec_status']
+                            for eachplatform,testcase in vaule.items():
 
 
+                            #print tcdict.get(eachtestcase)
+                            # list test cases by platform
+                            # 2016-12-20
+                            # http://192.168.252.175:8888/browse/AUT-4
+                            # The test cases in one test case suite should be executed in original order. Otherwise,
+                            # some cmd cannot be executed successfully because no requisites are met.
 
-                                tcsteps = tls.getTestCase(TC_Platform['tcase_id'])[0]['steps']
+                            # print eachtestcase[1]['6']['platform_id']
+                                print testcase
+                                testcaseid=testcase["tcase_id"]
+                                # print eachtestcase
+                                #modified on April 13th, 2017
+                                #TC_Platform = eachtestcase[1]['6']
+                                #
+
+
+                                TC_Platform = eachplatform
+
+                                Platform_Name = testcase['platform_name']
+                                TC_Name = testcase['tcase_name']
+                                TC_execution = testcase['exec_status']
+                                TC_exec_on_build=testcase['exec_on_build']
+                                TC_exec_status=testcase['exec_status']
+
+                                tcsteps = tls.getTestCase(testcase['tcase_id'])[0]['steps']
                                 # if the text contains some special char, such as '\x1b[D \x1b[D', the update to
                                 # testlink will be failed as "parsing error, not well formed."
                                 # this will be processed in send_cmd
@@ -233,122 +236,109 @@ if __name__ == "__main__":
 
                                 TC_Result_Steps = list()
                                 stepnote = list()
-                            # Added on April 18th, 2017
-                            # to determine last execution on which build
-                            # if the build id is smaller than current build,
-                            # rerun the test case
+                                # Added on April 18th, 2017
+                                # to determine last execution on which build
+                                # if the build id is smaller than current build,
+                                # rerun the test case
 
-                            buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
-                            buildname = buildnamelist[-1]['name']
-                            newbuildnum = open("./buildnum", "r").readline().rstrip()
-                            # print "newbuildnum is %s, currentbuild is %s" %(newbuildnum,buildname)
+                                buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
+                                buildname = buildnamelist[-1]['name']
+                                #newbuildnum = open("./buildnum", "r").readline().rstrip()
+                                # print "newbuildnum is %s, currentbuild is %s" %(newbuildnum,buildname)
 
-                            if buildname != newbuildnum:
-                                buildname = tls.createBuild(testplan['id'], newbuildnum, "auto")
+                                # if buildname != newbuildnum:
+                                #     buildname = tls.createBuild(testplan['id'], newbuildnum, "auto")
+                                #
+                                # buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
+                                # buildname = buildnamelist[-1]['name']
+                                testplanexec = tls.getTestCasesForTestPlan(testplan['id'])
+                                exec_onbuild = TC_exec_on_build
 
-                            buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
-                            buildname = buildnamelist[-1]['name']
-                            testplanexec = tls.getTestCasesForTestPlan(testplan['id'])
-                            exec_onbuild = testplanexec[TC_Platform['tcase_id']]['12']['exec_on_build']
-
-                            if buildnamelist[-1]['id'] > exec_onbuild:
-                                NeedRun=True
-                            # added this part on April 15th, 2017
-                            # for build acceptance testing
-                            # new build will be created through the following line
-                            # buildnumber
-
-
-                                #                                   'Notes for the Build',
-                                #                                   releasedate="2016-12-31")
-
-
-                            if NeedRun or TC_Name=="build_verification":# or TC_execution != 'f':
-                                    #one test case only contains one step, is that function.
-                                    # 2016.12.29
-                                    # to determine testcases's testsuite id
-                                    # print testsuite
-
+                                if buildnamelist[-1]['id'] > exec_onbuild or exec_onbuild=="":
+                                    NeedRun = True
+                                    print testcase
                                     for each in testsuite:
-                                        if each['id']==testcaseid:
-                                            testsuitename=each['tsuite_name']
-                                            hastestsuite=True
-
-                                            # added on April 25th, 2017
-                                            # to execute test cases by assigned user
-                                    buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
-                                    buildname = buildnamelist[-1]['name']
-                                    #print testplan['id'],eachtestcase[1]['12']['full_external_id'],buildname,eachtestcase[1]['12']
+                                        if each['id'] == testcaseid:
+                                            testsuitename = each['tsuite_name']
+                                            hastestsuite = True
+                                            break
+                                    #
+                                    #         # added on April 25th, 2017
+                                    #         # to execute test cases by assigned user
+                                    # buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
+                                    # buildname = buildnamelist[-1]['name']
+                                    # print testplan['id'],eachtestcase[1]['12']['full_external_id'],buildname,eachtestcase[1]['12']
                                     # print tls.whatArgs("assignTestCaseExecutionTask")
                                     # print tls.whatArgs("getTestCaseAssignedTester")
 
-                                    #aaaa = tls.getTestCasesForTestPlan(testplan['id'])
-                                    #bbbb=tls.assignTestCaseExecutionTask("jacky", testplan['id'], eachtestcase[1]['12']['full_external_id'], buildname=buildname,platformname=Platform_Name)
-                                    loginname=tls.getTestCaseAssignedTester(testplan['id'], eachtestcase[1]['12']['full_external_id'], buildname=buildname,platformname=Platform_Name)
+                                    # aaaa = tls.getTestCasesForTestPlan(testplan['id'])
+                                    # bbbb=tls.assignTestCaseExecutionTask("jacky", testplan['id'], eachtestcase[1]['12']['full_external_id'], buildname=buildname,platformname=Platform_Name)
+                                    loginname = tls.getTestCaseAssignedTester(testplan['id'],
+                                                                              testcase['full_external_id'],
+                                                                              buildname=buildname,
+                                                                              platformname=Platform_Name)
 
-
-                                    if hastestsuite and (lname==loginname[0]['login'] or lname=="robot"):
-                                        print "The test cases under " + testplan['name'] + " of " + project[
+                                    if hastestsuite and (lname == loginname[0]['login'] or lname == "robot"):
+                                        print "The "+testcase["tcase_name"]+" under " + testplan['name'] + " of " + project[
                                             'name'] + " are as following:\n"
                                         start = time.time()
                                         # convert the testsuite name into module that will be imported into
                                         TSuiteName = importlib.import_module(testsuitename, package="Tasks")
-                                        #print tls.getTestCase(TC_Platform['tcase_id'])
+                                        # print tls.getTestCase(TC_Platform['tcase_id'])
                                         # if >= 2 steps, 2017-01-06
-                                        stepsnum=len(tcsteps)
+                                        stepsnum = len(tcsteps)
                                         for i in range(stepsnum):
                                             open(Notes, 'w').close()
                                             stepstr = (string.replace(
-                                                string.replace(string.replace(tcsteps[i]['actions'], '<p>\n\t', ''), '</p>', ''),
+                                                string.replace(string.replace(tcsteps[i]['actions'], '<p>\n\t', ''), '</p>',
+                                                               ''),
                                                 '&quot;', '"'))
 
                                             func = stepstr.split('\n')
 
                                             # convert the stepname into function that will be executed in the above module
-                                            abc = getattr(TSuiteName, func[0],func[1])
+                                            abc = getattr(TSuiteName, func[0], func[1])
                                             # if some parameters are to be passed into
                                             # please write the parameter on second line
                                             # it will be func[1]
-                                            parameter=func[1]
+                                            parameter = func[1]
                                             # print parameter
                                             # if there's restart action in the function
                                             # the c is changed
                                             # 2016-12-30 to reestablish the ssh connection
-                                            if execinputtype=="c":
-                                                if ssh.get_transport().is_active()!=True:
-                                                    c,ssh=ssh_conn()
+                                            if execinputtype == "c":
+                                                if ssh.get_transport().is_active() != True:
+                                                    c, ssh = ssh_conn()
                                                 if parameter:
-                                                    abc(c,parameter)
+                                                    abc(c, parameter)
                                                 else:
                                                     abc(c)
                                             else:
                                                 abc()
 
                                             # read testcase notes from Notes
-                                            fp= open(Notes,'r')
-                                            note=fp.read()
+                                            fp = open(Notes, 'r')
+                                            note = fp.read()
                                             fp.close()
 
                                             # determine the execution result that will be updated to testlink.
                                             while "'result':" in note:
                                                 if "'result': 'f'" in note:
                                                     step_Result = 'f'
-                                                    note = string.replace(note, "'result': 'f'",'')
+                                                    note = string.replace(note, "'result': 'f'", '')
                                                 else:
                                                     step_Result = 'p'
                                                     note = string.replace(note, "'result': 'p'", '')
 
                                             TC_Result_Steps.append(
-                                                {'step_number': str(i+1), 'result': step_Result, 'notes': note})
+                                                {'step_number': str(i + 1), 'result': step_Result, 'notes': note})
 
                                         for each in TC_Result_Steps:
-                                            if each['result']!='p':
-                                                TC_Result='f'
+                                            if each['result'] != 'p':
+                                                TC_Result = 'f'
                                                 break
                                             else:
-                                                TC_Result='p'
-
-
+                                                TC_Result = 'p'
 
                                         # update test result remotely using API
 
@@ -357,11 +347,11 @@ if __name__ == "__main__":
                                             time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
                                         # duration_min = getduration(str(TC_execution_duration))
                                         elasped = time.time() - start
-                                        duration_min=str(elasped/60)
+                                        duration_min = str(elasped / 60)
                                         buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
                                         buildname = buildnamelist[-1]['name']
 
-                                        #TC_Result_Steps=[{'step_number': '0', 'notes': 'step1', 'result': 'f'}, {'step_number': '1', 'notes': 'step2 ', 'result': 'p'}]
+                                        # TC_Result_Steps=[{'step_number': '0', 'notes': 'step1', 'result': 'f'}, {'step_number': '1', 'notes': 'step2 ', 'result': 'p'}]
                                         getExecution = tls.reportTCResult(TC_Platform['tcase_id'], testplan['id'],
                                                                           buildname, TC_Result,
                                                                           'automated test cases', guess=True,
@@ -371,8 +361,7 @@ if __name__ == "__main__":
                                                                           timestamp=Update_timestamp,
                                                                           steps=TC_Result_Steps)
 
-
-                                        if TC_Name=="build_verification":
+                                        if TC_Name == "build_verification":
                                             serv = "MjExLjE1MC42NS44MQ=="
                                             u = "amFja3kubGlAY24ucHJvbWlzZS5jb20="
                                             p = "NzcwMjE0WHA="
@@ -382,20 +371,22 @@ if __name__ == "__main__":
                                             # Import the email modules we'll need
                                             from email.mime.text import MIMEText
 
-
                                             if getExecution[0]['status']:
-
-                                                link="http://192.168.252.175/testlink/lib/execute/execPrint.php?id="+str(getExecution[0]['id'])
-
-
+                                                link = "http://192.168.252.175/testlink/lib/execute/execPrint.php?id=" + str(
+                                                    getExecution[0]['id'])
 
                                                 fp = urllib.urlopen(link)
 
-
-                                                msg=MIMEText(strip_tags(fp.read()).replace(".notprintable { display:none;}","").replace("lnl.php?type=exec=","execPrint.php?id=").replace("<!-- var fRoot = 'http://192.168.252.175/testlink/lib/execute/'; -->",""))
+                                                msg = MIMEText(
+                                                    strip_tags(fp.read()).replace(".notprintable { display:none;}",
+                                                                                  "").replace("lnl.php?type=exec=",
+                                                                                              "execPrint.php?id=").replace(
+                                                        "<!-- var fRoot = 'http://192.168.252.175/testlink/lib/execute/'; -->",
+                                                        ""))
 
                                                 msg[
-                                                    'Subject'] = 'Build verification testing on %s is completed, the result is %s, please check the link for detail' % (buildname,TC_Result)
+                                                    'Subject'] = 'Build verification testing on %s is completed, the result is %s, please check the link for detail' % (
+                                                buildname, TC_Result)
                                                 msg['From'] = 'jacky.li@cn.promise.com'
                                                 msg['To'] = 'jacky.li@cn.promise.com'
                                                 # rec = ['jacky.li@cn.promise.com', 'hulda.zhao@cn.promise.com']
