@@ -236,7 +236,7 @@ if __name__ == "__main__":
 
                                 TC_Result_Steps = list()
                                 stepnote = list()
-<<<<<<< HEAD
+
                             # Added on April 18th, 2017
                             # to determine last execution on which build
                             # if the build id is smaller than current build,
@@ -273,7 +273,7 @@ if __name__ == "__main__":
                                     # to determine testcases's testsuite id
                                     # print testsuite
 
-=======
+
                                 # Added on April 18th, 2017
                                 # to determine last execution on which build
                                 # if the build id is smaller than current build,
@@ -295,7 +295,7 @@ if __name__ == "__main__":
                                 if buildnamelist[-1]['id'] > exec_onbuild or exec_onbuild=="":
                                     NeedRun = True
                                     print testcase
->>>>>>> 9f49c3725869ca12934b6bc85d9c9b4b26b03d14
+
                                     for each in testsuite:
                                         if each['id'] == testcaseid:
                                             testsuitename = each['tsuite_name']
