@@ -103,7 +103,7 @@ def nonBlockingRawInput(prompt='', timeout=5):
     except AlarmException:
         print '\nPrompt timeout.  Continuing with default name...'
     signal.signal(signal.SIGALRM, signal.SIG_IGN)
-    return "robot"
+    return "jacky"
 
 
 
@@ -175,17 +175,26 @@ if __name__ == "__main__":
             hastestsuite=False
             testsuite=tls.getTestCasesForTestSuite(testsuiteID,True,'full')
 
-
+            goonflag=True
             for testplan in tls.getProjectTestPlans(project['id']):
                 # changed from 821 to 1426 on April 13th, 2017
+                if exectype=="c" and "cli" not in testplan["name"]:
+                    goonflag=False
+                elif exectype=="g" and "gui" not in testplan["name"]:
+                    goonflag = False
+                elif exectype=="a" and "api" not in testplan["name"]:
+                    goonflag =False
+                else:
+                    goonflag=True
 
                 #if testplan['name'] == '0cli cmd testcases sequence issue':  # 2016.11.24 represent the active test plan testplan['active']=='1' and
 
                 #print testplan['name']
-                if "BuildVerification" not in testplan["name"]:
+                if "BuildVerification" not in testplan["name"] and goonflag:
+                    print testplan["name"]
                     tcdict = tls.getTestCasesForTestPlan(testplan['id'])
                     # list each test case ID
-                    print testplan["name"]
+
 
 
                     # list each test case by it's test case ID
@@ -243,14 +252,7 @@ if __name__ == "__main__":
 
                                 buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
                                 buildname = buildnamelist[-1]['name']
-                                #newbuildnum = open("./buildnum", "r").readline().rstrip()
-                                # print "newbuildnum is %s, currentbuild is %s" %(newbuildnum,buildname)
 
-                                # if buildname != newbuildnum:
-                                #     buildname = tls.createBuild(testplan['id'], newbuildnum, "auto")
-                                #
-                                # buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
-                                # buildname = buildnamelist[-1]['name']
                                 testplanexec = tls.getTestCasesForTestPlan(testplan['id'])
                                 exec_onbuild = TC_exec_on_build
 
