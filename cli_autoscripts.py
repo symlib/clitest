@@ -109,7 +109,7 @@ def nonBlockingRawInput(prompt='', timeout=5):
 
 if __name__ == "__main__":
 
-    lname=nonBlockingRawInput("Only the test cases assgined to you will be executed, please input your name:",1)
+    lname=nonBlockingRawInput("Only the test cases assgined to you will be executed, please input your name:",21)
 
     jacky = '2e99a3e8bb235adb1c0c06c7e17b13a2'
     zach="1e2a6e7af20e5c274174ff68e2ba63a2"
@@ -236,44 +236,6 @@ if __name__ == "__main__":
 
                                 TC_Result_Steps = list()
                                 stepnote = list()
-<<<<<<< HEAD
-                            # Added on April 18th, 2017
-                            # to determine last execution on which build
-                            # if the build id is smaller than current build,
-                            # rerun the test case
-
-                            buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
-                            buildname = buildnamelist[-1]['name']
-                            newbuildnum = open("./buildnum", "r").readline().rstrip()
-                            # print "newbuildnum is %s, currentbuild is %s" %(newbuildnum,buildname)
-
-                            if buildname != newbuildnum:
-                                buildname = tls.createBuild(testplan['id'], newbuildnum, "auto")
-
-                            buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
-                            buildname = buildnamelist[-1]['name']
-                            testplanexec = tls.getTestCasesForTestPlan(testplan['id'])
-                            exec_onbuild = testplanexec[TC_Platform['tcase_id']]['12']['exec_on_build']
-
-                            if buildnamelist[-1]['id'] >= exec_onbuild:
-                                NeedRun=True
-                            # added this part on April 15th, 2017
-                            # for build acceptance testing
-                            # new build will be created through the following line
-                            # buildnumber
-
-
-                                #                                   'Notes for the Build',
-                                #                                   releasedate="2016-12-31")
-
-
-                            if NeedRun or TC_Name=="build_verification":# or TC_execution != 'f':
-                                    #one test case only contains one step, is that function.
-                                    # 2016.12.29
-                                    # to determine testcases's testsuite id
-                                    # print testsuite
-
-=======
                                 # Added on April 18th, 2017
                                 # to determine last execution on which build
                                 # if the build id is smaller than current build,
@@ -295,7 +257,6 @@ if __name__ == "__main__":
                                 if buildnamelist[-1]['id'] > exec_onbuild or exec_onbuild=="":
                                     NeedRun = True
                                     print testcase
->>>>>>> 9f49c3725869ca12934b6bc85d9c9b4b26b03d14
                                     for each in testsuite:
                                         if each['id'] == testcaseid:
                                             testsuitename = each['tsuite_name']
