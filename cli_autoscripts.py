@@ -352,11 +352,11 @@ if __name__ == "__main__":
                                         buildname = buildnamelist[-1]['name']
 
                                         # TC_Result_Steps=[{'step_number': '0', 'notes': 'step1', 'result': 'f'}, {'step_number': '1', 'notes': 'step2 ', 'result': 'p'}]
-                                        getExecution = tls.reportTCResult(TC_Platform['tcase_id'], testplan['id'],
+                                        getExecution = tls.reportTCResult(testcase['tcase_id'], testplan['id'],
                                                                           buildname, TC_Result,
                                                                           'automated test cases', guess=True,
-                                                                          testcaseexternalid=TC_Platform['external_id'],
-                                                                          platformname=TC_Platform['platform_name'],
+                                                                          testcaseexternalid=testcase['external_id'],
+                                                                          platformname=testcase['platform_name'],
                                                                           execduration=duration_min,
                                                                           timestamp=Update_timestamp,
                                                                           steps=TC_Result_Steps)
