@@ -101,7 +101,7 @@ def nonBlockingRawInput(prompt='', timeout=5):
         signal.alarm(0)
         return text
     except AlarmException:
-        print '\nPrompt timeout.  Continuing with default name...'
+        print ('\nPrompt timeout.  Continuing with default name...')
     signal.signal(signal.SIGALRM, signal.SIG_IGN)
     return "jacky"
 
@@ -109,7 +109,7 @@ def nonBlockingRawInput(prompt='', timeout=5):
 
 if __name__ == "__main__":
 
-    lname=nonBlockingRawInput("Only the test cases assgined to you will be executed, please input your name:",21)
+    lname=nonBlockingRawInput("Only the test cases assgined to you will be executed, please input your name:",1)
 
     jacky = '2e99a3e8bb235adb1c0c06c7e17b13a2'
     zach="1e2a6e7af20e5c274174ff68e2ba63a2"
@@ -131,8 +131,9 @@ if __name__ == "__main__":
 
     # test case notes
     Notes = 'testlink.notes'
-    exectype={"g":-1, "a":0,"c":-2}
-    execinputtype=raw_input("please input what test cases you are going to execute, g --- GUI, a ---- API, c ---- CLI")
+    exectype={"g":-1, "a":1,"c":-2}
+    #execinputtype=raw_input("please input what test cases you are going to execute, g --- GUI, a ---- API, c ---- CLI")
+    execinputtype = "a"
     if execinputtype=="c":
         c,ssh=ssh_conn()
 
@@ -167,30 +168,32 @@ if __name__ == "__main__":
             #print tls.getFirstLevelTestSuitesForTestProject(project['id'])
             # -2 refers to CLIexecution
             # -1 refers to GUIexecution
-            # 0 refers to APIexecution
+            # 1 refers to APIexecution
 
             testsuiteID= tls.getFirstLevelTestSuitesForTestProject(project['id'])[exectype[execinputtype]]['id']
             testsuiteName = tls.getFirstLevelTestSuitesForTestProject(project['id'])[exectype[execinputtype]]['name']
-            print testsuiteName
+            # print testsuiteName
             hastestsuite=False
             testsuite=tls.getTestCasesForTestSuite(testsuiteID,True,'full')
 
-            goonflag=True
+            goonflag=False
             for testplan in tls.getProjectTestPlans(project['id']):
                 # changed from 821 to 1426 on April 13th, 2017
-                if exectype=="c" and "cli" not in testplan["name"]:
-                    goonflag=False
-                elif exectype=="g" and "gui" not in testplan["name"]:
-                    goonflag = False
-                elif exectype=="a" and "api" not in testplan["name"]:
-                    goonflag =False
-                else:
-                    goonflag=True
+                if testplan["active"]=="1":
+                    if execinputtype=="c" and "cli" in testplan["name"]:
+                        goonflag=True
+                    elif execinputtype=="g" and "gui" in testplan["name"]:
+                        goonflag = True
+                    elif execinputtype=="a" and "api" in testplan["name"]:
+                        goonflag =True
+                    else:
+                        goonflag=False
 
                 #if testplan['name'] == '0cli cmd testcases sequence issue':  # 2016.11.24 represent the active test plan testplan['active']=='1' and
 
                 #print testplan['name']
-                if "BuildVerification" not in testplan["name"] and goonflag:
+                # if "BuildVerification" not in testplan["name"] and goonflag:
+                if goonflag:
                     print testplan["name"]
                     tcdict = tls.getTestCasesForTestPlan(testplan['id'])
                     # list each test case ID
@@ -216,7 +219,7 @@ if __name__ == "__main__":
                             # some cmd cannot be executed successfully because no requisites are met.
 
                             # print eachtestcase[1]['6']['platform_id']
-                                print testcase
+                            #     print testcase
                                 testcaseid=testcase["tcase_id"]
                                 # print eachtestcase
                                 #modified on April 13th, 2017
@@ -231,7 +234,7 @@ if __name__ == "__main__":
                                 TC_execution = testcase['exec_status']
                                 TC_exec_on_build=testcase['exec_on_build']
                                 TC_exec_status=testcase['exec_status']
-
+                                print TC_Name
                                 tcsteps = tls.getTestCase(testcase['tcase_id'])[0]['steps']
                                 # if the text contains some special char, such as '\x1b[D \x1b[D', the update to
                                 # testlink will be failed as "parsing error, not well formed."
@@ -258,7 +261,7 @@ if __name__ == "__main__":
 
                                 if buildnamelist[-1]['id'] > exec_onbuild or exec_onbuild=="":
                                     NeedRun = True
-                                    print testcase
+                                    # print testcase
                                     for each in testsuite:
                                         if each['id'] == testcaseid:
                                             testsuitename = each['tsuite_name']
@@ -281,8 +284,8 @@ if __name__ == "__main__":
                                                                               platformname=Platform_Name)
 
                                     if hastestsuite and (lname == loginname[0]['login'] or lname == "robot"):
-                                        print "The "+testcase["tcase_name"]+" under " + testplan['name'] + " of " + project[
-                                            'name'] + " are as following:\n"
+                                        print ("The "+testcase["tcase_name"]+" under " + testplan['name'] + " of " + project[
+                                            'name'] + " are as following:\n")
                                         start = time.time()
                                         # convert the testsuite name into module that will be imported into
                                         TSuiteName = importlib.import_module(testsuitename, package="Tasks")
@@ -316,6 +319,7 @@ if __name__ == "__main__":
                                                 else:
                                                     abc(c)
                                             else:
+
                                                 abc()
 
                                             # read testcase notes from Notes
