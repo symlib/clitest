@@ -120,7 +120,7 @@ def verifySmartList(c):
         if row[2] not in result or row[4].split()[0] != m:
             FailFlag = True
             tolog('\n<font color="red">Fail: Verify smart -a list -p' + m + '</font>')
-    tolog('<b>Verify smart -a list -v')
+    tolog('<b>Verify smart -a list -v </b>')
     result = SendCmd(c, 'smart -a list -v')
     if "Error (" in result:
         FailFlag = True
