@@ -24,7 +24,7 @@ from to_log import *
 
 Pass = "'result': 'p'"
 Fail = "'result': 'f'"
-
+from pool import *
 def BuildVerification(c):
     flashimage=False
 
@@ -35,7 +35,7 @@ def BuildVerification(c):
 
 
 
-    tftpbuildnumber=open("/home/work/jackyl/Scripts/buildnum","r").readline().rstrip()
+    tftpbuildnumber=open("/home/work/jackyl/Scripts/clitest/buildnum","r").readline().rstrip()
     print int(tftpbuildnumber.split(".")[-1])
     if int(currentbuild.split(".")[-1])<=int(tftpbuildnumber.split(".")[-1]):
         filename="d5k-multi-12_0_9999_"+tftpbuildnumber.split(".")[-1]
@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     # record the version number of this time
     SendCmd(c,"about")
-    BuildVerification(c)
+    #BuildVerification(c)
     # remove pool/volume/snapshot/clone if possible.
     #poolcleanup(c)
     # poolforceclean(c)
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     # get avail pd without deleting any pool
     #getavailpd(c)
 
-    #poolcreateandlist(c,0)
+    poolcreateandlist(c,0)
     # poolcreateandlist(c,poolnum)
     # 0 - create as many as pools according to current available pds
     # 1 - create 1 pool and try to keep available pds if possible
@@ -98,18 +98,21 @@ if __name__ == "__main__":
     # pool name is renamed and extend with other available disks
     #poolmodifyandlist(c)
 
-    #volumecreateandlist(c, 20)
+    volumecreateandlist(c, 20)
     # volumecreateandlist(c,volnum)
     # create 3 volumes for each pool
 
-    #snapshotcreateandlist(c,20)
+    snapshotcreateandlist(c,5)
     # snapshotcreateandlist(c,snapshotnum)
     # create snapshotnum snapshots for each volume
 
-    #clonecreateandlist(c, 10)
+    clonecreateandlist(c, 10)
     # clonecreateandlist(c,clonenum)
     # create clonenum for each snapshot
-
+    clonedelete(c)
+    snapshotdelete(c)
+    volumedel(c)
+    pooldel(c)
     #poolcreateverify(c)
     #verify pool create with all options
     # stripe/sector/raid level
