@@ -12,7 +12,7 @@ def verifyAbout(c):
     FailFlag = False
     tolog("<b>Verify about</b>")
     result = SendCmd(c, "about")
-    if "Version: xx.00.xxxx.xx" not in result or "Build Date: month day, year" not in result:
+    if "Version: 12.00.9999.92" not in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: about</font>')
     if FailFlag:

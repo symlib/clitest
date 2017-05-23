@@ -39,10 +39,11 @@ def verifyCtrlList(c):
     FailFlag = False
     tolog("<b>Verify ctrl -a list </b>")
     result = SendCmd(c, "ctrl -a list")
-    if "Error (" not in result:
+    if "Error (" in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: Verify ctrl -a list</font>')
     for CtrlId in ['1', '2']:
+        tolog('Verify ctrl -a list -i ' + CtrlId)
         result = SendCmd(c, "ctrl -a list -i " + CtrlId)
         if "CtrlId" not in result or "Alias" not in result or "OperationalStatus" not in result or "ReadinessStatus" not in result:
             FailFlag = True
@@ -83,7 +84,7 @@ def verifyCtrlL(c):
     FailFlag = False
     tolog("<b>Verify ctrl -l </b>")
     result = SendCmd(c, "ctrl -l")
-    if "LocalCtrlId: 1" not in result or "LocalCtrlId: 2" not in result:
+    if "LocalCtrlId: " not in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: ctrl -l</font>')
     if FailFlag:
@@ -209,7 +210,7 @@ def verifyCtrlModNonstandardValues(c):
 
             if row.split()[-2] == "OK" or row.split()[-4][0:2] == "OK":
                 CtrlID = row.split()[0]
-                for values in ['aaaa1aaaa2aaaa3aaaa4aaaa5aaaa6aaaa7aaaa8aaaa9aaaa', '@#$%^&*\/`~']:
+                for values in ['aaaa1aaaa2aaaa3aaaa4aaaa5aaaa6aaaa7aaaa8aaaa9aaaa']:
                     result = SendCmd(c, "ctrl -a mod -i " + str(CtrlID) + ' -s "alias = ' + values + '"')
                     if "Error (" not in result:
                         FailFlag = True
@@ -282,7 +283,7 @@ def verifyCtrlInvalidOption(c):
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
         result = SendCmd(c, com)
-        if "Error (" not in result or "Invalid option" not in result or "invalid option" not in result:
+        if "Error (" not in result or "Invalid option" not in result:
             FailFlag = True
             tolog('\n<font color="red">Fail: ' + com + ' </font>')
     if FailFlag:
@@ -309,8 +310,8 @@ def verifyCtrlInvalidParameters(c):
         tolog(Pass)
 def verifyCtrlMissingParameters(c):
     FailFlag = False
-    tolog("<b>Verify ctrl missing para</b>")
-    command = ['ctrl -a list -i', 'ctrl -a mod -s', 'ctrl -a clear -t']
+    tolog("<b>Verify ctrl missing parameters</b>")
+    command = ['ctrl -v -i', 'ctrl -a list -i', 'ctrl -a mod -s', 'ctrl -a clear -t']
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
         result = SendCmd(c, com)
@@ -318,7 +319,7 @@ def verifyCtrlMissingParameters(c):
             FailFlag = True
             tolog('\n<font color="red">Fail: ' + com + ' </font>')
     if FailFlag:
-        tolog('\n<font color="red">Fail: Verify ctrl invalid parameters </font>')
+        tolog('\n<font color="red">Fail: Verify ctrl missing parameters </font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
@@ -336,7 +337,7 @@ if __name__ == "__main__":
     verifyCtrlModNormativeAlias(c)
     verifyCtrlModValuesIsEnableOrDisable(c)
     verifyCtrlModValuesIsTime(c)
-    verifyCtrlModNonstandardValues(c)
+    # verifyCtrlModNonstandardValues(c)
     verifyCtrlClear(c)
     verifyCtrlHelp(c)
     verifyCtrlInvalidOption(c)
