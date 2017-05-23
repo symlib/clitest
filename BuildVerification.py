@@ -57,7 +57,7 @@ def BuildVerification(c):
 
     if flashimage:
         i=1
-        while i< 260:
+        while i< 160:
             # wait for rebooting
            tolog("ptiflash is in progress, please wait, %d seconds elapse" %i)
            i+=1
@@ -66,7 +66,7 @@ def BuildVerification(c):
     # check if ssh connection is ok.
     # wait for another 40 seconds
         reconnectflag=False
-        for x in range(10):
+        for x in range(30):
             try:
                 c,ssh=ssh_conn()
                 reconnectflag=True
@@ -121,6 +121,9 @@ def BuildVerification(c):
         tolog(Pass)
 
     c.close()
+def About(c):
+    SendCmd(c,"about")
+    tolog(Pass)
 if __name__ == "__main__":
 
     start=time.clock()
