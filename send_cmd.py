@@ -1,7 +1,7 @@
 
-import paramiko
-import time
-import string
+# import paramiko
+# import time
+# import string
 from ssh_connect import check_ping
 from to_log import tolog
 
