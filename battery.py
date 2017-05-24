@@ -127,6 +127,19 @@ def verifyBatteryRecondition(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+def verifyBatteryHelp(c):
+    FailFlag = False
+    tolog("<b>Verify battery -h </b>")
+    result = SendCmd(c, 'battery -h')
+    if 'Error (' in result or 'battery' not in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: battery -h </font>')
+    if FailFlag:
+        tolog('\n<font color="red">Fail: Verify battery -h </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
 def verifyBatterySpecifyInexistentId(c):
     FailFlag = False
     tolog("<b> Verify battery specify inexistent Id </b>")
@@ -198,6 +211,7 @@ if __name__ == "__main__":
     verifyBattery(c)
     verifyBatteryList(c)
     verifyBatteryRecondition(c)
+    verifyBatteryHelp(c)
     verifyBatterySpecifyInexistentId(c)
     verifyBatteryInvalidOption(c)
     verifyBatteryInvalidParameters(c)

@@ -57,6 +57,19 @@ def verifyBgaMod(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+def verifyBgaHelp(c):
+    FailFlag = False
+    tolog("<b>Verify bga -h </b>")
+    result = SendCmd(c, 'bga -h')
+    if "Error (" in result or 'bga' not in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: bga -h </font>')
+    if FailFlag:
+        tolog('\n<font color="red">Fail: Verify bga -h </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
 def verifyBgaInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify bga invalid option</b>")
@@ -111,6 +124,7 @@ if __name__ == "__main__":
     verifyBga(c)
     verifyBgaList(c)
     verifyBgaMod(c)
+    verifyBgaHelp(c)
     verifyBgaInvalidOption(c)
     verifyBgaInvalidParameters(c)
     verifyBgaMissingParameters(c)
