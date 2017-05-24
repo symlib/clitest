@@ -76,6 +76,7 @@ def verifyChapAdd(c):
     tolog("<b>Verify CHAP legal name and type </b>")
     result = chapSend_cmd(c, 'chap -a add -s "name=a+-/(.)b,type=peer"', '111122221111')
     c.close()
+    time.sleep(3)
     c, ssh = ssh_conn()
     if 'Error (' in result:
         FailFlag = True
@@ -83,6 +84,8 @@ def verifyChapAdd(c):
 
     result = chapSend_cmd(c, 'chap -a add -s "name=testType,type=local,targetid=0"', '1111222211112222')
     c.close()
+    ssh.close()
+    time.sleep(3)
     c, ssh = ssh_conn()
     if 'Error (' in result:
         FailFlag = True
@@ -94,7 +97,8 @@ def verifyChapAdd(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
     c.close()
-    time.sleep(1)
+    ssh.close()
+    time.sleep(3)
 def verifyChap(c):
     FailFlag = False
     tolog("<b>Verify chap </b>")
@@ -124,7 +128,8 @@ def verifyChap(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
     c.close()
-    time.sleep(1)
+    ssh.close()
+    time.sleep(3)
 def verifyChapList(c):
     FailFlag = False
     tolog("<b>Verify chap -a list</b>")
@@ -153,7 +158,8 @@ def verifyChapList(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
     c.close()
-    time.sleep(1)
+    ssh.close()
+    time.sleep(3)
 def verifyChapMod(c):
     FailFlag = False
     tolog("<b>Verify chap -a mod</b>")
@@ -177,7 +183,8 @@ def verifyChapMod(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
     c.close()
-    time.sleep(1)
+    ssh.close()
+    time.sleep(3)
 def verifyChapDel(c):
     FailFlag = False
     tolog("<b>Verify chap -a del</b>")
@@ -195,7 +202,8 @@ def verifyChapDel(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
     c.close()
-    time.sleep(1)
+    ssh.close()
+    time.sleep(3)
 def verifyChapHelp(c):
     FailFlag = False
     tolog("<b> Verify chap -h </b>")
@@ -211,23 +219,25 @@ def verifyChapHelp(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
     c.close()
-    time.sleep(1)
-def verifyChapSpecifyInexistentId(c):
+    ssh.close()
+    time.sleep(3)
+def verifyChapSpecifyErrorId(c):
     FailFlag = False
-    tolog("<b> Verify chap specify inexistent Id </b>")
+    tolog("<b> Verify chap specify error Id </b>")
     c, ssh = ssh_conn()
     result = SendCmd(c, 'chap -a del -i 4')
     if 'Error (' not in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: chap -a del -i 4 </font>')
     if FailFlag:
-        tolog('\n<font color="red">Fail: Verify chap specify inexistent Id </font>')
+        tolog('\n<font color="red">Fail: Verify chap specify error Id </font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
     c.close()
-    time.sleep(1)
+    ssh.close()
+    time.sleep(3)
 def verifyChapInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify chap invalid option</b>")
@@ -246,7 +256,8 @@ def verifyChapInvalidOption(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
     c.close()
-    time.sleep(1)
+    ssh.close()
+    time.sleep(3)
 def verifyChapInvalidParameters(c):
     FailFlag = False
     tolog("<b>Verify chap invalid parameters</b>")
@@ -265,7 +276,8 @@ def verifyChapInvalidParameters(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
     c.close()
-    time.sleep(1)
+    ssh.close()
+    time.sleep(3)
 def verifyChapMissingParameters(c):
     FailFlag = False
     tolog("<b>Verify chap missing parameters</b>")
@@ -293,7 +305,7 @@ if __name__ == "__main__":
     verifyChapMod(c)
     verifyChapDel(c)
     verifyChapHelp(c)
-    verifyChapSpecifyInexistentId(c)
+    verifyChapSpecifyErrorId(c)
     verifyChapInvalidOption(c)
     verifyChapInvalidParameters(c)
     verifyChapMissingParameters(c)
