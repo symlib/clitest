@@ -1622,13 +1622,22 @@ def snapshotdelete(c):
             count+=1
         snapshotnotdelete = infodictret(c, "snapshot", "", "")
         if count>snapshotnum+1:
-            tolog("Some snapshots cannot be deleted.")
+            snapshotinfo = SendCmd(c, "snapshot")
+            snapshotnum = int(snapshotinfo.split("\r\n")[-2].split(" ")[0])
+            tolog("The %d snapshot cannot be deleted." %snapshotnum)
 
-
-            for key in snapshotnotdelete.keys():
-                SendCmd(c, "snapshot -a del -i " + key)
+            # modified on June 1st, 2017
+            # for key in snapshotnotdelete.keys():
+            #     SendCmd(c, "snapshot -a del -i " + key)
             Failflag=True
-            break
+            # break
+            # the previous method will get the last snapshot that cannot be removed
+            # and delete from 0 to the last id
+            # new method is to delete the last one
+            # and if there are multiple snapshots to be deleted, then the last one again
+            # until all snapshots are deleted
+
+            SendCmd(c, "snapshot -a del -i " + str(snapshotnum))
         snapshotinfo = SendCmd(c, "snapshot")
     if Failflag:
         tolog(Fail)
@@ -1653,14 +1662,28 @@ def clonedelete(c):
         # 2017-05-15
         clonenotdelete = infodictret(c, "clone", "", "")
         if count>clonenum+1:
-            tolog("Some clones cannot be deleted.")
+            cloneinfo = SendCmd(c, "clone")
+            clonenum = int(cloneinfo.split("\r\n")[-2].split(" ")[0])
+            tolog("The %d clone cannot be deleted." % clonenum)
 
-            for key in clonenotdelete.keys():
-                SendCmd(c, "clone -a del -i " + key)
-
-
+            # for key in clonenotdelete.keys():
+            #     SendCmd(c, "clone -a del -i " + key)
+            #
+            #
+            # Failflag=True
+            # break
+            # modified on June 1st, 2017
+            # for key in snapshotnotdelete.keys():
+            #     SendCmd(c, "snapshot -a del -i " + key)
             Failflag=True
-            break
+            # break
+            # the previous method will get the last snapshot that cannot be removed
+            # and delete from 0 to the last id
+            # new method is to delete the last one
+            # and if there are multiple snapshots to be deleted, then the last one again
+            # until all snapshots are deleted
+
+            SendCmd(c, "snapshot -a del -i " + str(clonenum))
         cloneinfo = SendCmd(c, "clone")
     if Failflag:
         tolog(Fail)
@@ -1785,12 +1808,27 @@ def bvtsnapshotdelete(c):
             count+=1
         snapshotnotdelete = infodictret(c, "snapshot", "", "")
         if count>snapshotnum+1:
-            tolog("Some snapshots cannot be deleted.")
+            # tolog("Some snapshots cannot be deleted.")
+            snapshotinfo = SendCmd(c, "snapshot")
+            snapshotnum = int(snapshotinfo.split("\r\n")[-2].split(" ")[0])
+            tolog("The %d snapshot cannot be deleted." % snapshotnum)
 
-            for key in snapshotnotdelete.keys():
-                SendCmd(c, "snapshot -a del -i " + key)
+            # modified on June 1st, 2017
+            # for key in snapshotnotdelete.keys():
+            #     SendCmd(c, "snapshot -a del -i " + key)
             Failflag=True
-            break
+            # break
+            # the previous method will get the last snapshot that cannot be removed
+            # and delete from 0 to the last id
+            # new method is to delete the last one
+            # and if there are multiple snapshots to be deleted, then the last one again
+            # until all snapshots are deleted
+
+            SendCmd(c, "snapshot -a del -i " + str(snapshotnum))
+            # for key in snapshotnotdelete.keys():
+            #     SendCmd(c, "snapshot -a del -i " + key)
+            # Failflag=True
+            # break
         snapshotinfo = SendCmd(c, "snapshot")
 
     return Failflag
@@ -1809,12 +1847,29 @@ def bvtclonedelete(c):
             count+=1
         clonenotdelete = infodictret(c, "clone", "", "")
         if count>clonenum+1:
-            tolog("Some clones cannot be deleted.")
 
-            for key in clonenotdelete.keys():
-                SendCmd(c, "clone -a del -i " + key)
+            cloneinfo = SendCmd(c, "clone")
+            clonenum = int(cloneinfo.split("\r\n")[-2].split(" ")[0])
+            tolog("The %d clone cannot be deleted." % clonenum)
+
+            # for key in clonenotdelete.keys():
+            #     SendCmd(c, "clone -a del -i " + key)
+            #
+            #
+            # Failflag=True
+            # break
+            # modified on June 1st, 2017
+            # for key in snapshotnotdelete.keys():
+            #     SendCmd(c, "snapshot -a del -i " + key)
             Failflag=True
-            break
+            # break
+            # the previous method will get the last snapshot that cannot be removed
+            # and delete from 0 to the last id
+            # new method is to delete the last one
+            # and if there are multiple snapshots to be deleted, then the last one again
+            # until all snapshots are deleted
+
+            SendCmd(c, "snapshot -a del -i " + str(clonenum))
         cloneinfo = SendCmd(c, "clone")
 
     return Failflag
