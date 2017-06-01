@@ -10,7 +10,33 @@ Fail = "'result': 'f'"
 def verifyEncldiag(c):
     FailFlag = False
     tolog("<b>Verify encldiag </b>")
-    # encldiag -a <action> -e <EnclosureId> -t <element type>
+    result = SendCmd(c, 'encldiag')
+    checkPoint = ['EnclosureId            PSUId            Type              Wattage ',
+                  'EnclosureId                Type                  PowerOnTime']
+    if checkPoint[0] not in result or checkPoint[1] not in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: encldiag  </font>')
+    command = ['encldiag -t all', 'encldiag -e 1 -t all',
+               'encldiag -t psu', 'encldiag -e 1 -t psu',
+               'encldiag -t powerontime', 'encldiag -e 1 -t powerontime']
+    for com in command[0:2]:
+        tolog('<b>Verify ' + com + ' </b>')
+        result = SendCmd(c, com)
+        if "Error (" in result or checkPoint[0] not in result or checkPoint[1] not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+    for com in command[2:4]:
+        tolog('<b>Verify ' + com + ' </b>')
+        result = SendCmd(c, com)
+        if "Error (" in result or checkPoint[0] not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+    for com in command[4:6]:
+        tolog('<b>Verify ' + com + ' </b>')
+        result = SendCmd(c, com)
+        if "Error (" in result or checkPoint[1] not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
 
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify encldiag  </font>')
@@ -18,12 +44,36 @@ def verifyEncldiag(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
-
-
 def verifyEncldiagList(c):
     FailFlag = False
     tolog("<b>Verify encldiag -a list</b>")
-    # encldiag -a <action> -e <EnclosureId> -t <element type>
+    result = SendCmd(c, 'encldiag -a list')
+    checkPoint = ['EnclosureId            PSUId            Type              Wattage ',
+                  'EnclosureId                Type                  PowerOnTime']
+    if checkPoint[0] not in result or checkPoint[1] not in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: encldiag -a list </font>')
+    command = ['encldiag -a list -t all', 'encldiag -a list -e 1 -t all',
+               'encldiag -a list -t psu', 'encldiag -a list -e 1 -t psu',
+               'encldiag -a list -t powerontime', 'encldiag -a list -e 1 -t powerontime']
+    for com in command[0:2]:
+        tolog('<b>Verify ' + com + ' </b>')
+        result = SendCmd(c, com)
+        if "Error (" in result or checkPoint[0] not in result or checkPoint[1] not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+    for com in command[2:4]:
+        tolog('<b>Verify ' + com + ' </b>')
+        result = SendCmd(c, com)
+        if "Error (" in result or checkPoint[0] not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+    for com in command[4:6]:
+        tolog('<b>Verify ' + com + ' </b>')
+        result = SendCmd(c, com)
+        if "Error (" in result or checkPoint[1] not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
 
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify encldiag -a list </font>')
@@ -31,19 +81,44 @@ def verifyEncldiagList(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
-
+def verifyEncldiagHelp(c):
+    FailFlag = False
+    tolog("<b>Verify encldiag -h </b>")
+    result = SendCmd(c, 'encldiag -h')
+    if "Error (" in result or 'encldiag' not in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: encldiag -h </font>')
+    if FailFlag:
+        tolog('\n<font color="red">Fail: Verify encldiag -h </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
 def verifyEncldiagSpecifyInexistentId(c):
     FailFlag = False
     tolog("<b> Verify encldiag specify inexistent Id </b>")
     # -e <enclosure ID> (1,16)
-
+    checkPoint = ['SEP not present', 'Invalid setting parameters']
+    command = ['encldiag -a list -e 15 -t all', 'encldiag -e 15 -t powerontime',
+               'encldiag -a list -e 17 -t all', 'encldiag -e 17 -t powerontime']
+    for com in command[0:2]:
+        tolog('<b>Verify ' + com + ' </b>')
+        result = SendCmd(c, com)
+        if "Error (" not in result or checkPoint[0] not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+    for com in command[2:4]:
+        tolog('<b>Verify ' + com + ' </b>')
+        result = SendCmd(c, com)
+        if "Error (" not in result or checkPoint[1] not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify encldiag specify inexistent Id </font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
-
 def verifyEncldiagInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify encldiag invalid option</b>")
@@ -98,6 +173,7 @@ if __name__ == "__main__":
     c, ssh = ssh_conn()
     verifyEncldiag(c)
     verifyEncldiagList(c)
+    verifyEncldiagHelp(c)
     verifyEncldiagSpecifyInexistentId(c)
     verifyEncldiagInvalidOption(c)
     verifyEncldiagInvalidParameters(c)

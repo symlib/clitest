@@ -12,7 +12,7 @@ import testlink
 import subprocess
 import string
 import datetime
-import Buzzer
+
 #from Buzzer import verifyBuzzerInfo
 
 
@@ -288,6 +288,7 @@ if __name__ == "__main__":
                                             'name'] + " are as following:\n")
                                         start = time.time()
                                         # convert the testsuite name into module that will be imported into
+                                        print testsuitename
                                         TSuiteName = importlib.import_module(testsuitename, package="Tasks")
                                         # if >= 2 steps, 2017-01-06
                                         stepsnum = len(tcsteps)

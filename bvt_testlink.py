@@ -81,7 +81,20 @@ if __name__ == "__main__":
     tls = testlink.TestlinkAPIClient(new_ip_testlink, new_adminjl_key)
 
     # test case notes
+<<<<<<< HEAD
     c,ssh=ssh_conn()
+=======
+    Notes = 'testlink.notes.bvt'
+<<<<<<< HEAD
+
+    c,ssh=ssh_conn()
+
+=======
+    print "i am here 0"
+    c,ssh=ssh_conn()
+    print c,"i am here"
+>>>>>>> 7bfa0c09cdcb14bcd22ec6fbf332c86690b68948
+>>>>>>> 1e2c4d722d1b90c6a40d63b4ab0fad9d522b3b3a
     # print tls.whatArgs('getTestCase')
 
     # build names to be updated before run this script
@@ -289,6 +302,14 @@ if __name__ == "__main__":
                                             from email.mime.text import MIMEText
 
                                             if getExecution[0]['status']:
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+=======
+                                                tolog("in email send process")
+>>>>>>> 7bfa0c09cdcb14bcd22ec6fbf332c86690b68948
+>>>>>>> 1e2c4d722d1b90c6a40d63b4ab0fad9d522b3b3a
                                                 link = "http://192.168.252.175/testlink/lib/execute/execPrint.php?id=" + str(
                                                     getExecution[0]['id'])
 
@@ -319,4 +340,8 @@ if __name__ == "__main__":
                                                 s.sendmail(msg['From'], rec, msg.as_string())
 
 
+<<<<<<< HEAD
     ssh.close()
+=======
+    ssh.close()
+>>>>>>> 7bfa0c09cdcb14bcd22ec6fbf332c86690b68948

@@ -1582,6 +1582,35 @@ def pooldel(c):
     else:
         tolog(Pass)
         tolog("Pools are deleted successfully.")
+def pooldelforce(c):
+
+    count = 0
+    Failflag=False
+    poolinfo = SendCmd(c, "pool")
+    while not "No pool in the subsystem" in poolinfo:
+
+        poolnum = int(poolinfo.split("\r\n")[-2].split(" ")[0])
+        for i in range(0, poolnum + 1):
+            SendCmd(c, "pool -a del -i " + str(i) +" -f")
+
+            count += 1
+
+        poolnotdelete = infodictret(c, "pool", "", "")
+        if count>poolnum+1:
+            tolog("Some pools cannot be deleted.")
+
+            for key in poolnotdelete.keys():
+                SendCmd(c, "pool -a del -i " + key+" -f")
+            Failflag=True
+            break
+        poolinfo = SendCmd(c, "pool")
+
+    if Failflag:
+        tolog(Fail)
+    else:
+        tolog(Pass)
+        tolog("Pools are deleted successfully.")
+
 
 def volumedel(c):
     volinfo=SendCmd(c, "volume")
@@ -1702,6 +1731,74 @@ def bvtsparedrvcreate(c,sparenum):
     else:
         FailFlag = True
         tolog("Snapshots are created failed: expected number is: %d" % sparenum)
+
+    return FailFlag
+
+def poolglobalsetting(c):
+    FailFlag = False
+    tolog("Verify change capacity threshold for pool")
+    pooldel(c)
+    pdhddssdlist = getavailpd(c)
+    hddlist=pdhddssdlist[0]
+    pdids = str(hddlist).replace("[", "").replace("]", "").replace(" ", "")
+    createpoolpd(c,"Testpoolsetting","5","","",pdids)
+    res=SendCmd(c,"pool -v")
+    origthreshold=int(res[res.find("CapacityThreshold: ")+len("CapacityThreshold: "):res.find("CapacityThreshold: ")+len("CapacityThreshold: ")+2])
+    if origthreshold< 75 or origthreshold >95:
+        tolog("Threshold %d has something wrong" % origthreshold)
+    elif origthreshold+5 > 95:
+        settings="\"" + "capthreshold="+str(origthreshold-5)+"\""
+        modsetting=origthreshold-5
+    else:
+        settings = "\"" + "capthreshold=" + str(origthreshold + 5) + "\""
+        modsetting = origthreshold + 5
+    SendCmd(c, "pool -a mod -s " + settings)
+
+    mod=SendCmd(c,"pool -v")
+    modthreshold = int(mod[mod.find("CapacityThreshold: ") + len("CapacityThreshold: "):mod.find(
+        "CapacityThreshold: ") + len("CapacityThreshold: ") + 2])
+    if modthreshold!=modsetting:
+        tolog("Failed on verifying modify capacity threshold for pool.")
+        Failflag=True
+    else:
+        tolog("Successfully verified modify capacity threshold for pool.")
+
+    if FailFlag:
+        tolog(Fail)
+    else:
+        tolog(Pass)
+
+
+def bvtpoolglobalsetting(c):
+
+    FailFlag = False
+    tolog("Verify change capacity threshold for pool")
+    pooldel(c)
+    pdhddssdlist = getavailpd(c)
+    hddlist = pdhddssdlist[0]
+    pdids = str(hddlist).replace("[", "").replace("]", "").replace(" ", "")
+    createpoolpd(c, "Testpoolsetting", "5", "", "", pdids)
+    res = SendCmd(c, "pool -v")
+    origthreshold = int(res[res.find("CapacityThreshold: ") + len("CapacityThreshold: "):res.find(
+        "CapacityThreshold: ") + len("CapacityThreshold: ") + 2])
+    if origthreshold < 75 or origthreshold > 95:
+        tolog("Threshold %d has something wrong" % origthreshold)
+    elif origthreshold + 5 > 95:
+        settings = "\"" + "capthrehold=" + str(origthreshold - 5) + "\""
+        modsetting = origthreshold - 5
+    else:
+        settings = "\"" + "capthrehold=" + str(origthreshold + 5) + "\""
+        modsetting = origthreshold + 5
+    SendCmd(c, "pool -a mod -n " + settings)
+
+    mod = SendCmd(c, "pool -v")
+    modthreshold = int(mod[mod.find("CapacityThreshold: ") + len("CapacityThreshold: "):mod.find(
+        "CapacityThreshold: ") + len("CapacityThreshold: ") + 2])
+    if modthreshold != modsetting:
+        tolog("Failed on verifying modify capacity threshold for pool.")
+        FailFlag = True
+    else:
+        tolog("Successfully verified modify capacity threshold for pool.")
 
     return FailFlag
 
@@ -1867,8 +1964,9 @@ if __name__ == "__main__":
     # record the version number of this time
     #SendCmd(c,"about")
     #print infodictret("clone")
-    pooldict=infodict("ctrl")
-    print pooldict.getobject()
+    for i in range(10):
+        poolglobalsetting(c)
+
     # remove pool/volume/snapshot/clone if possible.
     #poolcleanup(c)
     # poolforceclean(c)

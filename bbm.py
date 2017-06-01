@@ -101,7 +101,6 @@ def verifyBBMClear(c):
     while result.split("\r\n")[num] != 'administrator@cli> ':
         row = result.split("\r\n")[num]
         if row.split()[2] != "SAST":
-            FailFlag = True
             tolog('\n<font color="red">Fail: there is no SAST type PD</font>')
             break
         if row.split()[2] == "SAST" and row.split()[-1] != "Unconfigured":
@@ -110,7 +109,7 @@ def verifyBBMClear(c):
     if len(pdid) != 0:
         for m in pdid:
             result = SendCmd(c, "bbm -a clear " + m)
-            if "Error" in result:
+            if "Error (" in result:
                 FailFlag = True
                 tolog('\n<font color="red">Fail: Verify bbm -a clear ' + m + '</font>')
     if FailFlag:
