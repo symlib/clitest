@@ -1582,6 +1582,35 @@ def pooldel(c):
     else:
         tolog(Pass)
         tolog("Pools are deleted successfully.")
+def pooldelforce(c):
+
+    count = 0
+    Failflag=False
+    poolinfo = SendCmd(c, "pool")
+    while not "No pool in the subsystem" in poolinfo:
+
+        poolnum = int(poolinfo.split("\r\n")[-2].split(" ")[0])
+        for i in range(0, poolnum + 1):
+            SendCmd(c, "pool -a del -i " + str(i) +" -f")
+
+            count += 1
+
+        poolnotdelete = infodictret(c, "pool", "", "")
+        if count>poolnum+1:
+            tolog("Some pools cannot be deleted.")
+
+            for key in poolnotdelete.keys():
+                SendCmd(c, "pool -a del -i " + key+" -f")
+            Failflag=True
+            break
+        poolinfo = SendCmd(c, "pool")
+
+    if Failflag:
+        tolog(Fail)
+    else:
+        tolog(Pass)
+        tolog("Pools are deleted successfully.")
+
 
 def volumedel(c):
     volinfo=SendCmd(c, "volume")
@@ -1622,22 +1651,13 @@ def snapshotdelete(c):
             count+=1
         snapshotnotdelete = infodictret(c, "snapshot", "", "")
         if count>snapshotnum+1:
-            snapshotinfo = SendCmd(c, "snapshot")
-            snapshotnum = int(snapshotinfo.split("\r\n")[-2].split(" ")[0])
-            tolog("The %d snapshot cannot be deleted." %snapshotnum)
+            tolog("Some snapshots cannot be deleted.")
 
-            # modified on June 1st, 2017
-            # for key in snapshotnotdelete.keys():
-            #     SendCmd(c, "snapshot -a del -i " + key)
+
+            for key in snapshotnotdelete.keys():
+                SendCmd(c, "snapshot -a del -i " + key)
             Failflag=True
-            # break
-            # the previous method will get the last snapshot that cannot be removed
-            # and delete from 0 to the last id
-            # new method is to delete the last one
-            # and if there are multiple snapshots to be deleted, then the last one again
-            # until all snapshots are deleted
-
-            SendCmd(c, "snapshot -a del -i " + str(snapshotnum))
+            break
         snapshotinfo = SendCmd(c, "snapshot")
     if Failflag:
         tolog(Fail)
@@ -1662,28 +1682,14 @@ def clonedelete(c):
         # 2017-05-15
         clonenotdelete = infodictret(c, "clone", "", "")
         if count>clonenum+1:
-            cloneinfo = SendCmd(c, "clone")
-            clonenum = int(cloneinfo.split("\r\n")[-2].split(" ")[0])
-            tolog("The %d clone cannot be deleted." % clonenum)
+            tolog("Some clones cannot be deleted.")
 
-            # for key in clonenotdelete.keys():
-            #     SendCmd(c, "clone -a del -i " + key)
-            #
-            #
-            # Failflag=True
-            # break
-            # modified on June 1st, 2017
-            # for key in snapshotnotdelete.keys():
-            #     SendCmd(c, "snapshot -a del -i " + key)
+            for key in clonenotdelete.keys():
+                SendCmd(c, "clone -a del -i " + key)
+
+
             Failflag=True
-            # break
-            # the previous method will get the last snapshot that cannot be removed
-            # and delete from 0 to the last id
-            # new method is to delete the last one
-            # and if there are multiple snapshots to be deleted, then the last one again
-            # until all snapshots are deleted
-
-            SendCmd(c, "snapshot -a del -i " + str(clonenum))
+            break
         cloneinfo = SendCmd(c, "clone")
     if Failflag:
         tolog(Fail)
@@ -1725,6 +1731,74 @@ def bvtsparedrvcreate(c,sparenum):
     else:
         FailFlag = True
         tolog("Snapshots are created failed: expected number is: %d" % sparenum)
+
+    return FailFlag
+
+def poolglobalsetting(c):
+    FailFlag = False
+    tolog("Verify change capacity threshold for pool")
+    pooldel(c)
+    pdhddssdlist = getavailpd(c)
+    hddlist=pdhddssdlist[0]
+    pdids = str(hddlist).replace("[", "").replace("]", "").replace(" ", "")
+    createpoolpd(c,"Testpoolsetting","5","","",pdids)
+    res=SendCmd(c,"pool -v")
+    origthreshold=int(res[res.find("CapacityThreshold: ")+len("CapacityThreshold: "):res.find("CapacityThreshold: ")+len("CapacityThreshold: ")+2])
+    if origthreshold< 75 or origthreshold >95:
+        tolog("Threshold %d has something wrong" % origthreshold)
+    elif origthreshold+5 > 95:
+        settings="\"" + "capthreshold="+str(origthreshold-5)+"\""
+        modsetting=origthreshold-5
+    else:
+        settings = "\"" + "capthreshold=" + str(origthreshold + 5) + "\""
+        modsetting = origthreshold + 5
+    SendCmd(c, "pool -a mod -s " + settings)
+
+    mod=SendCmd(c,"pool -v")
+    modthreshold = int(mod[mod.find("CapacityThreshold: ") + len("CapacityThreshold: "):mod.find(
+        "CapacityThreshold: ") + len("CapacityThreshold: ") + 2])
+    if modthreshold!=modsetting:
+        tolog("Failed on verifying modify capacity threshold for pool.")
+        Failflag=True
+    else:
+        tolog("Successfully verified modify capacity threshold for pool.")
+
+    if FailFlag:
+        tolog(Fail)
+    else:
+        tolog(Pass)
+
+
+def bvtpoolglobalsetting(c):
+
+    FailFlag = False
+    tolog("Verify change capacity threshold for pool")
+    pooldel(c)
+    pdhddssdlist = getavailpd(c)
+    hddlist = pdhddssdlist[0]
+    pdids = str(hddlist).replace("[", "").replace("]", "").replace(" ", "")
+    createpoolpd(c, "Testpoolsetting", "5", "", "", pdids)
+    res = SendCmd(c, "pool -v")
+    origthreshold = int(res[res.find("CapacityThreshold: ") + len("CapacityThreshold: "):res.find(
+        "CapacityThreshold: ") + len("CapacityThreshold: ") + 2])
+    if origthreshold < 75 or origthreshold > 95:
+        tolog("Threshold %d has something wrong" % origthreshold)
+    elif origthreshold + 5 > 95:
+        settings = "\"" + "capthrehold=" + str(origthreshold - 5) + "\""
+        modsetting = origthreshold - 5
+    else:
+        settings = "\"" + "capthrehold=" + str(origthreshold + 5) + "\""
+        modsetting = origthreshold + 5
+    SendCmd(c, "pool -a mod -n " + settings)
+
+    mod = SendCmd(c, "pool -v")
+    modthreshold = int(mod[mod.find("CapacityThreshold: ") + len("CapacityThreshold: "):mod.find(
+        "CapacityThreshold: ") + len("CapacityThreshold: ") + 2])
+    if modthreshold != modsetting:
+        tolog("Failed on verifying modify capacity threshold for pool.")
+        FailFlag = True
+    else:
+        tolog("Successfully verified modify capacity threshold for pool.")
 
     return FailFlag
 
@@ -1808,27 +1882,12 @@ def bvtsnapshotdelete(c):
             count+=1
         snapshotnotdelete = infodictret(c, "snapshot", "", "")
         if count>snapshotnum+1:
-            # tolog("Some snapshots cannot be deleted.")
-            snapshotinfo = SendCmd(c, "snapshot")
-            snapshotnum = int(snapshotinfo.split("\r\n")[-2].split(" ")[0])
-            tolog("The %d snapshot cannot be deleted." % snapshotnum)
+            tolog("Some snapshots cannot be deleted.")
 
-            # modified on June 1st, 2017
-            # for key in snapshotnotdelete.keys():
-            #     SendCmd(c, "snapshot -a del -i " + key)
+            for key in snapshotnotdelete.keys():
+                SendCmd(c, "snapshot -a del -i " + key)
             Failflag=True
-            # break
-            # the previous method will get the last snapshot that cannot be removed
-            # and delete from 0 to the last id
-            # new method is to delete the last one
-            # and if there are multiple snapshots to be deleted, then the last one again
-            # until all snapshots are deleted
-
-            SendCmd(c, "snapshot -a del -i " + str(snapshotnum))
-            # for key in snapshotnotdelete.keys():
-            #     SendCmd(c, "snapshot -a del -i " + key)
-            # Failflag=True
-            # break
+            break
         snapshotinfo = SendCmd(c, "snapshot")
 
     return Failflag
@@ -1847,29 +1906,12 @@ def bvtclonedelete(c):
             count+=1
         clonenotdelete = infodictret(c, "clone", "", "")
         if count>clonenum+1:
+            tolog("Some clones cannot be deleted.")
 
-            cloneinfo = SendCmd(c, "clone")
-            clonenum = int(cloneinfo.split("\r\n")[-2].split(" ")[0])
-            tolog("The %d clone cannot be deleted." % clonenum)
-
-            # for key in clonenotdelete.keys():
-            #     SendCmd(c, "clone -a del -i " + key)
-            #
-            #
-            # Failflag=True
-            # break
-            # modified on June 1st, 2017
-            # for key in snapshotnotdelete.keys():
-            #     SendCmd(c, "snapshot -a del -i " + key)
+            for key in clonenotdelete.keys():
+                SendCmd(c, "clone -a del -i " + key)
             Failflag=True
-            # break
-            # the previous method will get the last snapshot that cannot be removed
-            # and delete from 0 to the last id
-            # new method is to delete the last one
-            # and if there are multiple snapshots to be deleted, then the last one again
-            # until all snapshots are deleted
-
-            SendCmd(c, "snapshot -a del -i " + str(clonenum))
+            break
         cloneinfo = SendCmd(c, "clone")
 
     return Failflag
@@ -1922,8 +1964,9 @@ if __name__ == "__main__":
     # record the version number of this time
     #SendCmd(c,"about")
     #print infodictret("clone")
-    pooldict=infodict("ctrl")
-    print pooldict.getobject()
+    for i in range(10):
+        poolglobalsetting(c)
+
     # remove pool/volume/snapshot/clone if possible.
     #poolcleanup(c)
     # poolforceclean(c)
