@@ -132,7 +132,7 @@ def SendCmdRestart(c, cmdstr):
 
 def SendCmdconfirm(c, cmdstr):
     data = ''
-
+    ytrue = False
     if cmdstr.endswith('\n'):
         c.send(cmdstr)
     else:
@@ -156,8 +156,12 @@ def SendCmdconfirm(c, cmdstr):
 
         while data.endswith('?25h'):
             # print data
-            c.send("y" + "\n")
-            data += c.recv(2000)
+            if ytrue==False:
+                c.send("y" + "\n")
+                ytrue=True
+                time.sleep(15)
+                data += c.recv(2000)
+                break
             if data.endswith('@cli> '):
                 break
         if data.endswith('@cli> '):
@@ -183,7 +187,7 @@ def SendCmdconfirm(c, cmdstr):
 
 
     data = data.replace("\x1b[D \x1b[D", "")
-    data = data.replace("[?1l[6n[?2004h[?25l[?7l[0m[0m[J[0m", "").replace("[32D[32C[0m[?12l[?25h",
+    data = data.replace("[?12l[?25h[?25l[38D[0m[J[0m", "").replace("[0my[39D[0m [?7h[0m[?12l[?25h[?2004l",
                                                                                    "").replace(
         "[?7h[0m[?12l[?25h[?2004l[?1l[6n[?2004h[?25l[?7l[0m[0m[J[0m", "")
     tolog(data)

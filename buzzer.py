@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1e2c4d722d1b90c6a40d63b4ab0fad9d522b3b3a
 # coding=utf-8
 # initial sample work on 2016.12.23
 # this section includes verify proper cmd/parameters/options and
@@ -441,11 +437,11 @@ def BVTverifyBuzzerInvalidOption(c):
         FailFlag = True
         tolog('\n<font color="red">Fail: buzz -x</font>')
 
-<<<<<<< HEAD
+
     return FailFlag
-=======
+
     return FailFlag
-=======
+
 # coding=utf-8
 # initial sample work on 2016.12.23
 # this section includes verify proper cmd/parameters/options and
@@ -709,5 +705,4 @@ if __name__ == "__main__":
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped
->>>>>>> 7bfa0c09cdcb14bcd22ec6fbf332c86690b68948
->>>>>>> 1e2c4d722d1b90c6a40d63b4ab0fad9d522b3b3a
+
