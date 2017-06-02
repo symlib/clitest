@@ -66,7 +66,7 @@ def SendCmd(c,cmdstr):
     data=data.replace("\x1b[D \x1b[D", "")
     data=data.replace("[?1l[6n[?2004h[?25l[?7l[0m[0m[J[0m","").replace("[32D[32C[0m[?12l[?25h","").replace("[?7h[0m[?12l[?25h[?2004l[?1l[6n[?2004h[?25l[?7l[0m[0m[J[0m","")
     tolog(data)
-    
+
     return data
 
 
@@ -188,7 +188,7 @@ def SendCmdconfirm(c, cmdstr):
 
     data = data.replace("\x1b[D \x1b[D", "")
     data = data.replace("[?1l[6n[?2004h[?25l[?7l[0m[0m[J[0m", "").replace("[38D[38C[0m[?12l[?25h[?25l[38D[0m[J[0m","").replace("[0my[39D[0m", "")\
-        .replace("[J[?7h[0m[?12l[?25h[?2004l)","")
+        .replace("[J[?7h[0m[?12l[?25h[?2004l","")
     tolog(data)
 
     return data
