@@ -518,12 +518,12 @@ def poolcreateandlist(c,poolnum):
                 if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
                     if "-a list" in eachres:
                         tolog("pool -a list with phydrvum " + str(
-                            phydrvnum) + " raid level" + raidlevel + " succeeded.")
+                            phydrvnum) + " raid level 0 succeeded.")
                     else:
-                        tolog("pool with phydrvum " + str(phydrvnum) + " raid level" + raidlevel + " succeeded.")
+                        tolog("pool with phydrvum " + str(phydrvnum) + " raid level 0 succeeded.")
                 else:
                     FailFlag = True
-                    tolog("Pool list with phydrvum " + str(phydrvnum) + " raid level" + raidlevel + " failed.")
+                    tolog("Pool list with phydrvum " + str(phydrvnum) + " raid level 0 failed.")
                     break
     if FailFlag:
 
