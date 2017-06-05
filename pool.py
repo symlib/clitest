@@ -432,7 +432,7 @@ def poolcreateandlist(c,poolnum):
                         FailFlag = True
                         tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
                         break
-            if phydrvnum == 2:
+            elif phydrvnum == 2:
                 tolog("Two phydrvs are in the system, raid 1 level pool will be created.")
                 poolname = random_key(maxnamelength) + str(phydrvnum)
                 createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
@@ -449,7 +449,7 @@ def poolcreateandlist(c,poolnum):
                         tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
                         break
 
-            if phydrvnum == 3:
+            elif phydrvnum == 3:
 
                 tolog(
                     "Three phydrvs are in the system, only 1 raid 1 level pool will be created and 1 phydrv available.")
@@ -468,7 +468,7 @@ def poolcreateandlist(c,poolnum):
                         FailFlag = True
                         tolog("Pool list with phydrvum " + str(phydrvnum) + "raid 1 failed.")
                         break
-            if phydrvnum == 4:
+            elif phydrvnum == 4:
                 poolname = random_key(maxnamelength) + str(phydrvnum - 1)
                 createpoolpd(c, poolname, "5", "", "", str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]))
                 poolcount += 1
@@ -484,7 +484,7 @@ def poolcreateandlist(c,poolnum):
                         tolog("Pool list with phydrvum " + str(phydrvnum) + "raid 1 failed.")
                         break
 
-            if phydrvnum >= 5:
+            else:
 
                 poolname = random_key(30) + "4"
                 raidlevel = random.choice(["5", "6"])
