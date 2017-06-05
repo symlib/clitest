@@ -378,6 +378,10 @@ def poolcreateandlist(c,poolnum):
     FailFlag=False
     # March 15, 2017
     # added hdd and ssd type condition
+
+    # June 1, 2017
+    # added new raidlevel
+    #
     poolforceclean(c)
 
     pdhddssdlist = getavailpd(c)
@@ -387,21 +391,19 @@ def poolcreateandlist(c,poolnum):
         phydrvnum = len(pdlist)
         poolcount = 0
         if phydrvnum == 0:
-            continue
+            tolog("No phydrv is in the subsystem")
+            break
 
-            # from 1 pool to maximum
-            # administrator@cli> pool
-            # ===============================================================================
-            # Id    Name    Status    TotalCapacity    UsedCapacity    FreeCapacity
-            # ===============================================================================
-            # 1     11      OK        72.48 GB         69.63 KB        72.48 GB
-        if phydrvnum == 1:
-            tolog("Only one phydrv is in the system, so no pool will be created.")
-        if phydrvnum == 2:
-            tolog("Two phydrvs are in the system, only raid 1 level pool will be created.")
-            poolname = random_key(maxnamelength) + str(phydrvnum)
-            createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
-            poolcount += 1
+        if poolnum==0:
+            tolog("%d raid 0 level pool will be created." %phydrvnum)
+
+            # June 1, 2017
+
+            #tolog("Only one phydrv is in the system, raid 0 level pool will be created.")
+            for i in range(phydrvnum):
+                poolname = random_key(maxnamelength) + str(phydrvnum)
+                createpoolpd(c, poolname, "0", "", "", str(pdlist[i]))
+                poolcount+=1
             poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
             for eachres in poolres:
                 if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
@@ -413,29 +415,46 @@ def poolcreateandlist(c,poolnum):
                     FailFlag = True
                     tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
                     break
-
-        if phydrvnum == 3:
-            if poolnum == 0 or poolnum == 2:
-                tolog("Three phydrvs are in the system, only 1 raid 5 level pool will be created.")
+        elif poolnum==1:
+            if phydrvnum==1:
+                tolog("%d raid 0 level pool will be created." % phydrvnum)
                 poolname = random_key(maxnamelength) + str(phydrvnum)
-                createpoolpd(c, poolname, "5", "", "", str(pdlist).replace("[", "").replace("]", ""))
+                createpoolpd(c, poolname, "0", "", "", str(pdlist[0]))
+                poolcount+=1
+                poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
+                for eachres in poolres:
+                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                        if "-a list" in eachres:
+                            tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
+                        else:
+                            tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
+                    else:
+                        FailFlag = True
+                        tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
+                        break
+            elif phydrvnum == 2:
+                tolog("Two phydrvs are in the system, raid 1 level pool will be created.")
+                poolname = random_key(maxnamelength) + str(phydrvnum)
+                createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
                 poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 for eachres in poolres:
                     if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
                         if "-a list" in eachres:
-                            tolog("pool -a list with phydrvum " + str(phydrvnum) + "raid 5 succeeded.")
+                            tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + "raid 5 succeeded.")
+                            tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
                     else:
                         FailFlag = True
-                        tolog("Pool list with phydrvum " + str(phydrvnum) + " raid 5 failed.")
+                        tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
                         break
-            else:
+
+            elif phydrvnum == 3:
+
                 tolog(
                     "Three phydrvs are in the system, only 1 raid 1 level pool will be created and 1 phydrv available.")
                 poolname = random_key(maxnamelength) + str(phydrvnum - 1)
-                # only the first two disks are used
+
                 createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
                 poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
@@ -449,97 +468,23 @@ def poolcreateandlist(c,poolnum):
                         FailFlag = True
                         tolog("Pool list with phydrvum " + str(phydrvnum) + "raid 1 failed.")
                         break
-        if phydrvnum == 4:
-
-            if poolnum == 0:
-                poolname = random_key(maxnamelength) + str(phydrvnum)
-
-                tolog(str(phydrvnum) + " phydrvs are in the system, " + str(
-                    phydrvnum / 2) + " raid 1 level pools will be created.")
-                # pdstr = ' '.join(str(e) for e in pdlist)
-                for i in range(1, phydrvnum + 1, 2):
-                    createpoolpd(c, poolname + str(i / 2), "1", "", "",
-                                 str(pdlist[(i - 1):(i + 1)]).replace("[", "").replace("]", "").replace(" ", ""))
-                    poolcount += 1
-                    # create volune in the pool
-
+            elif phydrvnum == 4:
+                poolname = random_key(maxnamelength) + str(phydrvnum - 1)
+                createpoolpd(c, poolname, "5", "", "", str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]))
+                poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 for eachres in poolres:
                     if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
                         if "-a list" in eachres:
-                            tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
+                            tolog("pool -a list with phydrvum " + str(phydrvnum) + "raid 1 succeeded.")
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
+                            tolog("pool with phydrvum " + str(phydrvnum) + "raid 1 succeeded.")
                     else:
                         FailFlag = True
-                        tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
+                        tolog("Pool list with phydrvum " + str(phydrvnum) + "raid 1 failed.")
                         break
-            if poolnum == 1:
 
-                poolname = random_key(maxnamelength) + str(phydrvnum - 1)
-                createpoolpd(c, poolname, "5", "", "", str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]))
-                poolcount += 1
-            if poolnum == 2:
-                poolname = random_key(maxnamelength) + str(phydrvnum - 1)
-                createpoolpd(c, poolname, "5", "", "",
-                             str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]) + "," + str(pdlist[3]))
-                poolcount += 1
-        if phydrvnum >= 5:
-
-            if poolnum == 0:
-                if phydrvnum % 2 == 0:
-                    poolname = random_key(maxnamelength) + str(phydrvnum)
-                    tolog(str(phydrvnum) + " phydrvs are in the system, " + str(
-                        phydrvnum / 2) + " raid 1 level pools will be created.")
-                    # pdstr = ' '.join(str(e) for e in pdlist)
-                    for i in range(1, phydrvnum + 1, 2):
-                        createpoolpd(c, poolname + str(i / 2), "1", "", "",
-                                     str(pdlist[(i - 1):(i + 1)]).replace("[", "").replace("]", "").replace(" ", ""))
-                        poolcount += 1
-                        # create volune in the pool
-
-                    poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
-                    SendCmd(c,"phydrv")
-                    for eachres in poolres:
-                        if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
-                            if "-a list" in eachres:
-                                tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
-                            else:
-                                tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
-                        else:
-                            FailFlag = True
-                            tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
-                            break
-                else:
-                    poolname = random_key(maxnamelength) + str(phydrvnum)
-                    tolog(str(phydrvnum) + " phydrvs are in the system, " + str(
-                        phydrvnum / 2 - 1) + " raid 1 level pools " + " and 1 raid 5 level pool will be created.")
-                    # pdstr = ' '.join(str(e) for e in pdlist)
-
-                    for i in range(1, phydrvnum - 2, 2):
-                        # pdids=pdstr[i - 1] + ","+pdstr[i]
-                        createpoolpd(c, poolname + str(i / 2), "1", "", "",
-                                     str(pdlist[(i - 1):(i + 1)]).replace("[", "").replace("]", "").replace(" ", ""))
-                        # createpoolpd(c,poolname+str(i+1),"5",pdstr[phydrvnum-3]+","+pdstr[phydrvnum-2]+","+pdstr[phydrvnum-1])
-                        poolcount += 1
-
-                    createpoolpd(c, poolname + str(i), "5", "", "",
-                                 str(pdlist[-3:]).replace("[", "").replace("]", "").replace(" ", ""))
-                    poolcount += 1
-
-                    poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
-                    SendCmd(c, "phydrv")
-                    for eachres in poolres:
-                        if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
-                            if "-a list" in eachres:
-                                tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
-                            else:
-                                tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
-                        else:
-                            FailFlag = True
-                            tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
-                            break
-            if poolnum == 1:
+            else:
 
                 poolname = random_key(30) + "4"
                 raidlevel = random.choice(["5", "6"])
@@ -550,7 +495,7 @@ def poolcreateandlist(c,poolnum):
                              str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]) + "," + str(pdlist[3]))
                 poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
-                SendCmd(c, "phydrv")
+                # SendCmd(c, "phydrv")
                 for eachres in poolres:
                     if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
                         if "-a list" in eachres:
@@ -562,27 +507,24 @@ def poolcreateandlist(c,poolnum):
                         FailFlag = True
                         tolog("Pool list with phydrvum " + str(phydrvnum) + " raid level" + raidlevel + " failed.")
                         break
-            if poolnum == 2:
-                poolname = random_key(maxnamelength) + str(phydrvnum)
-                tolog(str(
-                    phydrvnum) + " phydrvs are in the system, 1 raid 5 or raid 6 level pools will be created and no phydrv is avaible.")
-                raidlevel = random.choice(["5", "6"])
-                createpoolpd(c, poolname, raidlevel, "", "",
-                             str(pdlist).replace("[", "").replace("]", "").replace(" ", ""))
-                poolcount += 1
-                poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
-                SendCmd(c, "phydrv")
-                for eachres in poolres:
-                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
-                        if "-a list" in eachres:
-                            tolog("pool -a list with phydrvum " + str(phydrvnum) + " raid " + raidlevel + " succeeded.")
-                        else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " raid " + raidlevel + " succeeded.")
-                    else:
-                        FailFlag = True
-                        tolog("Pool list with phydrvum " + str(phydrvnum) + " raid " + raidlevel + " failed.")
-                        break
 
+        elif poolnum == 2:
+            tolog("1 raid 0 level pool will be created and %d phydrvs are unconfigure for further use" %(phydrvnum-1))
+            poolname = random_key(maxnamelength)
+            createpoolpd(c, poolname, "0", "", "", str(pdlist[0]))
+            poolcount+=1
+            poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
+            for eachres in poolres:
+                if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                    if "-a list" in eachres:
+                        tolog("pool -a list with phydrvum " + str(
+                            phydrvnum) + " raid level 0 succeeded.")
+                    else:
+                        tolog("pool with phydrvum " + str(phydrvnum) + " raid level 0 succeeded.")
+                else:
+                    FailFlag = True
+                    tolog("Pool list with phydrvum " + str(phydrvnum) + " raid level 0 failed.")
+                    break
     if FailFlag:
 
         tolog(Fail)
@@ -598,6 +540,10 @@ def bvtpoolcreateandlist(c, poolnum):
     FailFlag = False
     # March 15, 2017
     # added hdd and ssd type condition
+
+    # June 1, 2017
+    # added new raidlevel
+    #
     poolforceclean(c)
 
     pdhddssdlist = getavailpd(c)
@@ -607,21 +553,19 @@ def bvtpoolcreateandlist(c, poolnum):
         phydrvnum = len(pdlist)
         poolcount = 0
         if phydrvnum == 0:
-            continue
+            tolog("No phydrv is in the subsystem")
+            break
 
-            # from 1 pool to maximum
-            # administrator@cli> pool
-            # ===============================================================================
-            # Id    Name    Status    TotalCapacity    UsedCapacity    FreeCapacity
-            # ===============================================================================
-            # 1     11      OK        72.48 GB         69.63 KB        72.48 GB
-        if phydrvnum == 1:
-            tolog("Only one phydrv is in the system, so no pool will be created.")
-        if phydrvnum == 2:
-            tolog("Two phydrvs are in the system, only raid 1 level pool will be created.")
-            poolname = random_key(maxnamelength) + str(phydrvnum)
-            createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
-            poolcount += 1
+        if poolnum == 0:
+            tolog("%d raid 0 level pool will be created." % phydrvnum)
+
+            # June 1, 2017
+
+            # tolog("Only one phydrv is in the system, raid 0 level pool will be created.")
+            for i in range(phydrvnum):
+                poolname = random_key(maxnamelength) + str(phydrvnum)
+                createpoolpd(c, poolname, "0", "", "", str(pdlist[i]))
+                poolcount += 1
             poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
             for eachres in poolres:
                 if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
@@ -633,29 +577,46 @@ def bvtpoolcreateandlist(c, poolnum):
                     FailFlag = True
                     tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
                     break
-
-        if phydrvnum == 3:
-            if poolnum == 0 or poolnum == 2:
-                tolog("Three phydrvs are in the system, only 1 raid 5 level pool will be created.")
+        elif poolnum == 1:
+            if phydrvnum == 1:
+                tolog("%d raid 0 level pool will be created." % phydrvnum)
                 poolname = random_key(maxnamelength) + str(phydrvnum)
-                createpoolpd(c, poolname, "5", "", "", str(pdlist).replace("[", "").replace("]", ""))
+                createpoolpd(c, poolname, "0", "", "", str(pdlist[0]))
                 poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 for eachres in poolres:
                     if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
                         if "-a list" in eachres:
-                            tolog("pool -a list with phydrvum " + str(phydrvnum) + "raid 5 succeeded.")
+                            tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + "raid 5 succeeded.")
+                            tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
                     else:
                         FailFlag = True
-                        tolog("Pool list with phydrvum " + str(phydrvnum) + " raid 5 failed.")
+                        tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
                         break
-            else:
+            if phydrvnum == 2:
+                tolog("Two phydrvs are in the system, raid 1 level pool will be created.")
+                poolname = random_key(maxnamelength) + str(phydrvnum)
+                createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
+                poolcount += 1
+                poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
+                for eachres in poolres:
+                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                        if "-a list" in eachres:
+                            tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
+                        else:
+                            tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
+                    else:
+                        FailFlag = True
+                        tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
+                        break
+
+            if phydrvnum == 3:
+
                 tolog(
                     "Three phydrvs are in the system, only 1 raid 1 level pool will be created and 1 phydrv available.")
                 poolname = random_key(maxnamelength) + str(phydrvnum - 1)
-                # only the first two disks are used
+
                 createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
                 poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
@@ -669,96 +630,23 @@ def bvtpoolcreateandlist(c, poolnum):
                         FailFlag = True
                         tolog("Pool list with phydrvum " + str(phydrvnum) + "raid 1 failed.")
                         break
-        if phydrvnum == 4:
-
-            if poolnum == 0:
-                poolname = random_key(maxnamelength) + str(phydrvnum)
-
-                tolog(str(phydrvnum) + " phydrvs are in the system, " + str(
-                    phydrvnum / 2) + " raid 1 level pools will be created.")
-                # pdstr = ' '.join(str(e) for e in pdlist)
-                for i in range(1, phydrvnum + 1, 2):
-                    createpoolpd(c, poolname + str(i / 2), "1", "", "",
-                                 str(pdlist[(i - 1):(i + 1)]).replace("[", "").replace("]", "").replace(" ", ""))
-                    poolcount += 1
-                    # create volune in the pool
-
+            if phydrvnum == 4:
+                poolname = random_key(maxnamelength) + str(phydrvnum - 1)
+                createpoolpd(c, poolname, "5", "", "", str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]))
+                poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 for eachres in poolres:
                     if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
                         if "-a list" in eachres:
-                            tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
+                            tolog("pool -a list with phydrvum " + str(phydrvnum) + "raid 1 succeeded.")
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
+                            tolog("pool with phydrvum " + str(phydrvnum) + "raid 1 succeeded.")
                     else:
                         FailFlag = True
-                        tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
+                        tolog("Pool list with phydrvum " + str(phydrvnum) + "raid 1 failed.")
                         break
-            if poolnum == 1:
-                poolname = random_key(maxnamelength) + str(phydrvnum - 1)
-                createpoolpd(c, poolname, "5", "", "", str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]))
-                poolcount += 1
-            if poolnum == 2:
-                poolname = random_key(maxnamelength) + str(phydrvnum - 1)
-                createpoolpd(c, poolname, "5", "", "",
-                             str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]) + "," + str(pdlist[3]))
-                poolcount += 1
-        if phydrvnum >= 5:
 
-            if poolnum == 0:
-                if phydrvnum % 2 == 0:
-                    poolname = random_key(maxnamelength) + str(phydrvnum)
-                    tolog(str(phydrvnum) + " phydrvs are in the system, " + str(
-                        phydrvnum / 2) + " raid 1 level pools will be created.")
-                    # pdstr = ' '.join(str(e) for e in pdlist)
-                    for i in range(1, phydrvnum + 1, 2):
-                        createpoolpd(c, poolname + str(i / 2), "1", "", "",
-                                     str(pdlist[(i - 1):(i + 1)]).replace("[", "").replace("]", "").replace(" ", ""))
-                        poolcount += 1
-                        # create volune in the pool
-
-                    poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
-                    SendCmd(c, "phydrv")
-                    for eachres in poolres:
-                        if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
-                            if "-a list" in eachres:
-                                tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
-                            else:
-                                tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
-                        else:
-                            FailFlag = True
-                            tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
-                            break
-                else:
-                    poolname = random_key(maxnamelength) + str(phydrvnum)
-                    tolog(str(phydrvnum) + " phydrvs are in the system, " + str(
-                        phydrvnum / 2 - 1) + " raid 1 level pools " + " and 1 raid 5 level pool will be created.")
-                    # pdstr = ' '.join(str(e) for e in pdlist)
-
-                    for i in range(1, phydrvnum - 2, 2):
-                        # pdids=pdstr[i - 1] + ","+pdstr[i]
-                        createpoolpd(c, poolname + str(i / 2), "1", "", "",
-                                     str(pdlist[(i - 1):(i + 1)]).replace("[", "").replace("]", "").replace(" ", ""))
-                        # createpoolpd(c,poolname+str(i+1),"5",pdstr[phydrvnum-3]+","+pdstr[phydrvnum-2]+","+pdstr[phydrvnum-1])
-                        poolcount += 1
-
-                    createpoolpd(c, poolname + str(i), "5", "", "",
-                                 str(pdlist[-3:]).replace("[", "").replace("]", "").replace(" ", ""))
-                    poolcount += 1
-
-                    poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
-                    SendCmd(c, "phydrv")
-                    for eachres in poolres:
-                        if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
-                            if "-a list" in eachres:
-                                tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
-                            else:
-                                tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
-                        else:
-                            FailFlag = True
-                            tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
-                            break
-            if poolnum == 1:
+            if phydrvnum >= 5:
 
                 poolname = random_key(30) + "4"
                 raidlevel = random.choice(["5", "6"])
@@ -769,7 +657,7 @@ def bvtpoolcreateandlist(c, poolnum):
                              str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]) + "," + str(pdlist[3]))
                 poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
-                SendCmd(c, "phydrv")
+                # SendCmd(c, "phydrv")
                 for eachres in poolres:
                     if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
                         if "-a list" in eachres:
@@ -781,26 +669,25 @@ def bvtpoolcreateandlist(c, poolnum):
                         FailFlag = True
                         tolog("Pool list with phydrvum " + str(phydrvnum) + " raid level" + raidlevel + " failed.")
                         break
-            if poolnum == 2:
-                poolname = random_key(maxnamelength) + str(phydrvnum)
-                tolog(str(
-                    phydrvnum) + " phydrvs are in the system, 1 raid 5 or raid 6 level pools will be created and no phydrv is avaible.")
-                raidlevel = random.choice(["5", "6"])
-                createpoolpd(c, poolname, raidlevel, "", "",
-                             str(pdlist).replace("[", "").replace("]", "").replace(" ", ""))
-                poolcount += 1
-                poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
-                SendCmd(c, "phydrv")
-                for eachres in poolres:
-                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
-                        if "-a list" in eachres:
-                            tolog("pool -a list with phydrvum " + str(phydrvnum) + " raid " + raidlevel + " succeeded.")
-                        else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " raid " + raidlevel + " succeeded.")
+
+        elif poolnum == 2:
+            tolog(
+                "1 raid 0 level pool will be created and %d phydrvs are unconfigure for further use" % (phydrvnum - 1))
+            poolname = random_key(maxnamelength)
+            createpoolpd(c, poolname, "0", "", "", str(pdlist[0]))
+            poolcount += 1
+            poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
+            for eachres in poolres:
+                if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                    if "-a list" in eachres:
+                        tolog("pool -a list with phydrvum " + str(
+                            phydrvnum) + " raid level" + raidlevel + " succeeded.")
                     else:
-                        FailFlag = True
-                        tolog("Pool list with phydrvum " + str(phydrvnum) + " raid " + raidlevel + " failed.")
-                        break
+                        tolog("pool with phydrvum " + str(phydrvnum) + " raid level" + raidlevel + " succeeded.")
+                else:
+                    FailFlag = True
+                    tolog("Pool list with phydrvum " + str(phydrvnum) + " raid level" + raidlevel + " failed.")
+                    break
 
     return FailFlag
 
@@ -1582,6 +1469,36 @@ def pooldel(c):
     else:
         tolog(Pass)
         tolog("Pools are deleted successfully.")
+def pooldelforce(c):
+
+    count = 0
+    Failflag=False
+    poolinfo = SendCmd(c, "pool")
+    while not "No pool in the subsystem" in poolinfo:
+
+        poolnum = int(poolinfo.split("\r\n")[-2].split(" ")[0])
+        for i in range(0, poolnum + 1):
+            SendCmdconfirm(c, "pool -a del -i " + str(i) +" -f")
+            # SendCmdconfirm(c, "y")
+            count += 1
+
+        poolnotdelete = infodictret(c, "pool", "", "")
+        if count>poolnum+1:
+            tolog("Some pools cannot be deleted.")
+
+            for key in poolnotdelete.keys():
+                SendCmdconfirm(c, "pool -a del -i " + key+" -f")
+                #SendCmdconfirm(c,"y")
+            Failflag=True
+            break
+        poolinfo = SendCmd(c, "pool")
+
+    if Failflag:
+        tolog(Fail)
+    else:
+        tolog(Pass)
+        tolog("Pools are deleted successfully.")
+
 
 def volumedel(c):
     volinfo=SendCmd(c, "volume")
@@ -1702,6 +1619,74 @@ def bvtsparedrvcreate(c,sparenum):
     else:
         FailFlag = True
         tolog("Snapshots are created failed: expected number is: %d" % sparenum)
+
+    return FailFlag
+
+def poolglobalsetting(c):
+    FailFlag = False
+    tolog("Verify change capacity threshold for pool")
+    pooldel(c)
+    pdhddssdlist = getavailpd(c)
+    hddlist=pdhddssdlist[0]
+    pdids = str(hddlist).replace("[", "").replace("]", "").replace(" ", "")
+    createpoolpd(c,"Testpoolsetting","5","","",pdids)
+    res=SendCmd(c,"pool -v")
+    origthreshold=int(res[res.find("CapacityThreshold: ")+len("CapacityThreshold: "):res.find("CapacityThreshold: ")+len("CapacityThreshold: ")+2])
+    if origthreshold< 75 or origthreshold >95:
+        tolog("Threshold %d has something wrong" % origthreshold)
+    elif origthreshold+5 > 95:
+        settings="\"" + "capthreshold="+str(origthreshold-5)+"\""
+        modsetting=origthreshold-5
+    else:
+        settings = "\"" + "capthreshold=" + str(origthreshold + 5) + "\""
+        modsetting = origthreshold + 5
+    SendCmd(c, "pool -a mod -s " + settings)
+
+    mod=SendCmd(c,"pool -v")
+    modthreshold = int(mod[mod.find("CapacityThreshold: ") + len("CapacityThreshold: "):mod.find(
+        "CapacityThreshold: ") + len("CapacityThreshold: ") + 2])
+    if modthreshold!=modsetting:
+        tolog("Failed on verifying modify capacity threshold for pool.")
+        Failflag=True
+    else:
+        tolog("Successfully verified modify capacity threshold for pool.")
+
+    if FailFlag:
+        tolog(Fail)
+    else:
+        tolog(Pass)
+
+
+def bvtpoolglobalsetting(c):
+
+    FailFlag = False
+    tolog("Verify change capacity threshold for pool")
+    pooldel(c)
+    pdhddssdlist = getavailpd(c)
+    hddlist = pdhddssdlist[0]
+    pdids = str(hddlist).replace("[", "").replace("]", "").replace(" ", "")
+    createpoolpd(c, "Testpoolsetting", "5", "", "", pdids)
+    res = SendCmd(c, "pool -v")
+    origthreshold = int(res[res.find("CapacityThreshold: ") + len("CapacityThreshold: "):res.find(
+        "CapacityThreshold: ") + len("CapacityThreshold: ") + 2])
+    if origthreshold < 75 or origthreshold > 95:
+        tolog("Threshold %d has something wrong" % origthreshold)
+    elif origthreshold + 5 > 95:
+        settings = "\"" + "capthrehold=" + str(origthreshold - 5) + "\""
+        modsetting = origthreshold - 5
+    else:
+        settings = "\"" + "capthrehold=" + str(origthreshold + 5) + "\""
+        modsetting = origthreshold + 5
+    SendCmd(c, "pool -a mod -n " + settings)
+
+    mod = SendCmd(c, "pool -v")
+    modthreshold = int(mod[mod.find("CapacityThreshold: ") + len("CapacityThreshold: "):mod.find(
+        "CapacityThreshold: ") + len("CapacityThreshold: ") + 2])
+    if modthreshold != modsetting:
+        tolog("Failed on verifying modify capacity threshold for pool.")
+        FailFlag = True
+    else:
+        tolog("Successfully verified modify capacity threshold for pool.")
 
     return FailFlag
 
@@ -1867,8 +1852,10 @@ if __name__ == "__main__":
     # record the version number of this time
     #SendCmd(c,"about")
     #print infodictret("clone")
-    pooldict=infodict("ctrl")
-    print pooldict.getobject()
+    # for i in range(10):
+    #
+    #     poolglobalsetting(c)
+    pooldelforce(c)
     # remove pool/volume/snapshot/clone if possible.
     #poolcleanup(c)
     # poolforceclean(c)

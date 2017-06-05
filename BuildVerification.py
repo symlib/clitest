@@ -20,12 +20,12 @@ from send_cmd import *
 from ssh_connect import *
 forBVT = True
 from to_log import *
-
+import buzzer
 Pass = "'result': 'p'"
 Fail = "'result': 'f'"
 
 def BuildVerification(c):
-    Failflag=False
+    Failflag=list()
     flashimage=False
     c, ssh = ssh_conn()
 
@@ -77,45 +77,62 @@ def BuildVerification(c):
 
         if reconnectflag:
             tolog("Start verifying pool add")
-            Failflag=pool.bvtpoolcreateandlist(c,1)
+            Failflag.append(pool.bvtpoolcreateandlist(c,1))
 
             tolog("Start verifying volume add")
-            Failflag=pool.bvtvolumecreateandlist(c,10)
+            Failflag.append(pool.bvtvolumecreateandlist(c,10))
 
             tolog("Start verifying snapshot add")
-            Failflag=pool.bvtsnapshotcreateandlist(c,2)
+            Failflag.append(pool.bvtsnapshotcreateandlist(c,2))
 
             tolog("Start verifying clone add")
-            Failflag=pool.bvtclonecreateandlist(c,2)
+            Failflag.append(pool.bvtclonecreateandlist(c,2))
 
             tolog("Start verifying spare add")
-            Failflag = pool.bvtsparedrvcreate(c, 2)
+            Failflag.append( pool.bvtsparedrvcreate(c, 2))
 
             tolog("Start verifying delete clone")
-            Failflag = pool.bvtclonedelete(c)
+            Failflag.append( pool.bvtclonedelete(c))
 
             tolog("Start verifying delete snapshot")
-            Failflag = pool.bvtsnapshotdelete(c)
+            Failflag.append( pool.bvtsnapshotdelete(c))
 
             tolog("Start verifying delete volume")
-            Failflag = pool.bvtvolumedel(c)
+            Failflag.append( pool.bvtvolumedel(c))
 
             tolog("Start verifying delete pool")
-            Failflag = pool.bvtpooldel(c)
+            Failflag.append(pool.bvtpooldel(c))
 
             tolog("Start verifying delete spare")
-            Failflag = pool.bvtsparedelete(c)
+            Failflag.append(pool.bvtsparedelete(c))
 
-
+            tolog("Start verifying buzzer")
+            Failflag.append(buzzer.BVTverifyBuzzerDisableAndSilentTurnOn((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSilentTurnOn((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSoundingTurnOn((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerDisableAndSilentTurnOff((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSilentTurnOff((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSoundingTurnOff((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerDisableAndSilentEnable((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSilentEnable((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSoundingEnable((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSoundingDisable((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSilentDisable((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerDisableAndSilentDisable((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerInfo((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerHelp((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerInvalidParameters((c)))
+            Failflag.append(buzzer.BVTverifyBuzzerInvalidOption((c)))
         else:
             tolog("Failed to connect server after ptiflash.")
-            Failflag=True
+            Failflag.append(True)
 
-
-        if Failflag:
-            tolog(Fail)
-        else:
-            tolog(Pass)
+        for flag in Failflag:
+            if Failflag:
+                tolog(Fail)
+                break
+            else:
+                tolog(Pass)
     else:
         tolog("no new build is availlable.")
         tolog(Pass)

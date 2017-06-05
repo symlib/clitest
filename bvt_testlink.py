@@ -13,7 +13,6 @@ import subprocess
 import string
 import datetime
 
-from to_log import tolog
 
 # The initial version is from Nov 4, 2016
 # get the basic ideas about the testlink API
@@ -82,10 +81,20 @@ if __name__ == "__main__":
     tls = testlink.TestlinkAPIClient(new_ip_testlink, new_adminjl_key)
 
     # test case notes
+<<<<<<< HEAD
+    c,ssh=ssh_conn()
+=======
     Notes = 'testlink.notes.bvt'
+<<<<<<< HEAD
+
+    c,ssh=ssh_conn()
+
+=======
     print "i am here 0"
     c,ssh=ssh_conn()
     print c,"i am here"
+>>>>>>> 7bfa0c09cdcb14bcd22ec6fbf332c86690b68948
+>>>>>>> 1e2c4d722d1b90c6a40d63b4ab0fad9d522b3b3a
     # print tls.whatArgs('getTestCase')
 
     # build names to be updated before run this script
@@ -99,7 +108,7 @@ if __name__ == "__main__":
     # planname = raw_input('please input the test plan name to be executed:')
     cmd = ''
     stepsnum=0
-    Notes = 'testlink.notes'
+    Notes = '/home/work/jackyl/Scripts/clitest/testlink.notes'
     #print tls.whatArgs('getTestCasesForTestSuite')
     #print tls.whatArgs('createBuild')
     #print tls.whatArgs("unassignTestCaseExecutionTask")
@@ -205,7 +214,6 @@ if __name__ == "__main__":
                                     if hastestsuite:
                                         # print "The "+testcase["tcase_name"]+" under " + testplan['name'] + " of " + project[
                                         #     'name'] + " are as following:\n"
-                                        tolog(testcase["tcase_name"])
                                         start = time.time()
                                         # convert the testsuite name into module that will be imported into
                                         TSuiteName = importlib.import_module(testsuitename, package="Tasks")
@@ -220,7 +228,6 @@ if __name__ == "__main__":
                                                 '&quot;', '"'))
 
                                             func = stepstr.split('\n')
-                                            tolog(func[0])
 
                                             # convert the stepname into function that will be executed in the above module
                                             abc = getattr(TSuiteName, func[0], func[1])
@@ -246,7 +253,6 @@ if __name__ == "__main__":
                                             fp = open(Notes, 'r')
                                             note = fp.read()
                                             fp.close()
-
                                             # determine the execution result that will be updated to testlink.
                                             while "'result':" in note:
                                                 if "'result': 'f'" in note:
@@ -258,7 +264,6 @@ if __name__ == "__main__":
 
                                             TC_Result_Steps.append(
                                                 {'step_number': str(i + 1), 'result': step_Result, 'notes': note})
-
                                         for each in TC_Result_Steps:
                                             if each['result'] != 'p':
                                                 TC_Result = 'f'
@@ -268,7 +273,6 @@ if __name__ == "__main__":
 
                                         # update test result remotely using API
 
-
                                         Update_timestamp = (
                                             time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
                                         # duration_min = getduration(str(TC_execution_duration))
@@ -276,7 +280,6 @@ if __name__ == "__main__":
                                         duration_min = str(elasped / 60)
                                         buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
                                         buildname = buildnamelist[-1]['name']
-                                        tolog("before update to testlink")
 
                                         # TC_Result_Steps=[{'step_number': '0', 'notes': 'step1', 'result': 'f'}, {'step_number': '1', 'notes': 'step2 ', 'result': 'p'}]
                                         getExecution = tls.reportTCResult(testcase['tcase_id'], testplan['id'],
@@ -287,7 +290,6 @@ if __name__ == "__main__":
                                                                           execduration=duration_min,
                                                                           timestamp=Update_timestamp,
                                                                           steps=TC_Result_Steps)
-                                        tolog("after update to testlink")
 
                                         if TC_Name == "build_verification":
                                             serv = "MjExLjE1MC42NS44MQ=="
@@ -300,7 +302,14 @@ if __name__ == "__main__":
                                             from email.mime.text import MIMEText
 
                                             if getExecution[0]['status']:
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+=======
                                                 tolog("in email send process")
+>>>>>>> 7bfa0c09cdcb14bcd22ec6fbf332c86690b68948
+>>>>>>> 1e2c4d722d1b90c6a40d63b4ab0fad9d522b3b3a
                                                 link = "http://192.168.252.175/testlink/lib/execute/execPrint.php?id=" + str(
                                                     getExecution[0]['id'])
 
@@ -331,4 +340,8 @@ if __name__ == "__main__":
                                                 s.sendmail(msg['From'], rec, msg.as_string())
 
 
+<<<<<<< HEAD
     ssh.close()
+=======
+    ssh.close()
+>>>>>>> 7bfa0c09cdcb14bcd22ec6fbf332c86690b68948

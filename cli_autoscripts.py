@@ -12,7 +12,7 @@ import testlink
 import subprocess
 import string
 import datetime
-import Buzzer
+
 #from Buzzer import verifyBuzzerInfo
 
 
@@ -132,8 +132,8 @@ if __name__ == "__main__":
     # test case notes
     Notes = 'testlink.notes'
     exectype={"g":-1, "a":1,"c":-2}
-    #execinputtype=raw_input("please input what test cases you are going to execute, g --- GUI, a ---- API, c ---- CLI")
-    execinputtype = "a"
+    execinputtype=raw_input("please input what test cases you are going to execute, g --- GUI, a ---- API, c ---- CLI")
+    #execinputtype = "a"
     if execinputtype=="c":
         c,ssh=ssh_conn()
 
@@ -288,8 +288,8 @@ if __name__ == "__main__":
                                             'name'] + " are as following:\n")
                                         start = time.time()
                                         # convert the testsuite name into module that will be imported into
+                                        print testsuitename
                                         TSuiteName = importlib.import_module(testsuitename, package="Tasks")
-                                        # print tls.getTestCase(TC_Platform['tcase_id'])
                                         # if >= 2 steps, 2017-01-06
                                         stepsnum = len(tcsteps)
                                         for i in range(stepsnum):
@@ -298,6 +298,7 @@ if __name__ == "__main__":
                                                 string.replace(string.replace(tcsteps[i]['actions'], '<p>\n\t', ''), '</p>',
                                                                ''),
                                                 '&quot;', '"'))
+                                            print "stepstr,",stepstr
 
                                             func = stepstr.split('\n')
 
