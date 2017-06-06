@@ -49,10 +49,10 @@ def BuildVerification(c):
         if "13." in tftpbuildnumber:
 
             filename = "d5k-multi-13_0_0000_" + tftpbuildnumber.split(".")[-1]
-        elif "12.00" in tftpbuildnumber:
+        elif "12.0" in tftpbuildnumber:
 
             filename = "d5k-multi-12_0_9999_" + tftpbuildnumber.split(".")[-1]
-        elif "12.01" in tftpbuildnumber:
+        elif "12.1" in tftpbuildnumber:
 
             filename = "d5k-multi-12_1_9999_" + tftpbuildnumber.split(".")[-1]
 
