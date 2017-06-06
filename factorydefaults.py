@@ -6,24 +6,346 @@ from to_log import *
 from ssh_connect import ssh_conn
 Pass = "'result': 'p'"
 Fail = "'result': 'f'"
-
-def verifyFactorydefaultsRestore(c):
+def factorydefaultsRestoreSetting(c, type):
     FailFlag = False
-    tolog("<b>Verify factorydefaults -a restore </b>")
-    # factorydefaults -a <action> -t <type>
-    # action = restore
-    type=['all', 'allfw', 'bga', 'ctrl', 'encl', 'fc', 'iscsi', 'netmgmt', 'phydrv', 'sas', 'scsi', 'subsys',
-           'allsw', 'bgasched', 'service', 'webserver', 'snmp', 'telnet', 'ssh', 'email', 'netsend', 'cim',
-          'ntp', 'user', 'ups', 'ldap', 'syslog']
+    tolog('<b> factorydefaults -a restore -t ' + type + '</b>')
+    result = SendCmd(c, 'factorydefaults -a restore -t ' + type)
+    if 'Error (' in result:
+        FailFlag = True
+        tolog('<font color="red"> factorydefaults -a restore -t ' + type + '</font>')
+    return FailFlag
 
+def factorydefaultsBga(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'bga'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t bga </font>')
+    checkResult = SendCmd(c, 'bga')
+    if 'RebuildRate: High' not in checkResult or 'RCRate: Medium' not in checkResult:
+        FailFlag = True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t bga </font>')
     if FailFlag:
-        tolog('\n<font color="red">Fail: Verify factorydefaults -a restore </font>')
+        tolog('\n<font color="red">Fail: Verify factorydefaults -a restore -t bga </font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+def factorydefaultsCtrl(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'ctrl'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t ctrl </font>')
+    checkResult = SendCmd(c, 'ctrl -v')
+    checkpoint = ['Alias:',
+                  'PowerSavingIdleTime: Never',
+                  'PowerSavingStandbyTime: Never',
+                  'PowerSavingStoppedTime: Never',
+                  ]
+    for cp in checkpoint:
+        if cp not in checkResult:
+            FailFlag = True
+            tolog('<font color="red"> Fail: factorydefaults -a restore -t ctrl </font>')
+    if FailFlag:
+        tolog('\n<font color="red">Fail: Verify factorydefaults -a restore -t ctrl </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsEncl(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'encl'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t encl </font>')
+    checkResult = SendCmd(c, 'enclosure -v')
+    checkpoint = ['Enclosure                 51C/123F                 61C/141F',
+                  'Controller 1 Sensor 1     65C/149F                 72C/161F',
+                  'Controller 2 Sensor 2     70C/158F                 77C/170F',
+                  'Controller 1 Sensor 3     78C/172F                 88C/190F',
+                  'Controller 2 Sensor 4     65C/149F                 72C/161F',
+                  'Controller 1 Sensor 5     70C/158F                 77C/170F',
+                  'Controller 2 Sensor 6     78C/172F                 88C/190F'
+                  ]
+    for cp in checkpoint:
+        if cp not in checkResult:
+            FailFlag = True
+            tolog('<font color="red"> Fail: factorydefaults -a restore -t encl </font>')
+    if FailFlag:
+        tolog('\n<font color="red">Fail: Verify factorydefaults -a restore -t encl </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsFc(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'fc'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t fc </font>')
+    checkResult = SendCmd(c, 'fc -v')
+    checkpoint = ['ConfiguredLinkSpeed: Auto',
+                  'ConfiguredTopology: Auto',
+                  'HardALPA: ',
+                  ]
+    for cp in checkpoint:
+        if cp not in checkResult:
+            FailFlag = True
+            tolog('<font color="red"> Fail: factorydefaults -a restore -t fc </font>')
+    if FailFlag:
+        tolog('\n<font color="red">Fail: Verify factorydefaults -a restore -t fc </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsIscsi(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'iscsi'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t iscsi </font>')
+    checkResult1 = SendCmd(c, 'chap')
+    checkResult2 = SendCmd(c, 'trunk')
+    if 'ChapId: 0 (Peer) Name: TestInitiator' not in checkResult1 or 'No iSCSI trunks are available' not in checkResult2:
+        FailFlag = True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t iscsi </font>')
+    if FailFlag:
+        tolog('\n<font color="red">Fail: Verify factorydefaults -a restore -t iscsi </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsPhydrv(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'phydrv'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t phydrv </font>')
+    checkResult = SendCmd(c, 'phydrv -v')
+    checkpoint = ['WriteCache: Enabled',
+                  'RlaCache: Enabled',
+                  'Alias: \r\n',
+                  'TempPollInt: 245'
+                  'MediumErrorThreshold: 64'
+                  ]
+    for cp in checkpoint:
+        if cp not in checkResult:
+            FailFlag = True
+            tolog('<font color="red"> Fail: factorydefaults -a restore -t phydrv </font>')
+    if FailFlag:
+        tolog('\n<font color="red">Fail: Verify factorydefaults -a restore -t phydrv </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsSas(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'sas'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t sas </font>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t sas </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsScsi(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'scsi'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t scsi </font>')
 
 
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t scsi </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsSubsys(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'subsys'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t scsi </font>')
+    checkResult = SendCmd(c, 'subsys -v')
+    if 'Alias:  ' not in checkResult or 'RedundancyType: Active-Active' not in checkResult or 'CacheMirroring: Enabled' not in checkResult:
+        FailFlag = True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t scsi </font>')
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t scsi </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsBgasched(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'bgasched'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t bgasched </font>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t bgasched </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="red"> bgasched is not achieved </font>')
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsService(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'service'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t service </font>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t service </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsWebserver(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'webserver'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t webserver </font>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t webserver </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsSnmp(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'snmp'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t snmp </font>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t snmp </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsTelnet(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'telnet'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t telnet </font>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t telnet </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsSsh(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'ssh'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t ssh </font>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t ssh </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsEmail(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'email'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t email </font>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t email </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsCim(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'cim'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t cim </font>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t cim </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsNtp(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'ntp'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t ntp </font>')
+    checkResult = SendCmd(c, 'ntp')
+    if 'Ntp: Disabled' not in checkResult:
+        FailFlag = True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t ntp </font>')
+    if FailFlag:
+        tolog('\n<font color="red">Fail: Verify factorydefaults -a restore -t ntp </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsUser(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'user'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t user </font>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t user </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsUps(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'ups'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t ups </font>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t ups </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsLdap(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'ldap'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t ldap </font>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t ldap </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def factorydefaultsSyslog(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'syslog'):
+        FailFlag =True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t syslog </font>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: factorydefaults -a restore -t syslog </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+def verifyFactorydefaultsHelp(c):
+    FailFlag = False
+    tolog("<b>Verify factorydefaults -h </b>")
+    result = SendCmd(c, 'factorydefaults -h')
+    if 'Error (' in result or 'restore' not in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: factorydefaults -h </font>')
+    if FailFlag:
+        tolog('\n<font color="red">Fail: Verify factorydefaults -h </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
 def verifyFactorydefaultsInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify factorydefaults invalid option</b>")
@@ -76,7 +398,29 @@ def verifyFactorydefaultsMissingParameters(c):
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyFactorydefaultsRestore(c)
+    factorydefaultsBga(c)
+    factorydefaultsCtrl(c)
+    factorydefaultsEncl(c)
+    factorydefaultsFc(c)
+    factorydefaultsIscsi(c)
+    factorydefaultsPhydrv(c)
+    factorydefaultsSas(c)
+    factorydefaultsScsi(c)
+    factorydefaultsSubsys(c)
+    factorydefaultsBgasched(c)
+    factorydefaultsService(c)
+    factorydefaultsWebserver(c)
+    factorydefaultsSnmp(c)
+    factorydefaultsTelnet(c)
+    factorydefaultsSsh(c)
+    factorydefaultsEmail(c)
+    factorydefaultsCim(c)
+    factorydefaultsNtp(c)
+    factorydefaultsUser(c)
+    factorydefaultsUps(c)
+    factorydefaultsLdap(c)
+    factorydefaultsSyslog(c)
+    verifyFactorydefaultsHelp(c)
     verifyFactorydefaultsInvalidOption(c)
     verifyFactorydefaultsInvalidParameters(c)
     verifyFactorydefaultsMissingParameters(c)
