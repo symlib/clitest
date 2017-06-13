@@ -21,7 +21,7 @@ def verifyIscsi(c):
         FailFlag = True
         tolog('\n<font color="red">Fail: iscsi -v </font>')
 
-    command = ['iscsi -t target', 'iscsi -t port', 'iscsi -t portal -c 65535', 'iscsi -t session', 'iscsi -t device']
+    command = ['iscsi -t target', 'iscsi -t port', 'iscsi -t portal -c 32', 'iscsi -t session', 'iscsi -t device']
     for com in command:
         tolog('<b>' + com + '</b>')
         result = SendCmd(c, com)
@@ -222,26 +222,26 @@ def verifyIscsiDel(c):
         FailFlag = True
         tolog('<font color="red">Fail: iscsi -a del -t portal -i </font>')
 
-    tolog("<b>Verify iscsi -a del -t session </b>")
-    sessionID = []
-    result = SendCmd(c, 'iscsi -t session')
-    if 'No session in the subsystem' not in result and 'Error (' not in result:
-        row = result.split('\r\n')
-        for x in range(4, (len(row)-1)):
-            element = row[x].split()
-            sessionID.append(element[0])
-    else:
-        FailFlag = True
-        tolog('<font color="red">Fail: There is no type session </font>')
-    for i in sessionID:
-        result = SendCmd(c, 'iscsi -a del -t session -i ' + i)
-        if 'Error (' in result:
-            FailFlag = True
-            tolog('<font color="red">Fail: iscsi -a del -t session -i ' + i + '</font>')
-    checkResult = SendCmd(c, 'iscsi -t session')
-    if 'No session in the subsystem' not in checkResult:
-        FailFlag = True
-        tolog('<font color="red">Fail: iscsi -a del -t session </font>')
+    # tolog("<b>Verify iscsi -a del -t session </b>")
+    # sessionID = []
+    # result = SendCmd(c, 'iscsi -t session')
+    # if 'No session in the subsystem' not in result and 'Error (' not in result:
+    #     row = result.split('\r\n')
+    #     for x in range(4, (len(row)-1)):
+    #         element = row[x].split()
+    #         sessionID.append(element[0])
+    # else:
+    #     FailFlag = True
+    #     tolog('<font color="red">Fail: There is no type session </font>')
+    # for i in sessionID:
+    #     result = SendCmd(c, 'iscsi -a del -t session -i ' + i)
+    #     if 'Error (' in result:
+    #         FailFlag = True
+    #         tolog('<font color="red">Fail: iscsi -a del -t session -i ' + i + '</font>')
+    # checkResult = SendCmd(c, 'iscsi -t session')
+    # if 'No session in the subsystem' not in checkResult:
+    #     FailFlag = True
+    #     tolog('<font color="red">Fail: iscsi -a del -t session </font>')
 
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify iscsi -a del </font>')
@@ -273,7 +273,7 @@ def verifyIscsiSpecifyInexistentId(c):
 def verifyIscsiInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify iscsi invalid option</b>")
-    command = ['iscsi -1', 'iscsi -x', 'iscsi -a list -x', 'iscsi -a add -x', 'iscsi -a mod -x', 'iscsi -a del -x']
+    command = ['iscsi -x', 'iscsi -a list -x', 'iscsi -a add -x', 'iscsi -a mod -x', 'iscsi -a del -x']
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
         result = SendCmd(c, com)
