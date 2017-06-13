@@ -93,13 +93,16 @@ def factorydefaultsFc(c):
         tolog(Pass)
 def factorydefaultsIscsi(c):
     FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'iscsi'):
-        FailFlag =True
-    checkResult1 = SendCmd(c, 'chap')
-    checkResult2 = SendCmd(c, 'trunk')
-    if 'ChapId: 0 (Peer) Name: TestInitiator' not in checkResult1 or 'No iSCSI trunks are available' not in checkResult2:
-        FailFlag = True
-        tolog('<font color="red"> Fail: factorydefaults -a restore -t iscsi </font>')
+    checkResult1 = SendCmd(c, 'iscsi -t session')
+    if 'No session in the subsystem' in checkResult1:
+        if factorydefaultsRestoreSetting(c, 'iscsi'):
+            FailFlag = True
+        checkResult2 = SendCmd(c, 'trunk')
+        if 'No iSCSI trunks are available' not in checkResult2:
+            FailFlag = True
+            tolog('<font color="red"> Fail: factorydefaults -a restore -t iscsi </font>')
+    else:
+        tolog('\n<font color="red">Fail: Some iSCSI sessions are established on the portal </font>')
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify factorydefaults -a restore -t iscsi </font>')
         tolog(Fail)
@@ -111,14 +114,15 @@ def factorydefaultsPhydrv(c):
     if factorydefaultsRestoreSetting(c, 'phydrv'):
         FailFlag =True
     checkResult = SendCmd(c, 'phydrv -v')
-    checkpoint = ['WriteCache: Enabled',
-                  'RlaCache: Enabled',
-                  'Alias: \r\n',
-                  'TempPollInt: 245'
-                  'MediumErrorThreshold: 64'
+    countPD = checkResult.count('-------------------------------------------------------------------------------')
+    checkpoint = [checkResult.count('WriteCache: Enabled'),
+                  checkResult.count('RlaCache: Enabled'),
+                  checkResult.count('Alias: \r\n'),
+                  checkResult.count('TempPollInt: 245'),
+                  checkResult.count('MediumErrorThreshold: 64')
                   ]
     for cp in checkpoint:
-        if cp not in checkResult:
+        if cp != countPD:
             FailFlag = True
             tolog('<font color="red"> Fail: factorydefaults -a restore -t phydrv </font>')
     if FailFlag:
@@ -376,32 +380,32 @@ def verifyFactorydefaultsMissingParameters(c):
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    factorydefaultsBga(c)
-    factorydefaultsCtrl(c)
-    factorydefaultsEncl(c)
-    factorydefaultsFc(c)
+    # factorydefaultsBga(c)
+    # factorydefaultsCtrl(c)
+    # factorydefaultsEncl(c)
+    # factorydefaultsFc(c)
     factorydefaultsIscsi(c)
     factorydefaultsPhydrv(c)
-    factorydefaultsSas(c)
-    factorydefaultsScsi(c)
-    factorydefaultsSubsys(c)
-    factorydefaultsBgasched(c)
-    factorydefaultsService(c)
-    factorydefaultsWebserver(c)
-    factorydefaultsSnmp(c)
-    factorydefaultsTelnet(c)
-    factorydefaultsSsh(c)
-    factorydefaultsEmail(c)
-    factorydefaultsCim(c)
-    factorydefaultsNtp(c)
-    factorydefaultsUser(c)
-    factorydefaultsUps(c)
-    factorydefaultsLdap(c)
-    factorydefaultsSyslog(c)
-    verifyFactorydefaultsHelp(c)
-    verifyFactorydefaultsInvalidOption(c)
-    verifyFactorydefaultsInvalidParameters(c)
-    verifyFactorydefaultsMissingParameters(c)
+    # factorydefaultsSas(c)
+    # factorydefaultsScsi(c)
+    # factorydefaultsSubsys(c)
+    # factorydefaultsBgasched(c)
+    # factorydefaultsService(c)
+    # factorydefaultsWebserver(c)
+    # factorydefaultsSnmp(c)
+    # factorydefaultsTelnet(c)
+    # factorydefaultsSsh(c)
+    # factorydefaultsEmail(c)
+    # factorydefaultsCim(c)
+    # factorydefaultsNtp(c)
+    # factorydefaultsUser(c)
+    # factorydefaultsUps(c)
+    # factorydefaultsLdap(c)
+    # factorydefaultsSyslog(c)
+    # verifyFactorydefaultsHelp(c)
+    # verifyFactorydefaultsInvalidOption(c)
+    # verifyFactorydefaultsInvalidParameters(c)
+    # verifyFactorydefaultsMissingParameters(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped
