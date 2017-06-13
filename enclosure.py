@@ -10,21 +10,17 @@ Fail = "'result': 'f'"
 def verifyEnclosure(c):
     FailFlag = False
     command = ['enclosure', 'enclosure -e 1', 'enclosure -v']
-    listCheckPoint = ['SBB-SAS-12G-2U-12Bay']
+    listCheckPoint = ['SBB-SAS-12G-2U-12Bay', '> 2000 RPM']
     for com in command[0:2]:
         tolog('<b>Verify ' + com + ' </b>')
         result = SendCmd(c, com)
-        if listCheckPoint[0] not in result:
+        if 'Error (' in result or listCheckPoint[0] not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: enclosure </font>')
-
-    tolog('<b>Verify ' + command[2] + ' </b>')
-    listVCheckPoint = ['EnclosureType: SBB-SAS-12G-2U-12Bay', '> 2000 RPM', '℃']
+            tolog('\n<font color="red">Fail: ' + com + '</font>')
     result = SendCmd(c, command[2])
-    if listVCheckPoint[0] not in result or listVCheckPoint[1] not in result or listVCheckPoint[2] not in result:
+    if listCheckPoint[0] not in result or listCheckPoint[1] not in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: ' + command[2] + ' </font>')
-        tolog('Checkpoint: ' + listVCheckPoint[0] + '\t' + listVCheckPoint[1] + '\t' + listVCheckPoint[2])
+        tolog('\n<font color="red">Fail: ' + command[2] + '</font>')
 
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify enclosure </font>')
@@ -34,24 +30,18 @@ def verifyEnclosure(c):
         tolog(Pass)
 def verifyEnclosureList(c):
     FailFlag = False
-    tolog("<b>Verify enclosure -a list </b>")
     command = ['enclosure -a list', 'enclosure -a list -e 1', 'enclosure -a list -v']
-    listCheckPoint = ['SBB-SAS-12G-2U-12Bay']
+    listCheckPoint = ['SBB-SAS-12G-2U-12Bay', '> 2000 RPM']
     for com in command[0:2]:
         tolog('<b>Verify ' + com + ' </b>')
         result = SendCmd(c, com)
-        if listCheckPoint[0] not in result:
+        if 'Error (' in result or listCheckPoint[0] not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: enclosure -a list </font>')
-
-    tolog('<b>Verify ' + command[2] + ' </b>')
-    listVCheckPoint = ['EnclosureType: SBB-SAS-12G-2U-12Bay', '> 2000 RPM', '℃']
+            tolog('\n<font color="red">Fail: ' + com + '</font>')
     result = SendCmd(c, command[2])
-    if listVCheckPoint[0] not in result or listVCheckPoint[1] not in result or listVCheckPoint[2] not in result:
+    if listCheckPoint[0] not in result or listCheckPoint[1] not in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: ' + command[2] + ' </font>')
-        tolog('Checkpoint: ' + listVCheckPoint[0] + '\t' + listVCheckPoint[1] + '\t' + listVCheckPoint[2])
-
+        tolog('\n<font color="red">Fail: ' + command[2] + '</font>')
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify enclosure -a list </font>')
         tolog(Fail)
@@ -67,10 +57,9 @@ def verifyEnclosureMod(c):
         tolog('<b> enclosure -a mod -s "tempwarning=' + str(TW[index]) + ',tempcritical=' + str(TC[index]) + '"</b>')
         result = SendCmd(c, 'enclosure -a mod -s "tempwarning=' + str(TW[index]) + ',tempcritical=' + str(TC[index]) + '"')
         checkResult = SendCmd(c, 'enclosure -v')
-        if "Error (" in result or str(TW[index]) + '℃' not in checkResult or str(TC[index]) + '℃' not in checkResult:
+        if "Error (" in result or str(TW[index]) + 'C' not in checkResult or str(TC[index]) + 'C' not in checkResult:
             FailFlag = True
             tolog('\n<font color="red">Fail: enclosure -a mod -s "tempwarning=' + str(TW[index]) + ',tempcritical=' + str(TC[index]) + '"</font>')
-            tolog('\n<font color="red">Checkpoint: ' + str(TW[index]) + '℃ and ' + str(TC[index]) + '℃ </font>')
 
     def verifyCtrlTempSetting(c, option1, option2, i):
         tolog('<b> enclosure -a mod -s "ctrltempwarning=' + option1 + ',ctrltempcritical=' + option2 + '" -i ' + i + '"</b>')
