@@ -62,20 +62,27 @@ def verifyEnclosureMod(c):
             tolog('\n<font color="red">Fail: enclosure -a mod -s "tempwarning=' + str(TW[index]) + ',tempcritical=' + str(TC[index]) + '"</font>')
 
     def verifyCtrlTempSetting(c, option1, option2, i):
+        FailFlag = False
         tolog('<b> enclosure -a mod -s "ctrltempwarning=' + option1 + ',ctrltempcritical=' + option2 + '" -i ' + i + '"</b>')
         result = SendCmd(c, 'enclosure -a mod -s "ctrltempwarning=' + option1 + ',ctrltempcritical=' + option2 + '" -i '+ i)
         checkResult = SendCmd(c, 'enclosure -v')
         if "Error (" in result or option1 + 'C' not in checkResult or option2 + 'C' not in checkResult:
             FailFlag = True
             tolog('\n<font color="red">Fail: enclosure -a mod -s "ctrltempwarning=' + option1 + ',ctrltempcritical=' + option2 + '" -i ' + i + '"</font>')
-            return FailFlag
-            # tolog('\n<font color="red">Checkpoint: ' + option1 + '℃ and ' + option2 + '℃ </font>')
-    verifyCtrlTempSetting(c, '62', '69', '1')
-    verifyCtrlTempSetting(c, '63', '71', '4')
-    verifyCtrlTempSetting(c, '67', '74', '2')
-    verifyCtrlTempSetting(c, '69', '76', '5')
-    verifyCtrlTempSetting(c, '72', '82', '3')
-    verifyCtrlTempSetting(c, '77', '87', '6')
+        return FailFlag
+
+    if verifyCtrlTempSetting(c, '62', '69', '1'):
+        FailFlag = True
+    if verifyCtrlTempSetting(c, '63', '71', '4'):
+        FailFlag = True
+    if verifyCtrlTempSetting(c, '67', '74', '2'):
+        FailFlag = True
+    if verifyCtrlTempSetting(c, '69', '76', '5'):
+        FailFlag = True
+    if verifyCtrlTempSetting(c, '72', '82', '3'):
+        FailFlag = True
+    if verifyCtrlTempSetting(c, '77', '87', '6'):
+        FailFlag = True
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify enclosure -a mod </font>')
         tolog(Fail)
@@ -205,15 +212,15 @@ def verifyEnclosureMissingParameters(c):
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyEnclosure(c)
-    verifyEnclosureList(c)
+    # verifyEnclosure(c)
+    # verifyEnclosureList(c)
     verifyEnclosureMod(c)
-    verifyEnclosureLocate(c)
-    verifyEnclosureHelp(c)
-    verifEnclosureSpecifyInexistentId(c)
-    verifyEnclosureInvalidOption(c)
-    verifyEnclosureInvalidParameters(c)
-    verifyEnclosureMissingParameters(c)
+    # verifyEnclosureLocate(c)
+    # verifyEnclosureHelp(c)
+    # verifEnclosureSpecifyInexistentId(c)
+    # verifyEnclosureInvalidOption(c)
+    # verifyEnclosureInvalidParameters(c)
+    # verifyEnclosureMissingParameters(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped
