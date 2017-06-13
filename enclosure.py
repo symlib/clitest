@@ -123,7 +123,6 @@ def verifEnclosureSpecifyInexistentId(c):
     # -i <sensor id> (1,6)
     # -f <FRU id>  1 and 2
     command = ['enclosure -e 0',
-               'enclosure -17',
                'enclosure -a mod -s "ctrltempwarning=70, ctrltempcritical=75" -i 7',
                'enclosure -a mod -s "ctrltempwarning=70, ctrltempcritical=75" -i 0',
                'enclosure -a locate -t ctrl -f 0'
