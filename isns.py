@@ -10,50 +10,69 @@ Fail = "'result': 'f'"
 def verifyIsns(c):
     FailFlag = False
     tolog("<b>Verify isns </b>")
-
+    result = SendCmd(c, 'isns')
+    if 'Error (' in result or 'Mgmt' not in result or result.count(' Portal ') != 2:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: isns </font>')
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify isns </font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
-
 def verifyIsnsList(c):
     FailFlag = False
     tolog("<b>Verify isns -a list </b>")
-
+    result = SendCmd(c, 'isns -a list')
+    if 'Error (' in result or 'Mgmt' not in result or result.count(' Portal ') != 2:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: isns -a list </font>')
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify isns -a list</font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
-
 def verifyIsnsMod(c):
     FailFlag = False
-    tolog("<b>Verify isns -a mod</b>")
+    SendCmd(c, 'iscsi -a add -t portal -r 2 -p 2 -m phy  -s "iptype=4,dhcp=enable"')
+    pInfor = SendCmd(c, 'iscsi -t portal')
+    pID = pInfor.split('\r\n')[-2][0]
 
+    tolog('<b> isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
+    result = SendCmd(c, 'isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1"')
+    checkResult = SendCmd(c, 'isns')
+    if 'Error (' in result or 'Enabled    Portal' not in checkResult or '1.1.1.1' not in checkResult:
+        FailFlag = True
+        tolog('<font color="red">Fail: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1" </font>')
+
+    tolog('<b> isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </b>')
+    result = SendCmd(c, 'isns -a mod -t mgmt -s "isns=enable,serverip=255.255.255.255,serverport=1"')
+    checkResult = SendCmd(c, 'isns')
+    if 'Error (' in result or 'Enabled    Mgmt' not in checkResult or '255.255.255.255' not in checkResult:
+        FailFlag = True
+        tolog('<font color="red"> Fail: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </font>')
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify isns -a mod </font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
-
 def verifyIsnsSpecifyInexistentId(c):
     FailFlag = False
-    tolog("<b> Verify isns specify inexistent Id </b>")
-    # -g <portal id>  (0,31)
-
-
+    pInfor = SendCmd(c, 'iscsi -t portal')
+    pID = pInfor.split('\r\n')[-2][0]
+    if int(pID[0]) < 31:
+        tolog('<b> isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
+        result = SendCmd(c, 'isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1"')
+        if 'Error (' not in result or 'Invalid iSCSI portal id' not in result:
+            tolog(' <font color="red">Fail: isns specify inexistent Id </font>')
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify isns specify inexistent Id </font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
-
-
 def verifyIsnsInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify isns invalid option</b>")
