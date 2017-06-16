@@ -109,11 +109,13 @@ def BuildVerification(c):
     else:
         tolog("Failed to connect server after ptiflash.")
         Failflag = True
+    for Failflag in Failflaglist:
 
-    if Failflag:
-        tolog(Fail)
-    else:
-        tolog(Pass)
+        if Failflag:
+            tolog(Fail)
+            break
+        else:
+            tolog(Pass)
 
 
     c.close()
