@@ -10,7 +10,7 @@ def verifyLogout(c):
     FailFlag = False
     tolog("<b>Verify logout </b>")
     result = SendCmd(c, 'logout')
-    if 'logout' not in result or 'Error (' in result:
+    if 'Error (' in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: logout </font>')
     if FailFlag:
@@ -21,7 +21,7 @@ def verifyLogout(c):
         tolog(Pass)
 def verifyLogoutInvalidOption(c):
     FailFlag = False
-    tolog("<b>Verify isns invalid option</b>")
+    tolog("<b>Verify logout invalid option</b>")
     command = ['logout -x']
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
