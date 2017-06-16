@@ -14,44 +14,23 @@ from pool import sparedrvcreate
 import random
 Pass = "'result': 'p'"
 Fail = "'result': 'f'"
-def findPdId(c, l, attr):
+def findPdId(c):
     result = SendCmd(c, 'phydrv')
-    num = 4
-    PdId = []
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
-        if row.split()[l][:-1] == attr:
-            PdId.append(row.split()[0])
-        num = num + 1
-    return PdId
+    pdID = []
+    row = result.split('\r\n')
+    if 'Error (' not in result:
+        for r in range(4, (len(row) -1)):
+            if row[r].split()[-1] != 'Unconfigured':
+                pdID.append(row[r].split()[0])
+    return pdID
 def verifyBBM(c):
     FailFlag = False
-    PDCS= ['WriteCach', 'ReadCach', 'S', 'Dedicate', 'Pool']
-    UnCSPd = findPdId(c, -1, 'Unconfigure')
-    if len(findPdId(c, -1, PDCS[0])) == 0:
-        SendCmd(c, 'wcache -a add -p ' + UnCSPd[0] + ',' + UnCSPd[1])
-    if len(findPdId(c, -1, PDCS[1])) == 0:
-        SendCmd(c, 'rcache -a add -p ' + UnCSPd[2])
-    if len(findPdId(c, -1, PDCS[2])) == 0:
-        SendCmd(c, 'spare -a add -p ' + UnCSPd[3] + ' -t g -r y')
-    if len(findPdId(c, -1, PDCS[3])) == 0:
-        SendCmd(c, 'spare -a add -p ' + UnCSPd[4] + ' -t d -r y')
-    if len(findPdId(c, -1, PDCS[4])) == 0:
-        SendCmd(c, 'pool -a add -s "name=testBBM,raid=0" ' + '-p ' + UnCSPd[5])
-    tolog("<b>Verify bbm</b>")
-    result = SendCmd(c, 'bbm')
-    for cs in PDCS:
-        for x in findPdId(c, -1, cs):
-            if 'Physical Drive Id: ' + x not in result:
-                FailFlag = True
-                tolog('\n<font color="red">Fail: bbm</font>')
-    tolog("<b>Verify bbm -p PD's ID that the configstatus is configured</b>")
-    for cs in PDCS:
-        for x in findPdId(c, -1, cs):
-            result = SendCmd(c, "bbm -p " + x)
-            if "Error" in result or "Drive Id: " + x not in result:
-                FailFlag = True
-                tolog('\n<font color="red">Fail: bbm -p ' + x + '</font>')
+    for i in findPdId(c):
+        tolog('\n<b> Verify bbm -p ' + i)
+        result = SendCmd(c, 'bbm -p ' + i)
+        if 'Error (' in result:
+            FailFlag = True
+            tolog('<font color="red">Fail: bbm -p ' + i + '</font>')
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify bbm</font>')
         tolog(Fail)
@@ -60,32 +39,12 @@ def verifyBBM(c):
         tolog(Pass)
 def verifyBBMList(c):
     FailFlag = False
-    PDCS= ['WriteCach', 'ReadCach', 'S', 'Dedicate', 'Pool']
-    UnCSPd = findPdId(c, -1, 'Unconfigure')
-    if len(findPdId(c, -1, PDCS[0])) == 0:
-        SendCmd(c, 'wcache -a add -p ' + UnCSPd[0] + ',' + UnCSPd[1])
-    if len(findPdId(c, -1, PDCS[1])) == 0:
-        SendCmd(c, 'rcache -a add -p ' + UnCSPd[2])
-    if len(findPdId(c, -1, PDCS[2])) == 0:
-        SendCmd(c, 'spare -a add -p ' + UnCSPd[3] + ' -t g -r y')
-    if len(findPdId(c, -1, PDCS[3])) == 0:
-        SendCmd(c, 'spare -a add -p ' + UnCSPd[4] + ' -t d -r y')
-    if len(findPdId(c, -1, PDCS[4])) == 0:
-        SendCmd(c, 'pool -a add -s "name=testBBM,raid=0" ' + '-p ' + UnCSPd[5])
-    tolog("<b>Verify bbm -a list </b>")
-    result = SendCmd(c, 'bbm -a list')
-    for cs in PDCS:
-        for x in findPdId(c, -1, cs):
-            if 'Physical Drive Id: ' + x not in result:
-                FailFlag = True
-                tolog('\n<font color="red">Fail: bbm -a list </font>')
-    tolog("<b>Verify bbm -p PD's ID that the configstatus is configured</b>")
-    for cs in PDCS:
-        for x in findPdId(c, -1, cs):
-            result = SendCmd(c, "bbm -a list -p " + x)
-            if "Error" in result or "Drive Id: " + x not in result:
-                FailFlag = True
-                tolog('\n<font color="red">Fail: bbm -a list -p ' + x + '</font>')
+    for i in findPdId(c):
+        tolog('\n<b> Verify bbm -a list -p ' + i)
+        result = SendCmd(c, 'bbm -a list -p ' + i)
+        if 'Error (' in result:
+            FailFlag = True
+            tolog('<font color="red">Fail: bbm -a list -p ' + i + '</font>')
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify bbm -a list </font>')
         tolog(Fail)
@@ -258,33 +217,6 @@ def verifyBBMMissingParameters(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
-def cleanUpEnviromment(c):
-    PDCS= ['WriteCach', 'ReadCach', 'S', 'Dedicate', 'Pool']
-    if len(findPdId(c, -1, PDCS[0])) != 0:
-        SendCmd(c, 'wcache -a del')
-    if len(findPdId(c, -1, PDCS[1])) != 0:
-        for x in SendCmd(c, 'rcache').split('\r\n')[1].split(":")[1].split(','):
-            SendCmd(c, 'rcache -a del -p ' + x)
-    if len(findPdId(c, -1, PDCS[2])) != 0 or len(findPdId(c, -1, PDCS[3])) != 0:
-        result = SendCmd(c, 'spare')
-        num = 4
-        spareId = []
-        while result.split("\r\n")[num] != 'administrator@cli> ':
-            row = result.split("\r\n")[num]
-            spareId.append(row.split()[0])
-            num = num + 1
-        for x in spareId:
-            SendCmd(c, 'spare -a del -i ' + x)
-    if len(findPdId(c, -1, PDCS[4])) != 0:
-        result = SendCmd(c, 'pool')
-        num = 4
-        poolId = []
-        while result.split("\r\n")[num] != 'administrator@cli> ':
-            row = result.split("\r\n")[num]
-            poolId.append(row.split()[0])
-            num = num + 1
-        for x in poolId:
-            SendCmd(c, 'pool -a del -i ' + str(x))
 
 if __name__ == "__main__":
     start = time.clock()
@@ -298,7 +230,6 @@ if __name__ == "__main__":
     verifyBBMInvalidOption(c)
     verifyBBMInvalidParameters(c)
     verifyBBMMissingParameters(c)
-    cleanUpEnviromment(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped

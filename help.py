@@ -16,7 +16,10 @@ def verifyHelp(c):
                 "isns", "logout", "lunmap", "maintenance", "net", "ntp", "password", "pcie", "perfstats",
                 "phydrv", "ping", "pool", "ptiflash", "rb", "rc", "rcache", "sc", "session", "shutdown",
                 "smart", "snapshot", "spare", "stats", "subscription", "subsys", "swmgt", "sync",
-                "topology", "trunk", "ups", "user", "volume", "wcache",]
+                "topology", "trunk", "ups", "user", "volume", "wcache"]
+    if 'Error (' in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: help </font>')
     for com in command:
         if com not in result:
             FailFlag = True

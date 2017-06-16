@@ -37,10 +37,12 @@ def verifyAboutHelp(c):
 def verifyAboutInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify about Invalid Option</b>")
-    result = SendCmd(c, "about -x")
-    if "Error (" not in result or "Invalid option" not in result:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: about -x</font>')
+    command = ['about -x', 'about -1']
+    for com in command:
+        result = SendCmd(c, com)
+        if "Error (" not in result or "Invalid option" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + '</font>')
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify about Invalid Option</font>')
         tolog(Fail)
