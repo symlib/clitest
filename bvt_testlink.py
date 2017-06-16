@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
                 #if testplan['name'] == '0cli cmd testcases sequence issue':  # 2016.11.24 represent the active test plan testplan['active']=='1' and
 
-                #print testplan['name']
+                print testplan['name']
                 if "BuildVerification" in testplan["name"]:
                     tcdict = tls.getTestCasesForTestPlan(testplan['id'])
 
@@ -168,7 +168,7 @@ if __name__ == "__main__":
                                 buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
                                 buildname = buildnamelist[-1]['name']
                                 newbuildnum = open("/home/work/jackyl/Scripts/clitest/buildnum", "r").readline().rstrip()
-                                # print "newbuildnum is %s, currentbuild is %s" %(newbuildnum,buildname)
+                                print "newbuildnum is %s, currentbuild is %s" %(newbuildnum,buildname)
 
                                 if buildname != newbuildnum:
 
@@ -204,8 +204,8 @@ if __name__ == "__main__":
                                                                               platformname=Platform_Name)
 
                                     if hastestsuite:
-                                        # print "The "+testcase["tcase_name"]+" under " + testplan['name'] + " of " + project[
-                                        #     'name'] + " are as following:\n"
+                                        print "The "+testcase["tcase_name"]+" under " + testplan['name'] + " of " + project[
+                                             'name'] + " are as following:\n"
                                         start = time.time()
                                         # convert the testsuite name into module that will be imported into
                                         TSuiteName = importlib.import_module(testsuitename, package="Tasks")
