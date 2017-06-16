@@ -6,19 +6,7 @@ from to_log import *
 from ssh_connect import ssh_conn
 Pass = "'result': 'p'"
 Fail = "'result': 'f'"
-def verifyLogout(c):
-    FailFlag = False
-    tolog("<b>Verify logout </b>")
-    result = SendCmd(c, 'logout')
-    if 'Error (' in result:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: logout </font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify logout </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
+
 def verifyLogoutInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify logout invalid option</b>")
@@ -35,6 +23,7 @@ def verifyLogoutInvalidOption(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyLogoutInvalidParameters(c):
     FailFlag = False
     tolog("<b>Verify logout invalid parameters</b>")
@@ -48,6 +37,21 @@ def verifyLogoutInvalidParameters(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
+def verifyLogout(c):
+    FailFlag = False
+    tolog("<b>Verify logout </b>")
+    result = SendCmd(c, 'logout')
+    if 'Error (' in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: logout </font>')
+    if FailFlag:
+        tolog('\n<font color="red">Fail: Verify logout </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
