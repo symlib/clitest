@@ -7,9 +7,33 @@ from ssh_connect import ssh_conn
 Pass = "'result': 'p'"
 Fail = "'result': 'f'"
 
+def precondition(c):
+    tolog("<b>add initiator</b>")
+    SendCmd(c, 'initiator -a add -t iscsi -n test.lunmapadd.com')
+    SendCmd(c, 'initiator -a add -t fc -n te-st-lu-nm-ap-ad-d0-22')
+    initID = []
+    initIfor = SendCmd(c, 'initiator')
+    initID.append(initIfor.split('Id: ')[-4][0])
+    initID.append(initIfor.split('Id: ')[-3][0])
+
+    tolog("<b>add volume</b>")
+    volumeID = []
+    poolinfo = SendCmd(c, 'pool')
+    if 'No pool in the subsystem' in poolinfo:
+        pdinfo = SendCmd(c, 'phydrv')
+        pdID = [pdinfo.split('\r\n')[4][0]]
+        SendCmd(c, 'pool -a add -p ' + pdID[0] + ' -s "name=Ptestlunmap,raid=0"')
+        SendCmd(c, 'volume -a add -p 0 -s "name=Vtestlunmap,capacity=1GB"')
+        volumeID = ['0']
+    volumeInfo = SendCmd(c, 'volume')
+    volumeID = [volumeInfo.split('\r\n')[4][0]]
+    return initID, volumeID
+
 def verifyLunmap(c):
     FailFlag = False
     tolog("<b>Verify lunmap </b>")
+
+
 
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify lunmap </font>')
@@ -31,7 +55,11 @@ def verifyLunmapList(c):
 
 def verifyLunmapAdd(c):
     FailFlag = False
-    tolog("<b>Verify lunmap -a add</b>")
+    initID, volumeID = precondition(c)
+
+    result = SendCmd(c, 'lunmap -a add -i ' + initID[0] + ' -p volume -l 0 -m 0')
+    checkResult = SendCmd(c, 'lunmap')
+
 
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify lunmap -a add </font>')
@@ -165,18 +193,19 @@ def verifyLunmapMissingParameters(c):
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyLunmap(c)
-    verifyLunmapList(c)
-    verifyLunmapAdd(c)
-    verifyLunmapDel(c)
-    verifyLunmapAddvol(c)
-    verifyLunmapDelvol(c)
-    verifyLunmapEnable(c)
-    verifyLunmapDisable(c)
-    verifyLunmapSpecifyInexistentId(c)
-    verifyLunmapInvalidOption(c)
-    verifyLunmapInvalidParameters(c)
-    verifyLunmapMissingParameters(c)
+    precondition(c)
+    # verifyLunmap(c)
+    # verifyLunmapList(c)
+    # verifyLunmapAdd(c)
+    # verifyLunmapDel(c)
+    # verifyLunmapAddvol(c)
+    # verifyLunmapDelvol(c)
+    # verifyLunmapEnable(c)
+    # verifyLunmapDisable(c)
+    # verifyLunmapSpecifyInexistentId(c)
+    # verifyLunmapInvalidOption(c)
+    # verifyLunmapInvalidParameters(c)
+    # verifyLunmapMissingParameters(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped

@@ -8,6 +8,7 @@ from ssh_connect import ssh_conn
 import random
 Pass = "'result': 'p'"
 Fail = "'result': 'f'"
+
 def verifyBuzzerEnableAndSilentTurnOn(c):
     FailFlag = False
     tolog('<b>Verify buzz -a on</b>')
@@ -39,6 +40,7 @@ def verifyBuzzerEnableAndSoundingTurnOn(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerDisableAndSilentTurnOn(c):
     FailFlag = False
     tolog('<b>Verify buzz -a on</b>')
@@ -53,6 +55,7 @@ def verifyBuzzerDisableAndSilentTurnOn(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerEnableAndSoundingTurnOff(c):
     FailFlag = False
     tolog('<b>Verify buzz -a off</b>')
@@ -68,6 +71,7 @@ def verifyBuzzerEnableAndSoundingTurnOff(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerEnableAndSilentTurnOff(c):
     FailFlag = False
     tolog('<b>Verify buzz -a off</b>')
@@ -83,6 +87,7 @@ def verifyBuzzerEnableAndSilentTurnOff(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerDisableAndSilentTurnOff(c):
     FailFlag = False
     tolog('<b>Verify buzz -a off</b>')
@@ -98,6 +103,7 @@ def verifyBuzzerDisableAndSilentTurnOff(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerDisableAndSilentEnable(c):
     FailFlag = False
     tolog('<b>Verify buzz -a enable</b>')
@@ -113,6 +119,7 @@ def verifyBuzzerDisableAndSilentEnable(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerEnableAndSilentEnable(c):
     FailFlag = False
     tolog('<b>Verify buzz -a enable</b>')
@@ -128,6 +135,7 @@ def verifyBuzzerEnableAndSilentEnable(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerEnableAndSoundingEnable(c):
     FailFlag = False
     tolog('<b>Verify buzz -a enable</b>')
@@ -143,6 +151,7 @@ def verifyBuzzerEnableAndSoundingEnable(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerEnableAndSoundingDisable(c):
     FailFlag = False
     tolog('<b>Verify buzz -a disable</b>')
@@ -158,6 +167,7 @@ def verifyBuzzerEnableAndSoundingDisable(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerEnableAndSilentDisable(c):
     FailFlag = False
     tolog('<b>Verify buzz -a disable</b>')
@@ -173,6 +183,7 @@ def verifyBuzzerEnableAndSilentDisable(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerDisableAndSilentDisable(c):
     FailFlag = False
     tolog('<b>Verify buzz -a disable</b>')
@@ -188,6 +199,7 @@ def verifyBuzzerDisableAndSilentDisable(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerInfo(c):
     FailFlag = False
     tolog('<b>Verify buzz</b>')
@@ -201,6 +213,7 @@ def verifyBuzzerInfo(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerHelp(c):
     FailFlag = False
     tolog('<b>Verify buzz -h </b>')
@@ -214,6 +227,7 @@ def verifyBuzzerHelp(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerInvalidParameters(c):
     FailFlag = False
     tolog('<b>Verify buzzer abc</b>')
@@ -227,6 +241,7 @@ def verifyBuzzerInvalidParameters(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyBuzzerInvalidOption(c):
     FailFlag = False
     tolog('<b>Verify buzzer -x</b>')
@@ -242,7 +257,7 @@ def verifyBuzzerInvalidOption(c):
         tolog(Pass)
 
 
-def BVTverifyBuzzerEnableAndSilentTurnOn(c):
+def bvt_verifyBuzzerEnableAndSilentTurnOn(c):
     FailFlag = False
     tolog('<b>Verify buzz -a on</b>')
     SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a off")
@@ -254,8 +269,7 @@ def BVTverifyBuzzerEnableAndSilentTurnOn(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerEnableAndSoundingTurnOn(c):
+def bvt_verifyBuzzerEnableAndSoundingTurnOn(c):
     FailFlag = False
     tolog('<b>Verify buzz -a on</b>')
     SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a on")
@@ -267,8 +281,7 @@ def BVTverifyBuzzerEnableAndSoundingTurnOn(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerDisableAndSilentTurnOn(c):
+def bvt_verifyBuzzerDisableAndSilentTurnOn(c):
     FailFlag = False
     tolog('<b>Verify buzz -a on</b>')
     SendCmd(c, "buzz -a disable")
@@ -279,8 +292,7 @@ def BVTverifyBuzzerDisableAndSilentTurnOn(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerEnableAndSoundingTurnOff(c):
+def bvt_verifyBuzzerEnableAndSoundingTurnOff(c):
     FailFlag = False
     tolog('<b>Verify buzz -a off</b>')
     SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a on")
@@ -292,8 +304,7 @@ def BVTverifyBuzzerEnableAndSoundingTurnOff(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerEnableAndSilentTurnOff(c):
+def bvt_verifyBuzzerEnableAndSilentTurnOff(c):
     FailFlag = False
     tolog('<b>Verify buzz -a off</b>')
     SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a off")
@@ -305,7 +316,7 @@ def BVTverifyBuzzerEnableAndSilentTurnOff(c):
 
     return FailFlag
 
-def BVTverifyBuzzerDisableAndSilentTurnOff(c):
+def bvt_verifyBuzzerDisableAndSilentTurnOff(c):
     FailFlag = False
     tolog('<b>Verify buzz -a off</b>')
     SendCmd(c, "buzz -a disable")
@@ -317,8 +328,7 @@ def BVTverifyBuzzerDisableAndSilentTurnOff(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerDisableAndSilentEnable(c):
+def bvt_verifyBuzzerDisableAndSilentEnable(c):
     FailFlag = False
     tolog('<b>Verify buzz -a enable</b>')
     SendCmd(c, "buzz -a disable")
@@ -330,8 +340,7 @@ def BVTverifyBuzzerDisableAndSilentEnable(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerEnableAndSilentEnable(c):
+def bvt_verifyBuzzerEnableAndSilentEnable(c):
     FailFlag = False
     tolog('<b>Verify buzz -a enable</b>')
     SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a off")
@@ -343,8 +352,7 @@ def BVTverifyBuzzerEnableAndSilentEnable(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerEnableAndSoundingEnable(c):
+def bvt_verifyBuzzerEnableAndSoundingEnable(c):
     FailFlag = False
     tolog('<b>Verify buzz -a enable</b>')
     SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a on")
@@ -356,8 +364,7 @@ def BVTverifyBuzzerEnableAndSoundingEnable(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerEnableAndSoundingDisable(c):
+def bvt_verifyBuzzerEnableAndSoundingDisable(c):
     FailFlag = False
     tolog('<b>Verify buzz -a disable</b>')
     SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a on")
@@ -369,8 +376,7 @@ def BVTverifyBuzzerEnableAndSoundingDisable(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerEnableAndSilentDisable(c):
+def bvt_verifyBuzzerEnableAndSilentDisable(c):
     FailFlag = False
     tolog('<b>Verify buzz -a disable</b>')
     SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a off")
@@ -382,8 +388,7 @@ def BVTverifyBuzzerEnableAndSilentDisable(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerDisableAndSilentDisable(c):
+def bvt_verifyBuzzerDisableAndSilentDisable(c):
     FailFlag = False
     tolog('<b>Verify buzz -a disable</b>')
     SendCmd(c, "buzz -a disable")
@@ -395,8 +400,7 @@ def BVTverifyBuzzerDisableAndSilentDisable(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerInfo(c):
+def bvt_verifyBuzzerInfo(c):
     FailFlag = False
     tolog('<b>Verify buzz</b>')
     result = SendCmd(c, 'buzz')
@@ -406,8 +410,7 @@ def BVTverifyBuzzerInfo(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerHelp(c):
+def bvt_verifyBuzzerHelp(c):
     FailFlag = False
     tolog('<b>Verify buzz -h </b>')
     result = SendCmd(c, 'buzz -h')
@@ -417,8 +420,7 @@ def BVTverifyBuzzerHelp(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerInvalidParameters(c):
+def bvt_verifyBuzzerInvalidParameters(c):
     FailFlag = False
     tolog('<b>Verify buzzer abc</b>')
     result = SendCmd(c, 'buzz abc')
@@ -428,8 +430,7 @@ def BVTverifyBuzzerInvalidParameters(c):
 
     return FailFlag
 
-
-def BVTverifyBuzzerInvalidOption(c):
+def bvt_verifyBuzzerInvalidOption(c):
     FailFlag = False
     tolog('<b>Verify buzzer -x</b>')
     result = SendCmd(c, 'buzz -x')
@@ -437,252 +438,8 @@ def BVTverifyBuzzerInvalidOption(c):
         FailFlag = True
         tolog('\n<font color="red">Fail: buzz -x</font>')
 
-
     return FailFlag
 
-    return FailFlag
-
-# coding=utf-8
-# initial sample work on 2016.12.23
-# this section includes verify proper cmd/parameters/options and
-# some other boundary or misspelled parameters/options
-from send_cmd import *
-from to_log import *
-from ssh_connect import ssh_conn
-import random
-Pass = "'result': 'p'"
-Fail = "'result': 'f'"
-def verifyBuzzerEnableAndSilentTurnOn(c):
-    FailFlag = False
-    tolog('<b>Verify buzz -a on</b>')
-    SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a off")
-    result = SendCmd(c, "buzz -a on")
-    checkResult = SendCmd(c, "buzz")
-    if 'Error' in result or 'Sounding' not in checkResult or 'Yes' not in checkResult:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -a on</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -a on </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerEnableAndSoundingTurnOn(c):
-    FailFlag = False
-    tolog('<b>Verify buzz -a on</b>')
-    SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a on")
-    result = SendCmd(c, "buzz -a on")
-    checkResult = SendCmd(c, "buzz")
-    if 'Error' in result or 'Sounding' not in checkResult or 'Yes' not in checkResult:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -a on</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -a on </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerDisableAndSilentTurnOn(c):
-    FailFlag = False
-    tolog('<b>Verify buzz -a on</b>')
-    SendCmd(c, "buzz -a disable")
-    result = SendCmd(c, "buzz -a on")
-    if "Error (" not in result or "Buzzer is disabled" not in result:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -a on</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -a on </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerEnableAndSoundingTurnOff(c):
-    FailFlag = False
-    tolog('<b>Verify buzz -a off</b>')
-    SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a on")
-    result = SendCmd(c, "buzz -a off")
-    checkResult = SendCmd(c, "buzz")
-    if 'Error' in result or 'Silent' not in checkResult or 'Yes' not in checkResult:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -a off</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -a off </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerEnableAndSilentTurnOff(c):
-    FailFlag = False
-    tolog('<b>Verify buzz -a off</b>')
-    SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a off")
-    result = SendCmd(c, "buzz -a off")
-    checkResult = SendCmd(c, "buzz")
-    if 'Error' in result or 'Silent' not in checkResult or 'Yes' not in checkResult:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -a off</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -a off </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerDisableAndSilentTurnOff(c):
-    FailFlag = False
-    tolog('<b>Verify buzz -a off</b>')
-    SendCmd(c, "buzz -a disable")
-    result = SendCmd(c, "buzz -a off")
-    checkResult = SendCmd(c, "buzz")
-    if "Error (" in result or "No" not in checkResult or "Silent" not in checkResult:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -a off</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -a off </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerDisableAndSilentEnable(c):
-    FailFlag = False
-    tolog('<b>Verify buzz -a enable</b>')
-    SendCmd(c, "buzz -a disable")
-    result = SendCmd(c, "buzz -a enable")
-    checkResult = SendCmd(c, "buzz")
-    if "Error (" in result or "Yes" not in checkResult or "Silent" not in checkResult:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -a enable</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -a enable </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerEnableAndSilentEnable(c):
-    FailFlag = False
-    tolog('<b>Verify buzz -a enable</b>')
-    SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a off")
-    result = SendCmd(c, "buzz -a enable")
-    checkResult = SendCmd(c, "buzz")
-    if 'Error (' in result or 'Silent' not in checkResult or 'Yes' not in checkResult:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -a enable</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -a enable </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerEnableAndSoundingEnable(c):
-    FailFlag = False
-    tolog('<b>Verify buzz -a enable</b>')
-    SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a on")
-    result = SendCmd(c, "buzz -a enable")
-    checkResult = SendCmd(c, "buzz")
-    if 'Error (' in result or 'Sounding' not in checkResult or 'Yes' not in checkResult:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -a enable</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -a enable </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerEnableAndSoundingDisable(c):
-    FailFlag = False
-    tolog('<b>Verify buzz -a disable</b>')
-    SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a on")
-    result = SendCmd(c, "buzz -a disable")
-    checkResult = SendCmd(c, "buzz")
-    if 'Error (' in result or 'Silent' not in checkResult or 'No' not in checkResult:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -a disable</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -a disable </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerEnableAndSilentDisable(c):
-    FailFlag = False
-    tolog('<b>Verify buzz -a disable</b>')
-    SendCmd(c, "buzz -a enable"), SendCmd(c, "buzz -a off")
-    result = SendCmd(c, "buzz -a disable")
-    checkResult = SendCmd(c, "buzz")
-    if 'Error (' in result or 'Silent' not in checkResult or 'No' not in checkResult:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -a disable</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -a disable </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerDisableAndSilentDisable(c):
-    FailFlag = False
-    tolog('<b>Verify buzz -a disable</b>')
-    SendCmd(c, "buzz -a disable")
-    result = SendCmd(c, "buzz -a disable")
-    checkResult = SendCmd(c, "buzz")
-    if "Error (" in result or "No" not in checkResult or "Silent" not in checkResult:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -a disable </font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -a disable </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerInfo(c):
-    FailFlag = False
-    tolog('<b>Verify buzz</b>')
-    result = SendCmd(c, 'buzz')
-    if "Error (" in result or "Enabled" not in result or "Status" not in result:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerHelp(c):
-    FailFlag = False
-    tolog('<b>Verify buzz -h </b>')
-    result = SendCmd(c, 'buzz -h')
-    if "Error (" in result or "buzz" not in result or "Usage" not in result or "Summary" not in result:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -h</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -h</font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerInvalidParameters(c):
-    FailFlag = False
-    tolog('<b>Verify buzzer abc</b>')
-    result = SendCmd(c, 'buzz abc')
-    if "Error (" not in result or "parameters" not in result:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz abc</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz abc </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-def verifyBuzzerInvalidOption(c):
-    FailFlag = False
-    tolog('<b>Verify buzzer -x</b>')
-    result = SendCmd(c, 'buzz -x')
-    if "Error (" not in result or "Invalid option" not in result:
-        FailFlag = True
-        tolog('\n<font color="red">Fail: buzz -x</font>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify buzz -x </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
@@ -705,4 +462,3 @@ if __name__ == "__main__":
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped
-

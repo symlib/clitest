@@ -52,6 +52,40 @@ def verifyLogout(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
+
+def bvt_verifyLogoutInvalidOption(c):
+    FailFlag = False
+    tolog("<b>Verify logout invalid option</b>")
+    command = ['logout -x']
+    for com in command:
+        tolog('<b> Verify ' + com + '</b>')
+        result = SendCmd(c, com)
+        if "Error (" not in result or "Invalid option" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+
+    return FailFlag
+
+def bvt_verifyLogoutInvalidParameters(c):
+    FailFlag = False
+    tolog("<b>Verify logout invalid parameters</b>")
+    result = SendCmd(c, 'logout test')
+    if "Error (" not in result or "Invalid setting parameters" not in result:
+         FailFlag = True
+         tolog('\n<font color="red">Fail: logout </font>')
+
+    return FailFlag
+
+def bvt_verifyLogout(c):
+    FailFlag = False
+    tolog("<b>Verify logout </b>")
+    result = SendCmd(c, 'logout')
+    if 'Error (' in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: logout </font>')
+
+    return FailFlag
+
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
