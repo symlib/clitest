@@ -25,7 +25,7 @@ Pass = "'result': 'p'"
 Fail = "'result': 'f'"
 
 def BuildVerification(c):
-    Failflag=list()
+    Failflaglist=list()
     flashimage=False
     c, ssh = ssh_conn()
 
@@ -85,58 +85,89 @@ def BuildVerification(c):
 
         if reconnectflag:
             tolog("Start verifying pool add")
-            Failflag.append(pool.bvtpoolcreateandlist(c,1))
+            Failflaglist.append(pool.bvtpoolcreateandlist(c,1))
+            
+            tolog("Start verifying pool global setting")
+            Failflaglist.append(pool.bvtpoolglobalsetting(c))
 
             tolog("Start verifying volume add")
-            Failflag.append(pool.bvtvolumecreateandlist(c,10))
+            Failflaglist.append(pool.bvtvolumecreateandlist(c,10))
 
             tolog("Start verifying snapshot add")
-            Failflag.append(pool.bvtsnapshotcreateandlist(c,2))
+            Failflaglist.append(pool.bvtsnapshotcreateandlist(c,2))
 
             tolog("Start verifying clone add")
-            Failflag.append(pool.bvtclonecreateandlist(c,2))
+            Failflaglist.append(pool.bvtclonecreateandlist(c,2))
 
             tolog("Start verifying spare add")
-            Failflag.append( pool.bvtsparedrvcreate(c, 2))
+            Failflaglist.append( pool.bvtsparedrvcreate(c, 2))
 
             tolog("Start verifying delete clone")
-            Failflag.append( pool.bvtclonedelete(c))
+            Failflaglist.append( pool.bvtclonedelete(c))
 
             tolog("Start verifying delete snapshot")
-            Failflag.append( pool.bvtsnapshotdelete(c))
+            Failflaglist.append( pool.bvtsnapshotdelete(c))
 
             tolog("Start verifying delete volume")
-            Failflag.append( pool.bvtvolumedel(c))
+            Failflaglist.append( pool.bvtvolumedel(c))
 
             tolog("Start verifying delete pool")
-            Failflag.append(pool.bvtpooldel(c))
+            Failflaglist.append(pool.bvtpooldel(c))
 
             tolog("Start verifying delete spare")
-            Failflag.append(pool.bvtsparedelete(c))
+            Failflaglist.append(pool.bvtsparedelete(c))
+
+            tolog("Start verifying pool add")
+            Failflaglist.append(pool.bvtpoolcreateandlist(c, 0))
+
+            tolog("Start verifying pool global setting")
+            Failflaglist.append(pool.bvtpoolglobalsetting(c))
+
+            tolog("Start verifying volume add")
+            Failflaglist.append(pool.bvtvolumecreateandlist(c, 5))
+
+            tolog("Start verifying snapshot add")
+            Failflaglist.append(pool.bvtsnapshotcreateandlist(c, 2))
+
+            tolog("Start verifying clone add")
+            Failflaglist.append(pool.bvtclonecreateandlist(c, 2))
+
+            tolog("Start verifying clone force delete")
+            Failflaglist.append(pool.bvtforcedelete(c, "clone"))
+
+            tolog("Start verifying snapshot force delete")
+            Failflaglist.append(pool.bvtforcedelete(c, "snapshot"))
+
+            tolog("Start verifying volume force delete")
+            Failflaglist.append(pool.bvtforcedelete(c, "volume"))
+
+            tolog("Start verifying pool force delete")
+            Failflaglist.append(pool.bvtforcedelete(c, "pool"))
 
             tolog("Start verifying buzzer")
-            Failflag.append(buzzer.BVTverifyBuzzerDisableAndSilentTurnOn((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSilentTurnOn((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSoundingTurnOn((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerDisableAndSilentTurnOff((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSilentTurnOff((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSoundingTurnOff((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerDisableAndSilentEnable((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSilentEnable((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSoundingEnable((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSoundingDisable((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerEnableAndSilentDisable((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerDisableAndSilentDisable((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerInfo((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerHelp((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerInvalidParameters((c)))
-            Failflag.append(buzzer.BVTverifyBuzzerInvalidOption((c)))
+            
+            Failflaglist.append(buzzer.BVTverifyBuzzerDisableAndSilentTurnOn((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSilentTurnOn((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSoundingTurnOn((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerDisableAndSilentTurnOff((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSilentTurnOff((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSoundingTurnOff((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerDisableAndSilentEnable((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSilentEnable((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSoundingEnable((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSoundingDisable((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSilentDisable((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerDisableAndSilentDisable((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerInfo((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerHelp((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerInvalidParameters((c)))
+            Failflaglist.append(buzzer.BVTverifyBuzzerInvalidOption((c)))
         else:
             tolog("Failed to connect server after ptiflash.")
-            Failflag.append(True)
+            Failflaglist.append(True)
 
-        for flag in Failflag:
-            if Failflag:
+        for flag in Failflaglist:
+            if Failflaglist:
                 tolog(Fail)
                 break
             else:

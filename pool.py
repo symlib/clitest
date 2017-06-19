@@ -346,29 +346,6 @@ def getscloneinfo(c):
 
     return clonedict
 
-def getscloneinfo(c):
-
-# administrator@cli> clone
-# ================================================================================
-# Id   Name      Type      SourceId    TotalCapacity   UsedCapacity    Status
-# ================================================================================
-# 43   eefa      volume    42          100 GB          1.02 KB         Un-export
-
-    clonedata = SendCmd(c, "clone")
-    clonedata = clonedata.split("\r\n")
-    clonetab = clonedata[2]
-    clonedata = clonedata[4:-1]
-    clonedict = {}
-    for cloneinfo in clonedata:
-        clonedict[cloneinfo[0:(clonetab.find("Name") - 1)].rstrip()] = (
-            cloneinfo[clonetab.find("Name"):(clonetab.find("Type") - 1)].rstrip(),
-            cloneinfo[clonetab.find("Type"):(clonetab.find("SourceId") - 1)].rstrip(),
-            cloneinfo[clonetab.find("SourceId"):(clonetab.find("TotalCapacity") - 1)].rstrip(),
-            cloneinfo[clonetab.find("TotalCapacity"):(clonetab.find("UsedCapacity") - 1)].rstrip(),
-            cloneinfo[clonetab.find("UsedCapacity"):(clonetab.find("Status") - 1)].rstrip())
-
-    return clonedict
-
 
 
 def poolcreateandlist(c,poolnum):
@@ -406,7 +383,7 @@ def poolcreateandlist(c,poolnum):
                 poolcount+=1
             poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
             for eachres in poolres:
-                if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                     if "-a list" in eachres:
                         tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
                     else:
@@ -423,7 +400,7 @@ def poolcreateandlist(c,poolnum):
                 poolcount+=1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 for eachres in poolres:
-                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                    if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                         if "-a list" in eachres:
                             tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
                         else:
@@ -439,7 +416,7 @@ def poolcreateandlist(c,poolnum):
                 poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 for eachres in poolres:
-                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                    if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                         if "-a list" in eachres:
                             tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
                         else:
@@ -459,7 +436,7 @@ def poolcreateandlist(c,poolnum):
                 poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 for eachres in poolres:
-                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                    if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                         if "-a list" in eachres:
                             tolog("pool -a list with phydrvum " + str(phydrvnum) + "raid 1 succeeded.")
                         else:
@@ -474,7 +451,7 @@ def poolcreateandlist(c,poolnum):
                 poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 for eachres in poolres:
-                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                    if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                         if "-a list" in eachres:
                             tolog("pool -a list with phydrvum " + str(phydrvnum) + "raid 1 succeeded.")
                         else:
@@ -497,7 +474,7 @@ def poolcreateandlist(c,poolnum):
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 # SendCmd(c, "phydrv")
                 for eachres in poolres:
-                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                    if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                         if "-a list" in eachres:
                             tolog("pool -a list with phydrvum " + str(
                                 phydrvnum) + " raid level" + raidlevel + " succeeded.")
@@ -515,7 +492,7 @@ def poolcreateandlist(c,poolnum):
             poolcount+=1
             poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
             for eachres in poolres:
-                if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                     if "-a list" in eachres:
                         tolog("pool -a list with phydrvum " + str(
                             phydrvnum) + " raid level 0 succeeded.")
@@ -568,7 +545,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 poolcount += 1
             poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
             for eachres in poolres:
-                if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                     if "-a list" in eachres:
                         tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
                     else:
@@ -585,7 +562,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 for eachres in poolres:
-                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                    if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                         if "-a list" in eachres:
                             tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
                         else:
@@ -601,7 +578,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 for eachres in poolres:
-                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                    if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                         if "-a list" in eachres:
                             tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
                         else:
@@ -621,7 +598,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 for eachres in poolres:
-                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                    if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                         if "-a list" in eachres:
                             tolog("pool -a list with phydrvum " + str(phydrvnum) + "raid 1 succeeded.")
                         else:
@@ -636,7 +613,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 poolcount += 1
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 for eachres in poolres:
-                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                    if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                         if "-a list" in eachres:
                             tolog("pool -a list with phydrvum " + str(phydrvnum) + "raid 1 succeeded.")
                         else:
@@ -659,7 +636,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
                 # SendCmd(c, "phydrv")
                 for eachres in poolres:
-                    if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                    if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                         if "-a list" in eachres:
                             tolog("pool -a list with phydrvum " + str(
                                 phydrvnum) + " raid level" + raidlevel + " succeeded.")
@@ -678,7 +655,7 @@ def bvtpoolcreateandlist(c, poolnum):
             poolcount += 1
             poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
             for eachres in poolres:
-                if len(eachres.split("\r\n")) == poolcount + 5 and poolname in eachres:
+                if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                     if "-a list" in eachres:
                         tolog("pool -a list with phydrvum " + str(
                             phydrvnum) + " raid level" + raidlevel + " succeeded.")
@@ -705,9 +682,12 @@ def volumecreate(c, poolid, name, capacity, blocksize, sectorsize):
     if capacity=="":
         capacity=random.randint(mincapacity, maxcapacity)
 
-    settings ="name="+name+", capacity="+str(capacity)+"GB"+", block="+blocksize+", sector="+sectorsize
+    settings0 ="name="+name+", capacity="+str(capacity)+"GB"+", block="+blocksize+", sector="+sectorsize+",thinprov=enable"
+    settings1 = "name=" + name + ", capacity= 10GB" + ", block=" + blocksize + ", sector=" + sectorsize + ",thinprov=disable"
+    settings=random.choice((settings0,settings1))
     # settings = "name=" + name + ", capacity=" + str(capacity) + "GB"
     SendCmd(c,"volume -a add -p "+poolid+" -s "+"\""+settings+"\"")
+
 
 def volumecreateandlist(c,volnum):
     i=0
@@ -716,7 +696,7 @@ def volumecreateandlist(c,volnum):
     FailFlag=False
     volnum=int(volnum)
     # tolog("I am here")
-    pooldct=getpoolinfo(c)
+    pooldct=infodictret(c,"pool","",1)
     # administrator@cli> pool
     # ===============================================================================
     # Id    Name    Status    TotalCapacity    UsedCapacity    FreeCapacity
@@ -735,7 +715,7 @@ def volumecreateandlist(c,volnum):
     if i==0:
         tolog("No volume exists")
     else:
-        if len(res.split("\r\n")) ==  count+ 5 and str(count-1) in res:
+        if len(res.split("\r\n")) ==  count+ 6 and str(count-1) in res:
             tolog("Volumes are created succesfully.")
         else:
             FailFlag=True
@@ -745,6 +725,8 @@ def volumecreateandlist(c,volnum):
         tolog(Fail)
     else:
         tolog(Pass)
+
+
 def bvtvolumecreateandlist(c,volnum):
     i=0
     j=0
@@ -752,7 +734,7 @@ def bvtvolumecreateandlist(c,volnum):
     FailFlag=False
     volnum=int(volnum)
     # tolog("I am here")
-    pooldct=getpoolinfo(c)
+    pooldct=infodictret(c,"pool","",1)
     # administrator@cli> pool
     # ===============================================================================
     # Id    Name    Status    TotalCapacity    UsedCapacity    FreeCapacity
@@ -771,7 +753,7 @@ def bvtvolumecreateandlist(c,volnum):
     if i==0:
         tolog("No volume exists")
     else:
-        if len(res.split("\r\n")) ==  count+ 5 and str(count-1) in res:
+        if len(res.split("\r\n")) ==  count+ 6 and str(count-1) in res:
             tolog("Volumes are created succesfully.")
         else:
             FailFlag=True
@@ -781,7 +763,7 @@ def bvtvolumecreateandlist(c,volnum):
 
 def snapshotcreateandlist(c,snapshotnum):
     snapshotnum=int(snapshotnum)
-    volumedct = getvolinfo(c)
+    volumedct = infodictret(c,"volume","",1)
     i=0
     FailFlag=False
 # administrator@cli> volume
@@ -808,11 +790,11 @@ def snapshotcreateandlist(c,snapshotnum):
     res=SendCmd(c,"snapshot")
     # because build 50 still has the problem RB-234122: cli "snapshot" can not get all snapshots listed
     # jusr commented this section to verify snapshots number
-    volnum=len(getvolinfo(c))
+    volnum=len(infodictret(c,"volume","",1))
     if i==0:
         tolog("no snapshot")
     else:
-        if len(res.split("\r\n")) ==  volnum * i+ 5 and str(volnum * i-1) in res:
+        if len(res.split("\r\n")) ==  volnum * i+ 6 and str(volnum * i-1) in res:
             tolog("Snapshots are created succesfully.")
         else:
             FailFlag=True
@@ -824,7 +806,7 @@ def snapshotcreateandlist(c,snapshotnum):
 
 def bvtsnapshotcreateandlist(c,snapshotnum):
     snapshotnum=int(snapshotnum)
-    volumedct = getvolinfo(c)
+    volumedct = infodictret(c,"volume","",1)
     i=0
     FailFlag=False
 # administrator@cli> volume
@@ -851,11 +833,11 @@ def bvtsnapshotcreateandlist(c,snapshotnum):
     res=SendCmd(c,"snapshot")
     # because build 50 still has the problem RB-234122: cli "snapshot" can not get all snapshots listed
     # jusr commented this section to verify snapshots number
-    volnum=len(getvolinfo(c))
+    volnum=len(infodictret(c,"volume","",1))
     if i==0:
         tolog("no snapshot")
     else:
-        if len(res.split("\r\n")) ==  volnum * i+ 5 and str(volnum * i-1) in res:
+        if len(res.split("\r\n")) ==  volnum * i+ 6 and str(volnum * i-1) in res:
             tolog("Snapshots are created succesfully.")
         else:
             FailFlag=True
@@ -883,17 +865,18 @@ def clonecreateandlist(c,clonenum):
 # 62    volume48_ 4      volume      48        0 Byte         Un-export
 # 63    volume48_ 4      volume      48        0 Byte         Un-export
 # 64    volume48_ 4      volume      48        0 Byte         Un-export
-    snapshotdct=getsnapshotinfo(c)
+    snapshotdct=infodictret(c,"snapshot","",1)
     for snapshotid,snapshotvalue in snapshotdct.items():
         for i in range(1,clonenum+1):
             clonecreate(c,snapshotid,snapshotvalue[0]+random_key(3)+"_"+str(i))
+
     res=SendCmd(c,"clone")
     # volnum=len(getvolinfo(c))
-    snapnum=len(getsnapshotinfo(c))
+    snapnum=len(infodictret(c,"snapshot","",1))
     if i==0:
         tolog("no clone")
     else:
-        if len(res.split("\r\n")) ==  snapnum * clonenum+ 5 and str(snapnum * clonenum-1) in res:
+        if len(res.split("\r\n")) ==  snapnum * clonenum+ 6 and str(snapnum * clonenum-1) in res:
             tolog("Clones are created succesfully.")
         else:
             FailFlag=True
@@ -903,6 +886,8 @@ def clonecreateandlist(c,clonenum):
         tolog(Fail)
     else:
         tolog(Pass)
+
+
 def bvtclonecreateandlist(c,clonenum):
     clonenum=int(clonenum)
     i=0
@@ -916,17 +901,17 @@ def bvtclonecreateandlist(c,clonenum):
 # 62    volume48_ 4      volume      48        0 Byte         Un-export
 # 63    volume48_ 4      volume      48        0 Byte         Un-export
 # 64    volume48_ 4      volume      48        0 Byte         Un-export
-    snapshotdct=getsnapshotinfo(c)
+    snapshotdct=infodictret(c,"snapshot","",1)
     for snapshotid,snapshotvalue in snapshotdct.items():
         for i in range(1,clonenum+1):
             clonecreate(c,snapshotid,snapshotvalue[0]+random_key(3)+"_"+str(i))
     res=SendCmd(c,"clone")
     # volnum=len(getvolinfo(c))
-    snapnum=len(getsnapshotinfo(c))
+    snapnum=len(infodictret(c,"snapshot","",1))
     if i==0:
         tolog("no clone")
     else:
-        if len(res.split("\r\n")) ==  snapnum * clonenum+ 5 and str(snapnum * clonenum-1) in res:
+        if len(res.split("\r\n")) ==  snapnum * clonenum+ 6 and str(snapnum * clonenum-1) in res:
             tolog("Clones are created succesfully.")
         else:
             FailFlag=True
@@ -1016,12 +1001,16 @@ def getctrlinfo(c):
                 ctrlinfo[ctrltab.find("OperationalStatus"):(ctrltab.find("ReadinessStatus") - 1)].rstrip(),
                 ctrlinfo[ctrltab.find("ReadinessStatus"):].rstrip(), "2")
     return ctrldict
+
+
 def phydrvlist(c):
     res=SendCmd(c,"phydrv")
     if "Error" in res:
         tolog(Fail)
     else:
         tolog(Pass)
+
+
 def poolforceclean(c):
 
     clonedelete(c)
@@ -1063,7 +1052,7 @@ def poolforceclean(c):
     arraysinfo = SendCmd(c, "arrays")
     while "Alias" in arraysinfo:
 
-        arraysnum = int(arraysinfo.split("\r\n")[-2].split(" ")[0])
+        arraysnum = int(arraysinfo.split("\r\n")[-3].split(" ")[0])
         for i in range(0, arraysnum + 1):
             SendCmd(c, "arrays -a del -d " + str(i))
         arraysinfo = SendCmd(c, "arrays")
@@ -1071,7 +1060,7 @@ def poolforceclean(c):
             time.sleep(5)
     spareinfo = SendCmd(c, "spare")
     while "Revertible" in spareinfo:
-        sparenum = int(spareinfo.split("\r\n")[-2].split(" ")[0])
+        sparenum = int(spareinfo.split("\r\n")[-3].split(" ")[0])
         for i in range(0, sparenum + 1):
             SendCmd(c, "spare -a del -i " + str(i))
         spareinfo = SendCmd(c, "spare")
@@ -1116,10 +1105,14 @@ def poolcreateverify(c):
                             j+=1
 
     tolog("Created %s and deleted %s" % (str(i),str(j)))
+
+
     if i==j:
         tolog(Pass)
     else:
         tolog(Fail)
+
+
 def poolcreateverify_newraidlevel(c):
     # stripelst = ("64kb", "128kb", "256kb", "512kb", "1mb", "64Kb", "64kB", "64KB", "128Kb", "128KB", "128kB", "256Kb",
     #              "256KB", "256kB", "512Kb", "512KB", "512kB", "1Mb", "1MB", "1mB")
@@ -1448,7 +1441,7 @@ def pooldel(c):
     poolinfo = SendCmd(c, "pool")
     while not "No pool in the subsystem" in poolinfo:
 
-        poolnum = int(poolinfo.split("\r\n")[-2].split(" ")[0])
+        poolnum = int(poolinfo.split("\r\n")[-3].split(" ")[0])
         for i in range(0, poolnum + 1):
             SendCmd(c, "pool -a del -i " + str(i))
 
@@ -1469,6 +1462,8 @@ def pooldel(c):
     else:
         tolog(Pass)
         tolog("Pools are deleted successfully.")
+
+
 def pooldelforce(c):
 
     count = 0
@@ -1476,7 +1471,7 @@ def pooldelforce(c):
     poolinfo = SendCmd(c, "pool")
     while not "No pool in the subsystem" in poolinfo:
 
-        poolnum = int(poolinfo.split("\r\n")[-2].split(" ")[0])
+        poolnum = int(poolinfo.split("\r\n")[-3].split(" ")[0])
         for i in range(0, poolnum + 1):
             SendCmdconfirm(c, "pool -a del -i " + str(i) +" -f")
             # SendCmdconfirm(c, "y")
@@ -1506,7 +1501,7 @@ def volumedel(c):
     Failflag=False
     while not "No volume exists" in volinfo:
 
-        volnum=int(volinfo.split("\r\n")[-2].split(" ")[0])
+        volnum=int(volinfo.split("\r\n")[-3].split(" ")[0])
         for i in range(0,volnum+1):
             SendCmd(c,"volume -a del -i "+str(i))
             count += 1
@@ -1533,7 +1528,7 @@ def snapshotdelete(c):
     Failflag = False
     while not "No snapshot exists" in snapshotinfo:
 
-        snapshotnum = int(snapshotinfo.split("\r\n")[-2].split(" ")[0])
+        snapshotnum = int(snapshotinfo.split("\r\n")[-3].split(" ")[0])
         for i in range(0, snapshotnum + 1):
             SendCmd(c, "snapshot -a del -i " + str(i))
             count+=1
@@ -1561,7 +1556,7 @@ def clonedelete(c):
     Failflag=False
     while not "No clone found" in cloneinfo:
 
-        clonenum = int(cloneinfo.split("\r\n")[-2].split(" ")[0])
+        clonenum = int(cloneinfo.split("\r\n")[-3].split(" ")[0])
         for i in range(0, clonenum + 1):
             SendCmd(c, "clone -a del -i " + str(i))
             count+=1
@@ -1614,7 +1609,7 @@ def bvtsparedrvcreate(c,sparenum):
             FailFalg=True
 
     res=SendCmd(c,"spare")
-    if len(res.split("\r\n")) == sparenum + 5 and str(sparenum - 1) in res:
+    if len(res.split("\r\n")) == sparenum + 6 and str(sparenum - 1) in res:
         tolog("Snapshots are created succesfully.")
     else:
         FailFlag = True
@@ -1838,9 +1833,108 @@ def infodictret(c, name,leading,tailing):
         Outinfo[info.split(" ")[0]] = infolist
 
     return Outinfo
-def about(c):
-    SendCmd(c,"about")
-    tolog(Pass)
+
+def exportunexport(c,obj):
+    FailFlag = False
+    i=j=0
+    objlist = infodictret(c, obj, "", 1)
+    objnum=len(objlist)
+    print "before export/unexport ",objlist
+    for id,value in objlist.items():
+
+        if "Exported" in value:
+            cmd=obj +" -a export -i "+ str(id)
+            i+=1
+        else:
+            cmd = obj + " -a unexport -i " + str(id)
+            j+=1
+
+    objlist = infodictret(c, obj, "", 1)
+    print "after export/unexport ", objlist
+
+    for id, value in objlist.items():
+        if "Exported" in value:
+            cmd = obj + " -a export -i " + str(id)
+            j += 1
+        else:
+            cmd = obj + " -a unexport -i " + str(id)
+            i += 1
+
+    if i==j==objnum:
+        tolog("%s export and unexport successfully." %obj)
+    else:
+        tolog("%s export and unexport failed." %obj)
+        FailFlag=True
+
+    if FailFlag:
+        tolog(Fail)
+    else:
+        tolog(Pass)
+
+def bvtexportunexport(c,obj):
+    pass
+
+
+def forcedel(c,obj):
+
+    # intial added on June, 19th, 2017
+    # for force delete pool, volume, snapshot, clone.
+    # both -y -f and -f with interactive input are tested
+    FailFlag=False
+    objlist=infodictret(c,obj,"",1)
+
+    objnum=len(objlist)
+    i=0
+    for num in objlist:
+
+        if int(num) % 2 == 0:
+            cmd = obj + " -a del -f -i " + str(num)
+            SendCmdconfirm(c, cmd)
+            i+=1
+        else:
+            cmd = obj + " -a del -y -f -i " + num
+            SendCmd(c, cmd)
+            i+=1
+    if objnum!=i:
+        FailFlag=True
+        tolog("%s force delete, expected number is %d, actual number is %d" %(obj,objnum,i))
+    else:
+        tolog("%s force delete successfully." %obj)
+
+    if FailFlag:
+        tolog(Fail)
+    else:
+        tolog(Pass)
+
+
+def bvtforcedel(c, obj):
+    # intial added on June, 19th, 2017
+    # for force delete pool, volume, snapshot, clone.
+    # both -y -f and -f with interactive input are tested
+    FailFlag = False
+    objlist = infodictret(c, obj, "", 1)
+
+    objnum = len(objlist)
+    i = 0
+    for num in objlist:
+
+        if int(num) % 2 == 0:
+            cmd = obj + " -a del -f -i " + str(num)
+            SendCmdconfirm(c, cmd)
+            i += 1
+        else:
+            cmd = obj + " -a del -y -f -i " + num
+            SendCmd(c, cmd)
+            i += 1
+    if objnum != i:
+        FailFlag = True
+        tolog("%s force delete, expected number is %d, actual number is %d" % (obj, objnum, i))
+    else:
+        tolog("%s force delete successfully." % obj)
+
+    return FailFlag
+
+
 if __name__ == "__main__":
 
     start=time.clock()
@@ -1849,21 +1943,23 @@ if __name__ == "__main__":
     if not c:
         raise ValueError
 
+
     # record the version number of this time
     #SendCmd(c,"about")
     #print infodictret("clone")
     # for i in range(10):
     #
     #     poolglobalsetting(c)
-    pooldelforce(c)
+    #pooldelforce(c)
     # remove pool/volume/snapshot/clone if possible.
-    #poolcleanup(c)
-    # poolforceclean(c)
+    forcedel(c, "volume")
+    #poolforceclean(c)
 
     # get avail pd without deleting any pool
     #getavailpd(c)
 
-    #poolcreateandlist(c,0)
+    poolcreateandlist(c,0)
+
     # poolcreateandlist(c,poolnum)
     # 0 - create as many as pools according to current available pds
     # 1 - create 1 pool and try to keep available pds if possible
@@ -1872,18 +1968,30 @@ if __name__ == "__main__":
     # pool name is renamed and extend with other available disks
     #poolmodifyandlist(c)
 
-    #volumecreateandlist(c, 20)
+    volumecreateandlist(c, 10)
     # volumecreateandlist(c,volnum)
     # create 3 volumes for each pool
 
-    #snapshotcreateandlist(c,20)
+    snapshotcreateandlist(c,2)
     # snapshotcreateandlist(c,snapshotnum)
     # create snapshotnum snapshots for each volume
     #SendCmd(c,"snapshot")
-    #clonecreateandlist(c, 10)
+    clonecreateandlist(c, 2)
     # clonecreateandlist(c,clonenum)
     # create clonenum for each snapshot
+    exportunexport(c, "volume")
+    exportunexport(c, "snapshot")
+    exportunexport(c, "clone")
 
+    # forcedel(c,"clone")
+    #
+    # forcedel(c,"snapshot")
+    #
+    # forcedel(c,"volume")
+    #
+    # forcedel(c,"pool")
+
+    #
     #poolcreateverify(c)
     #verify pool create with all options
     # stripe/sector/raid level
