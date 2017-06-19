@@ -57,7 +57,7 @@ def verifyLunmapAdd(c):
     FailFlag = False
     initID, volumeID = precondition(c)
 
-    result = SendCmd(c, 'lunmap -a add -i ' + initID[0] + ' -p volume -l 0 -m 0')
+    result = SendCmd(c, 'lunmap -a add -i ' + initID[0] + ' -p volume -l ' + volumeID[0] + ' -m 0')
     checkResult = SendCmd(c, 'lunmap')
 
 
@@ -193,10 +193,9 @@ def verifyLunmapMissingParameters(c):
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    precondition(c)
     # verifyLunmap(c)
     # verifyLunmapList(c)
-    # verifyLunmapAdd(c)
+    verifyLunmapAdd(c)
     # verifyLunmapDel(c)
     # verifyLunmapAddvol(c)
     # verifyLunmapDelvol(c)
