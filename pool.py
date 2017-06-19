@@ -346,29 +346,6 @@ def getscloneinfo(c):
 
     return clonedict
 
-def getscloneinfo(c):
-
-# administrator@cli> clone
-# ================================================================================
-# Id   Name      Type      SourceId    TotalCapacity   UsedCapacity    Status
-# ================================================================================
-# 43   eefa      volume    42          100 GB          1.02 KB         Un-export
-
-    clonedata = SendCmd(c, "clone")
-    clonedata = clonedata.split("\r\n")
-    clonetab = clonedata[2]
-    clonedata = clonedata[4:-1]
-    clonedict = {}
-    for cloneinfo in clonedata:
-        clonedict[cloneinfo[0:(clonetab.find("Name") - 1)].rstrip()] = (
-            cloneinfo[clonetab.find("Name"):(clonetab.find("Type") - 1)].rstrip(),
-            cloneinfo[clonetab.find("Type"):(clonetab.find("SourceId") - 1)].rstrip(),
-            cloneinfo[clonetab.find("SourceId"):(clonetab.find("TotalCapacity") - 1)].rstrip(),
-            cloneinfo[clonetab.find("TotalCapacity"):(clonetab.find("UsedCapacity") - 1)].rstrip(),
-            cloneinfo[clonetab.find("UsedCapacity"):(clonetab.find("Status") - 1)].rstrip())
-
-    return clonedict
-
 
 
 def poolcreateandlist(c,poolnum):
@@ -705,9 +682,12 @@ def volumecreate(c, poolid, name, capacity, blocksize, sectorsize):
     if capacity=="":
         capacity=random.randint(mincapacity, maxcapacity)
 
-    settings ="name="+name+", capacity="+str(capacity)+"GB"+", block="+blocksize+", sector="+sectorsize
+    settings0 ="name="+name+", capacity="+str(capacity)+"GB"+", block="+blocksize+", sector="+sectorsize+",thinprov=enable"
+    settings1 = "name=" + name + ", capacity= 10GB" + ", block=" + blocksize + ", sector=" + sectorsize + ",thinprov=disable"
+    settings=random.choice((settings0,settings1))
     # settings = "name=" + name + ", capacity=" + str(capacity) + "GB"
     SendCmd(c,"volume -a add -p "+poolid+" -s "+"\""+settings+"\"")
+
 
 def volumecreateandlist(c,volnum):
     i=0
@@ -745,6 +725,8 @@ def volumecreateandlist(c,volnum):
         tolog(Fail)
     else:
         tolog(Pass)
+
+
 def bvtvolumecreateandlist(c,volnum):
     i=0
     j=0
@@ -1016,12 +998,16 @@ def getctrlinfo(c):
                 ctrlinfo[ctrltab.find("OperationalStatus"):(ctrltab.find("ReadinessStatus") - 1)].rstrip(),
                 ctrlinfo[ctrltab.find("ReadinessStatus"):].rstrip(), "2")
     return ctrldict
+
+
 def phydrvlist(c):
     res=SendCmd(c,"phydrv")
     if "Error" in res:
         tolog(Fail)
     else:
         tolog(Pass)
+
+
 def poolforceclean(c):
 
     clonedelete(c)
@@ -1116,10 +1102,14 @@ def poolcreateverify(c):
                             j+=1
 
     tolog("Created %s and deleted %s" % (str(i),str(j)))
+
+
     if i==j:
         tolog(Pass)
     else:
         tolog(Fail)
+
+
 def poolcreateverify_newraidlevel(c):
     # stripelst = ("64kb", "128kb", "256kb", "512kb", "1mb", "64Kb", "64kB", "64KB", "128Kb", "128KB", "128kB", "256Kb",
     #              "256KB", "256kB", "512Kb", "512KB", "512kB", "1Mb", "1MB", "1mB")
@@ -1469,6 +1459,8 @@ def pooldel(c):
     else:
         tolog(Pass)
         tolog("Pools are deleted successfully.")
+
+
 def pooldelforce(c):
 
     count = 0
@@ -1863,7 +1855,7 @@ if __name__ == "__main__":
     # get avail pd without deleting any pool
     #getavailpd(c)
 
-    #poolcreateandlist(c,0)
+    poolcreateandlist(c,1)
     # poolcreateandlist(c,poolnum)
     # 0 - create as many as pools according to current available pds
     # 1 - create 1 pool and try to keep available pds if possible
@@ -1872,7 +1864,7 @@ if __name__ == "__main__":
     # pool name is renamed and extend with other available disks
     #poolmodifyandlist(c)
 
-    #volumecreateandlist(c, 20)
+    volumecreateandlist(c, 20)
     # volumecreateandlist(c,volnum)
     # create 3 volumes for each pool
 
