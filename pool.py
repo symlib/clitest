@@ -1830,9 +1830,74 @@ def infodictret(c, name,leading,tailing):
         Outinfo[info.split(" ")[0]] = infolist
 
     return Outinfo
-def about(c):
-    SendCmd(c,"about")
-    tolog(Pass)
+
+def exportunexport(c,obj):
+    pass
+
+def bvtexportunexport(c,obj):
+    pass
+
+
+def forcedel(c,obj):
+
+    # intial added on June, 19th, 2017
+    # for force delete pool, volume, snapshot, clone.
+    # both -y -f and -f with interactive input are tested
+
+    objlist=infodictret(c,obj,"","")
+
+    objnum=len(objlist)
+    i=0
+    for num in objlist:
+
+        if int(num) % 2 == 0:
+            cmd = obj + " -a del -f -i " + str(num)
+            SendCmdconfirm(c, cmd)
+            i+=1
+        else:
+            cmd = obj + " -a del -y -f -i " + num
+            SendCmd(c, cmd)
+            i+=1
+    if objnum!=i:
+        FailFlag=True
+        tolog("%s force delete, expected number is %d, actual number is %d" %(obj,objnum,i))
+    else:
+        tolog("%s force delete successfully." %obj)
+
+    if FailFlag:
+        tolog(Fail)
+    else:
+        tolog(Pass)
+
+
+def bvtforcedel(c, obj):
+    # intial added on June, 19th, 2017
+    # for force delete pool, volume, snapshot, clone.
+    # both -y -f and -f with interactive input are tested
+
+    objlist = infodictret(c, obj, "", "")
+
+    objnum = len(objlist)
+    i = 0
+    for num in objlist:
+
+        if int(num) % 2 == 0:
+            cmd = obj + " -a del -f -i " + str(num)
+            SendCmdconfirm(c, cmd)
+            i += 1
+        else:
+            cmd = obj + " -a del -y -f -i " + num
+            SendCmd(c, cmd)
+            i += 1
+    if objnum != i:
+        FailFlag = True
+        tolog("%s force delete, expected number is %d, actual number is %d" % (obj, objnum, i))
+    else:
+        tolog("%s force delete successfully." % obj)
+
+    return FailFlag
+
+
 if __name__ == "__main__":
 
     start=time.clock()
@@ -1847,7 +1912,7 @@ if __name__ == "__main__":
     # for i in range(10):
     #
     #     poolglobalsetting(c)
-    pooldelforce(c)
+    #pooldelforce(c)
     # remove pool/volume/snapshot/clone if possible.
     #poolcleanup(c)
     # poolforceclean(c)
@@ -1855,7 +1920,7 @@ if __name__ == "__main__":
     # get avail pd without deleting any pool
     #getavailpd(c)
 
-    poolcreateandlist(c,1)
+    #poolcreateandlist(c,1)
     # poolcreateandlist(c,poolnum)
     # 0 - create as many as pools according to current available pds
     # 1 - create 1 pool and try to keep available pds if possible
@@ -1864,17 +1929,26 @@ if __name__ == "__main__":
     # pool name is renamed and extend with other available disks
     #poolmodifyandlist(c)
 
-    volumecreateandlist(c, 20)
+    #volumecreateandlist(c, 10)
     # volumecreateandlist(c,volnum)
     # create 3 volumes for each pool
 
-    #snapshotcreateandlist(c,20)
+    #snapshotcreateandlist(c,2)
     # snapshotcreateandlist(c,snapshotnum)
     # create snapshotnum snapshots for each volume
     #SendCmd(c,"snapshot")
-    #clonecreateandlist(c, 10)
+    #clonecreateandlist(c, 2)
     # clonecreateandlist(c,clonenum)
     # create clonenum for each snapshot
+
+    forcedel(c,"clone")
+
+    forcedel(c,"snapshot")
+
+    forcedel(c,"volume")
+
+    forcedel(c,"pool")
+
 
     #poolcreateverify(c)
     #verify pool create with all options
