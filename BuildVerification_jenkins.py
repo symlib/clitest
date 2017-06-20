@@ -88,7 +88,6 @@ def BuildVerification(c):
         Failflaglist.append(pool.bvtpooldel(c))
 
         tolog("Start verifying delete spare")
-
         Failflaglist.append(pool.bvtsparedelete(c))
 
         tolog("Start verifying pool add")
@@ -98,7 +97,10 @@ def BuildVerification(c):
         Failflaglist.append(pool.bvtpoolglobalsetting(c))
 
         tolog("Start verifying volume add many")
-        Failflaglist.append(pool.bvtvolumeaddmany(c, 5))
+        Failflaglist.append(pool.bvtvolumeaddmany(c, 25))
+
+        tolog("Start verifying pool add")
+        Failflaglist.append(pool.bvtpoolcreateandlist(c, 0))
 
         tolog("Start verifying volume add")
         Failflaglist.append(pool.bvtvolumecreateandlist(c, 5))
