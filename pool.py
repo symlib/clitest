@@ -683,7 +683,7 @@ def volumecreate(c, poolid, name, capacity, blocksize, sectorsize):
         capacity=random.randint(mincapacity, maxcapacity)
 
     settings0 ="name="+name+", capacity="+str(capacity)+"GB"+", block="+blocksize+", sector="+sectorsize+",thinprov=enable"
-    settings1 = "name=" + name + ", capacity= 10GB" + ", block=" + blocksize + ", sector=" + sectorsize + ",thinprov=disable"
+    settings1 = "name=" + name + ", capacity= 1GB" + ", block=" + blocksize + ", sector=" + sectorsize + ",thinprov=disable"
     settings=random.choice((settings0,settings1))
     # settings = "name=" + name + ", capacity=" + str(capacity) + "GB"
     SendCmd(c,"volume -a add -p "+poolid+" -s "+"\""+settings+"\"")
@@ -1934,6 +1934,73 @@ def bvtforcedel(c, obj):
 
     return FailFlag
 
+def volumeaddmany():
+    FailFlag = False
+    res=list()
+    originalname="test_many_vol"
+    i=0
+
+    poollist = infodictret(c, "pool", "", 1)
+
+    for poolid in poollist:
+        if i==0:
+            res.append(SendCmd(c,"volume -a add -p " + str(poolid)+ " -s \"name="+originalname +",capacity=1GB\" -c 5"))
+        elif i==1:
+            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test" + ",capacity=1GB\" -c 5"))
+        elif i==2:
+            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "many" + ",capacity=1GB\" -c 5"))
+        elif i==3:
+            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "vol" + ",capacity=1GB\" -c 5"))
+        elif i==4:
+            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test_many_volume_more" + ",capacity=1GB\" -c 5"))
+        else:
+            pass
+        i+=1
+
+    for r in res:
+        if "Error" in r or "Volume prefix_name is duplicated." in r:
+            FailFlag=True
+            tolog("Create many volumes failed")
+
+    if FailFlag:
+        tolog(Fail)
+    else:
+        tolog(Pass)
+
+
+def bvtvolumeaddmany():
+    
+    FailFlag=False
+    res = list()
+    originalname = "test_many_vol"
+    i = 0
+
+    poollist = infodictret(c, "pool", "", 1)
+
+    for poolid in poollist:
+        if i == 0:
+            res.append(
+                SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + originalname + ",capacity=1GB\" -c 5"))
+        elif i == 1:
+            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test" + ",capacity=1GB\" -c 5"))
+        elif i == 2:
+            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "many" + ",capacity=1GB\" -c 5"))
+        elif i == 3:
+            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "vol" + ",capacity=1GB\" -c 5"))
+        elif i == 4:
+            res.append(SendCmd(c, "volume -a add -p " + str(
+                poolid) + " -s \"name=" + "test_many_volume_more" + ",capacity=1GB\" -c 5"))
+        else:
+            pass
+        i += 1
+
+    for r in res:
+        if "Error" in r or "Volume prefix_name is duplicated." in r:
+            FailFlag = True
+            tolog("Create many volumes failed")
+
+    return FailFlag
+
 
 if __name__ == "__main__":
 
@@ -1952,7 +2019,7 @@ if __name__ == "__main__":
     #     poolglobalsetting(c)
     #pooldelforce(c)
     # remove pool/volume/snapshot/clone if possible.
-    forcedel(c, "volume")
+    forcedel(c, "pool")
     #poolforceclean(c)
 
     # get avail pd without deleting any pool
