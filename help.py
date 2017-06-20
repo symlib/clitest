@@ -31,6 +31,26 @@ def verifyHelp(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
+def bvt_verifyHelp(c):
+    FailFlag = False
+    tolog("<b>Verify help </b>")
+    result = SendCmd(c, 'help')
+    command = ["about", "battery", "bbm", "bga", "buzz",  "chap", "clone", "ctrl", "date", "encldiag",
+                "enclosure", "event", "export", "factorydefaul", "fc", "import", "initiator", "iscsi",
+                "isns", "logout", "lunmap", "maintenance", "net", "ntp", "password", "pcie", "perfstats",
+                "phydrv", "ping", "pool", "ptiflash", "rb", "rc", "rcache", "sc", "session", "shutdown",
+                "smart", "snapshot", "spare", "stats", "subscription", "subsys", "swmgt", "sync",
+                "topology", "trunk", "ups", "user", "volume", "wcache"]
+    if 'Error (' in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: help </font>')
+    for com in command:
+        if com not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: help </font>')
+
+    return FailFlag
+
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()

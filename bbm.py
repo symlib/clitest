@@ -14,6 +14,7 @@ from pool import sparedrvcreate
 import random
 Pass = "'result': 'p'"
 Fail = "'result': 'f'"
+
 def findPdId(c):
     result = SendCmd(c, 'phydrv')
     pdID = []
@@ -24,7 +25,6 @@ def findPdId(c):
                 pdID.append(row[r].split()[0])
     return pdID
 
-
 def verifyBBM(c):
     FailFlag = False
     for i in findPdId(c):
@@ -33,14 +33,12 @@ def verifyBBM(c):
         if 'Error (' in result:
             FailFlag = True
             tolog('<font color="red">Fail: bbm -p ' + i + '</font>')
-
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify bbm</font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
-
 
 def verifyBBMList(c):
     FailFlag = False
@@ -50,7 +48,6 @@ def verifyBBMList(c):
         if 'Error (' in result:
             FailFlag = True
             tolog('<font color="red">Fail: bbm -a list -p ' + i + '</font>')
-
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify bbm -a list </font>')
         tolog(Fail)
@@ -58,30 +55,26 @@ def verifyBBMList(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
-
 def verifyBBMClear(c):
     FailFlag = False
     tolog("<b>Verify bbm -a clear -p pd ID (configured SATA physical drive)</b>")
     result = SendCmd(c, "phydrv")
     num = 4
     pdid = []
-
     while result.split("\r\n")[num] != 'administrator@cli> ':
         row = result.split("\r\n")[num]
-        if row.split()[2] != "SATA":
-            tolog('\n<font color="red">There is no SATA type PD</font>')
+        if row.split()[2] != "SAST":
+            tolog('\n<font color="red">Fail: there is no SAST type PD</font>')
             break
-        if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
+        if row.split()[2] == "SAST" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
         num = num + 1
-
     if len(pdid) != 0:
         for m in pdid:
             result = SendCmd(c, "bbm -a clear " + m)
             if "Error (" in result:
                 FailFlag = True
                 tolog('\n<font color="red">Fail: Verify bbm -a clear ' + m + '</font>')
-
     if FailFlag:
         tolog('\n<font color="red">Verify bbm -a clear -p pd ID (configured SATA physical drive)</font>')
         tolog(Fail)
@@ -89,23 +82,19 @@ def verifyBBMClear(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
-
 def verifyBBMHelp(c):
     FailFlag = False
     tolog("<b>Verify bbm -h</b>")
     result = SendCmd(c, "bbm -h")
-
     if "Usage" not in result or "Summary" not in result or "bbm" not in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: bbm -h </font>')
-
     if FailFlag:
         tolog('\n<font color="red">Verify bbm -h </font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
-
 
 def verifyBBMClearFailedTest(c):
     FailFlag = False
@@ -171,7 +160,6 @@ def verifyBBMClearFailedTest(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
-
 def verifyBBMSpecifyInexistentId(c):
     FailFlag = False
     tolog("<b>Verify bbm specify inexistent CtrlId</b>")
@@ -182,7 +170,6 @@ def verifyBBMSpecifyInexistentId(c):
         if "Error (" not in result or "nvalid physical drive id" not in result:
             FailFlag = True
             tolog('\n<font color="red">Fail: ' + com + ' </font>')
-
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify bbm specify inexistent CtrlId </font>')
         tolog(Fail)
@@ -194,14 +181,12 @@ def verifyBBMInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify bbm invalid option</b>")
     command = ['bbm -x', 'bbm -a list -x', 'bbm -a clear -x']
-
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid option" not in result:
             FailFlag = True
             tolog('\n<font color="red">Fail: ' + com + ' </font>')
-
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify bbm invalid option </font>')
         tolog(Fail)
@@ -209,19 +194,16 @@ def verifyBBMInvalidOption(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
-
 def verifyBBMInvalidParameters(c):
     FailFlag = False
     tolog("<b>Verify ctrl invalid parameters</b>")
     command = ['bbm test', 'bbm -a test', 'bbm -a clear -p test']
-
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid setting parameters" not in result:
             FailFlag = True
             tolog('\n<font color="red">Fail: ' + com + ' </font>')
-
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify bbm invalid parameters </font>')
         tolog(Fail)
@@ -229,19 +211,16 @@ def verifyBBMInvalidParameters(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
-
 def verifyBBMMissingParameters(c):
     FailFlag = False
     tolog("<b>Verify bbm missing parameters</b>")
     command = ['bbm -p', 'bbm -a list -p', 'bbm -a clear -p']
-
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
         result = SendCmd(c, com)
         if "Error (" not in result or "Missing parameter" not in result:
             FailFlag = True
             tolog('\n<font color="red">Fail: ' + com + ' </font>')
-
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify bbm missing parameters </font>')
         tolog(Fail)
@@ -261,8 +240,6 @@ def bvt_verifyBBM(c):
 
     return FailFlag
 
-
-
 def bvt_verifyBBMList(c):
     FailFlag = False
     for i in findPdId(c):
@@ -274,20 +251,18 @@ def bvt_verifyBBMList(c):
 
     return FailFlag
 
-
 def bvt_verifyBBMClear(c):
     FailFlag = False
     tolog("<b>Verify bbm -a clear -p pd ID (configured SATA physical drive)</b>")
     result = SendCmd(c, "phydrv")
     num = 4
     pdid = []
-
     while result.split("\r\n")[num] != 'administrator@cli> ':
         row = result.split("\r\n")[num]
-        if row.split()[2] != "SATA":
-            tolog('\n<font color="red">There is no SATA type PD</font>')
+        if row.split()[2] != "SAST":
+            tolog('\n<font color="red">Fail: there is no SAST type PD</font>')
             break
-        if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
+        if row.split()[2] == "SAST" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
         num = num + 1
 
@@ -300,18 +275,15 @@ def bvt_verifyBBMClear(c):
 
     return FailFlag
 
-
 def bvt_verifyBBMHelp(c):
     FailFlag = False
     tolog("<b>Verify bbm -h</b>")
     result = SendCmd(c, "bbm -h")
-
     if "Usage" not in result or "Summary" not in result or "bbm" not in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: bbm -h </font>')
 
     return FailFlag
-
 
 def bvt_verifyBBMClearFailedTest(c):
     FailFlag = False
@@ -347,7 +319,7 @@ def bvt_verifyBBMClearFailedTest(c):
     Rpdid = random.choice(pdid)
     result = SendCmd(c, "bbm -a clear -p " + Rpdid)
     if "Error" not in result:
-        FailFlag = True
+        FailFlag =True
         tolog('\n<font color="red">Fail: bbm -a clear -p ' + Rpdid + '</font>')
 
     tolog("<b>Verify bbm -a clear -p pd id(Unconfigured not SATA physical drive)</b>")
@@ -362,7 +334,7 @@ def bvt_verifyBBMClearFailedTest(c):
     Rpdid = random.choice(pdid)
     result = SendCmd(c, "bbm -a clear -p " + Rpdid)
     if "Error" not in result:
-        FailFlag = True
+        FailFlag =True
         tolog('\n<font color="red">Fail: bbm -a clear -p ' + Rpdid + '</font>')
 
     tolog("<b> Verify bbm -a clear -p pd's ID </b>")
@@ -372,7 +344,6 @@ def bvt_verifyBBMClearFailedTest(c):
         tolog('\n<font color="red"> Fail: bbm -a clear -p pd ID </font>')
 
     return FailFlag
-
 
 def bvt_verifyBBMSpecifyInexistentId(c):
     FailFlag = False
@@ -387,12 +358,10 @@ def bvt_verifyBBMSpecifyInexistentId(c):
 
     return FailFlag
 
-
 def bvt_verifyBBMInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify bbm invalid option</b>")
     command = ['bbm -x', 'bbm -a list -x', 'bbm -a clear -x']
-
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
         result = SendCmd(c, com)
@@ -402,12 +371,10 @@ def bvt_verifyBBMInvalidOption(c):
 
     return FailFlag
 
-
 def bvt_verifyBBMInvalidParameters(c):
     FailFlag = False
     tolog("<b>Verify ctrl invalid parameters</b>")
     command = ['bbm test', 'bbm -a test', 'bbm -a clear -p test']
-
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
         result = SendCmd(c, com)
@@ -417,12 +384,10 @@ def bvt_verifyBBMInvalidParameters(c):
 
     return FailFlag
 
-
 def bvt_verifyBBMMissingParameters(c):
     FailFlag = False
     tolog("<b>Verify bbm missing parameters</b>")
     command = ['bbm -p', 'bbm -a list -p', 'bbm -a clear -p']
-
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
         result = SendCmd(c, com)

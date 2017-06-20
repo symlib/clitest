@@ -8,6 +8,7 @@ import random
 import re
 Pass = "'result': 'p'"
 Fail = "'result': 'f'"
+
 def verifyCtrl(c):
     FailFlag = False
     tolog("<b>Verify ctrl</b>")
@@ -21,6 +22,7 @@ def verifyCtrl(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyCtrlSpecifyId(c):
     FailFlag = False
     tolog("<b>Verify ctrl -i CtrlId </b>")
@@ -35,6 +37,7 @@ def verifyCtrlSpecifyId(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyCtrlList(c):
     FailFlag = False
     tolog("<b>Verify ctrl -a list </b>")
@@ -67,6 +70,7 @@ def verifyCtrlV(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyCtrlListV(c):
     FailFlag = False
     result = SendCmd(c, 'ctrl -a list -v')
@@ -93,6 +97,7 @@ def verifyCtrlL(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyCtrlModNormativeAlias(c):
     FailFlag = False
     tolog("<b> verify ctrl alias by character type and length  </b>")
@@ -119,6 +124,7 @@ def verifyCtrlModNormativeAlias(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyCtrlModValuesIsEnableOrDisable(c):
     FailFlag = False
     tolog('<b>Verify ctrl -a mod -i CtrlId -s "Option = enable or disable "  </b>')
@@ -154,6 +160,7 @@ def verifyCtrlModValuesIsEnableOrDisable(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyCtrlModValuesIsTime(c):
     FailFlag = False
     tolog('<b>Verify ctrl -a mod -i CtrlId -s "Option = Time " </b>')
@@ -176,6 +183,7 @@ def verifyCtrlModValuesIsTime(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyCtrlModNonstandardValues(c):
     FailFlag = False
     tolog('<b>Verify ctrl -a mod -i CtrlId -s "Option = Nonstandard Values " </b>')
@@ -221,6 +229,7 @@ def verifyCtrlModNonstandardValues(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyCtrlClear(c):
     FailFlag = False
     tolog('<b> Verify ctrl -a clear -i CtrlID -t watermark </b>')
@@ -247,6 +256,7 @@ def verifyCtrlClear(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyCtrlHelp(c):
     FailFlag = False
     tolog("<b> Verify ctrl -h </b>")
@@ -260,6 +270,7 @@ def verifyCtrlHelp(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyCtrlSpecifyInexistentId(c):
     FailFlag = False
     tolog("<b>Verify ctrl specify inexistent CtrlId</b>")
@@ -276,6 +287,7 @@ def verifyCtrlSpecifyInexistentId(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyCtrlInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify ctrl invalid option</b>")
@@ -292,6 +304,7 @@ def verifyCtrlInvalidOption(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyCtrlInvalidParameters(c):
     FailFlag = False
     tolog("<b>Verify ctrl invalid parameters</b>")
@@ -308,6 +321,7 @@ def verifyCtrlInvalidParameters(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyCtrlMissingParameters(c):
     FailFlag = False
     tolog("<b>Verify ctrl missing parameters</b>")
@@ -325,6 +339,234 @@ def verifyCtrlMissingParameters(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
+
+def bvt_verifyCtrl(c):
+    FailFlag = False
+    tolog("<b>Verify ctrl</b>")
+    result = SendCmd(c, "ctrl")
+    if "CtrlId" not in result or "Alias" not in result or "OperationalStatus" not in result or "ReadinessStatus" not in result or "is Primary" not in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: ctrl</font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlSpecifyId(c):
+    FailFlag = False
+    tolog("<b>Verify ctrl -i CtrlId </b>")
+    for CtrlId in ['1', '2']:
+        result = SendCmd(c, "ctrl -i " + CtrlId)
+        if "CtrlId" not in result or "Alias" not in result or "OperationalStatus" not in result or "ReadinessStatus" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ctrl -i ' + CtrlId + '</font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlList(c):
+    FailFlag = False
+    tolog("<b>Verify ctrl -a list </b>")
+    result = SendCmd(c, "ctrl -a list")
+    if "Error (" in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: Verify ctrl -a list</font>')
+
+    for CtrlId in ['1', '2']:
+        tolog('Verify ctrl -a list -i ' + CtrlId)
+        result = SendCmd(c, "ctrl -a list -i " + CtrlId)
+        if "CtrlId" not in result or "Alias" not in result or "OperationalStatus" not in result or "ReadinessStatus" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ctrl -a list -i ' + CtrlId + '</font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlV(c):
+    FailFlag = False
+    result = SendCmd(c, 'ctrl -v')
+    if "Error (" in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: ctrl -v </font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlListV(c):
+    FailFlag = False
+    result = SendCmd(c, 'ctrl -a list -v')
+    if "Error (" in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: ctrl -a list -v </font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlL(c):
+    FailFlag = False
+    tolog("<b>Verify ctrl -l </b>")
+    result = SendCmd(c, "ctrl -l")
+    if "LocalCtrlId: " not in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: ctrl -l</font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlModNormativeAlias(c):
+    FailFlag = False
+    tolog("<b> verify ctrl alias by character type and length  </b>")
+    result = SendCmd(c, "ctrl")
+    for index in [4, 5]:
+        row = result.split("\r\n")[index]
+        if row.split()[-2] == "OK" or row.split()[-4][0:2] == "OK":
+            CtrlID = row.split()[0]
+            values = 'aaaa1aaaa2aaaa3aaaa4aaaa5aaaa6aaaa7aaaa8aaaa9aaa'
+            result = SendCmd(c, "ctrl -a mod -i " + str(CtrlID) + ' -s "alias = ' + values + '"')
+            checkResult = SendCmd(c, "ctrl -v -i " + str(CtrlID))
+            if "Error (" in result or values not in checkResult:
+                FailFlag = True
+                tolog('\n<font color="red">Fail: ctrl -a mod -i ' + str(CtrlID) + ' -s "alias = ' + values + '" </font>')
+            for values in ['test_12', '12_test', 'test 12', '_', '123', '  TEST  ', ""]:
+                result = SendCmd(c, "ctrl -a mod -i " + str(CtrlID) + " -s " + '"alias = ' + values + '"')
+                checkResult = SendCmd(c, "ctrl -i " + str(CtrlID))
+                if "Error (" in result or values not in checkResult:
+                    FailFlag = True
+                    tolog('\n<font color="red">Fail: ctrl -a mod -i ' + str(CtrlID) + " -s alias = " + values + '"</font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlModValuesIsEnableOrDisable(c):
+    FailFlag = False
+    tolog('<b>Verify ctrl -a mod -i CtrlId -s "Option = enable or disable "  </b>')
+    result = SendCmd(c, "ctrl")
+    for index in [4, 5]:
+        row = result.split("\r\n")[index]
+        if row.split()[-2] == "OK" or row.split()[-4][0:2] == "OK":
+            CtrlID = row.split()[0]
+            for values in ['disable', 'enable']:
+                tolog('\n<b> Verify ctrl -a mod -i ' + str(CtrlID) + '-s "VAAIsupport = ' + values + '" </b>')
+                result = SendCmd(c, 'ctrl -a mod -i ' + str(CtrlID) + ' -s "VAAIsupport = ' + values + '"')
+                if "Error (" in result or "The VAAIsupport setting will take affect only after next reboot" not in result:
+                    FailFlag = True
+                    tolog('\n<font color="red">Fail: ctrl -a mod -i ' + str(CtrlID) + '-s "VAAIsupport = ' + values + '" </font>')
+            for values in ['disable', 'enable']:
+                option = ["SMART = " + values,
+                          "AdaptiveWBCache = " + values,
+                          "HostCacheFlushing = " + values,
+                          "ForcedReadAhead = " + values,
+                          "SSDTrimSupport = " + values,
+                          "Coercion = " + values,
+                          ]
+                for Op in option:
+                    tolog('\n<b>Verify ctrl -a mod -s "' + Op + '" </b>')
+                    SendCmd(c, "ctrl -a mod -i " + str(CtrlID) + " -s " + '"' + Op + '"')
+                    result = SendCmd(c, "ctrl -v -i " + str(CtrlID))
+                    if Op.split()[0] + ': ' + Op.split()[-1].capitalize() + 'd' not in result:
+                        FailFlag = True
+                        tolog('\n<font color="red">Fail: ctrl -a mod -s "' + Op + '" </font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlModValuesIsTime(c):
+    FailFlag = False
+    tolog('<b>Verify ctrl -a mod -i CtrlId -s "Option = Time " </b>')
+    result = SendCmd(c, "ctrl")
+    for index in [4, 5]:
+        row = result.split("\r\n")[index]
+        # 2             test         OK                       Active
+        # 2             test         OK, BGA Running          Active
+        if row.split()[-2] == "OK" or row.split()[-4][0:2] == "OK":
+            CtrlID = row.split()[0]
+            for option in ["powersavingidletime", "powersavingstandbytime", "powersavingstoppedtime"]:
+                for values in [0, 15, 1380, 1440]:
+                    result = SendCmd(c, "ctrl -a mod -i " + str(CtrlID) + " -s " + '"' + option + " = " + str(values) + '"')
+                    if "Error" in result:
+                        FailFlag = True
+                        tolog('\n<font color="red">Fail: ctrl -a mod -i ' + str(CtrlID) + " -s " + '"' + option + " = " + str(values) + '"</font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlClear(c):
+    FailFlag = False
+    tolog('<b> Verify ctrl -a clear -i CtrlID -t watermark </b>')
+    for ctrlID in [1, 2]:
+        tolog('<b> verify ctrl -a clear -i '+str(ctrlID)+' -t watermark </b>')
+        result = SendCmd(c, "ctrl -a clear -i "+str(ctrlID)+" -t watermark")
+        if "Error" in result or "ctrl -a clear -i "+str(ctrlID)+" -t watermark" not in result:
+            FailFlag = True
+            tolog('\n<font color="red"> Fail: verify ctrl -a clear -i '+str(ctrlID)+' -t watermark </font>')
+
+    tolog('<b> verify ctrl -a clear -t watermark </b>')
+    result = SendCmd(c, "ctrl -a clear -t watermark")
+    if "Error" in result or "ctrl -a clear -t watermark" not in result:
+        FailFlag = True
+        tolog('\n<font color="red"> Fail: verify ctrl -a clear -t watermark </font>')
+
+    for ctrlID in [1, 2]:
+        tolog("<b>verify ctrl -a clear -t watermark -i " + str(ctrlID) + '</b>')
+        result = SendCmd(c, "ctrl -a clear -t watermark -i "+str(ctrlID))
+        if "Error" in result or "ctrl -a clear -t watermark -i "+str(ctrlID) not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: verify ctrl -a clear -t watermark -i ' + str(ctrlID) + '</font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlHelp(c):
+    FailFlag = False
+    tolog("<b> Verify ctrl -h </b>")
+    result = SendCmd(c, "ctrl -h")
+    if "Usage" not in result or "Summary" not in result or "ctrl" not in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: ctrl -h </font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlSpecifyInexistentId(c):
+    FailFlag = False
+    tolog("<b>Verify ctrl specify inexistent CtrlId</b>")
+    command = ['ctrl -v -i 5', 'ctrl -a list -i 5', 'ctrl -a mod -i 5 -s "alias = test"', 'ctrl -a clear -i 5 -t watermark ']
+    for com in command:
+        tolog('<b> Verify ' + com + '</b>')
+        result = SendCmd(c, com)
+        if "Error (" not in result or "-i: invalid setting 5 (1,2)" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlInvalidOption(c):
+    FailFlag = False
+    tolog("<b>Verify ctrl invalid option</b>")
+    command = ['ctrl -x', 'ctrl -a list -x', 'ctrl -a mod -x', 'ctrl -a clear -x']
+    for com in command:
+        tolog('<b> Verify ' + com + '</b>')
+        result = SendCmd(c, com)
+        if "Error (" not in result or "Invalid option" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlInvalidParameters(c):
+    FailFlag = False
+    tolog("<b>Verify ctrl invalid parameters</b>")
+    command = ['ctrl test', 'ctrl -a test', 'ctrl -a mod -s test', 'ctrl -a clear -t test']
+    for com in command:
+        tolog('<b> Verify ' + com + '</b>')
+        result = SendCmd(c, com)
+        if "Error (" not in result or "Invalid setting parameters" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+
+    return FailFlag
+
+def bvt_verifyCtrlMissingParameters(c):
+    FailFlag = False
+    tolog("<b>Verify ctrl missing parameters</b>")
+    command = ['ctrl -v -i', 'ctrl -a list -i', 'ctrl -a mod -s', 'ctrl -a clear -t']
+    for com in command:
+        tolog('<b> Verify ' + com + '</b>')
+        result = SendCmd(c, com)
+        if "Error (" not in result or "Missing parameter" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+
+    return FailFlag
+
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
@@ -337,7 +579,6 @@ if __name__ == "__main__":
     verifyCtrlModNormativeAlias(c)
     verifyCtrlModValuesIsEnableOrDisable(c)
     verifyCtrlModValuesIsTime(c)
-    # verifyCtrlModNonstandardValues(c)
     verifyCtrlClear(c)
     verifyCtrlHelp(c)
     verifyCtrlInvalidOption(c)

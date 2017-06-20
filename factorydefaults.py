@@ -29,6 +29,7 @@ def factorydefaultsBga(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsCtrl(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'ctrl'):
@@ -49,6 +50,7 @@ def factorydefaultsCtrl(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsEncl(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'encl'):
@@ -72,6 +74,7 @@ def factorydefaultsEncl(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsFc(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'fc'):
@@ -91,6 +94,7 @@ def factorydefaultsFc(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsIscsi(c):
     FailFlag = False
     checkResult1 = SendCmd(c, 'iscsi -t session')
@@ -109,6 +113,7 @@ def factorydefaultsIscsi(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsPhydrv(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'phydrv'):
@@ -131,6 +136,7 @@ def factorydefaultsPhydrv(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsSas(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'sas'):
@@ -142,6 +148,7 @@ def factorydefaultsSas(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsScsi(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'scsi'):
@@ -154,6 +161,7 @@ def factorydefaultsScsi(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsSubsys(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'subsys'):
@@ -168,6 +176,7 @@ def factorydefaultsSubsys(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsBgasched(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'bgasched'):
@@ -180,6 +189,7 @@ def factorydefaultsBgasched(c):
         tolog('\n<font color="red"> bgasched is not achieved </font>')
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsService(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'service'):
@@ -191,6 +201,7 @@ def factorydefaultsService(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsWebserver(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'webserver'):
@@ -202,6 +213,7 @@ def factorydefaultsWebserver(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsSnmp(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'snmp'):
@@ -213,6 +225,7 @@ def factorydefaultsSnmp(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsTelnet(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'telnet'):
@@ -224,6 +237,7 @@ def factorydefaultsTelnet(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsSsh(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'ssh'):
@@ -235,6 +249,7 @@ def factorydefaultsSsh(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsEmail(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'email'):
@@ -246,6 +261,7 @@ def factorydefaultsEmail(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsCim(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'cim'):
@@ -257,6 +273,7 @@ def factorydefaultsCim(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsNtp(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'ntp'):
@@ -271,6 +288,7 @@ def factorydefaultsNtp(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsUser(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'user'):
@@ -282,6 +300,7 @@ def factorydefaultsUser(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsUps(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'ups'):
@@ -293,6 +312,7 @@ def factorydefaultsUps(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsLdap(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'ldap'):
@@ -304,6 +324,7 @@ def factorydefaultsLdap(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def factorydefaultsSyslog(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'syslog'):
@@ -315,6 +336,7 @@ def factorydefaultsSyslog(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyFactorydefaultsHelp(c):
     FailFlag = False
     tolog("<b>Verify factorydefaults -h </b>")
@@ -328,6 +350,7 @@ def verifyFactorydefaultsHelp(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyFactorydefaultsInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify factorydefaults invalid option</b>")
@@ -344,6 +367,7 @@ def verifyFactorydefaultsInvalidOption(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyFactorydefaultsInvalidParameters(c):
     FailFlag = False
     tolog("<b>Verify factorydefaults invalid parameters</b>")
@@ -360,6 +384,7 @@ def verifyFactorydefaultsInvalidParameters(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyFactorydefaultsMissingParameters(c):
     FailFlag = False
     tolog("<b>Verify factorydefaults missing parameters</b>")
@@ -376,6 +401,274 @@ def verifyFactorydefaultsMissingParameters(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
+
+def bvt_factorydefaultsBga(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'bga'):
+        FailFlag =True
+    checkResult = SendCmd(c, 'bga')
+    if 'RebuildRate: High' not in checkResult or 'RCRate: Medium' not in checkResult:
+        FailFlag = True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t bga </font>')
+
+    return FailFlag
+
+def bvt_factorydefaultsCtrl(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'ctrl'):
+        FailFlag =True
+    checkResult = SendCmd(c, 'ctrl -v')
+    checkpoint = ['Alias:',
+                  'PowerSavingIdleTime: Never',
+                  'PowerSavingStandbyTime: Never',
+                  'PowerSavingStoppedTime: Never',
+                  ]
+    for cp in checkpoint:
+        if cp not in checkResult:
+            FailFlag = True
+            tolog('<font color="red"> Fail: factorydefaults -a restore -t ctrl </font>')
+
+    return FailFlag
+
+def bvt_factorydefaultsEncl(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'encl'):
+        FailFlag =True
+    checkResult = SendCmd(c, 'enclosure -v')
+    checkpoint = ['Enclosure                 51C/123F                 61C/141F',
+                  'Controller 1 Sensor 1     65C/149F                 72C/161F',
+                  'Controller 2 Sensor 2     70C/158F                 77C/170F',
+                  'Controller 1 Sensor 3     78C/172F                 88C/190F',
+                  'Controller 2 Sensor 4     65C/149F                 72C/161F',
+                  'Controller 1 Sensor 5     70C/158F                 77C/170F',
+                  'Controller 2 Sensor 6     78C/172F                 88C/190F'
+                  ]
+    for cp in checkpoint:
+        if cp not in checkResult:
+            FailFlag = True
+            tolog('<font color="red"> Fail: factorydefaults -a restore -t encl </font>')
+
+    return FailFlag
+
+def bvt_factorydefaultsFc(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'fc'):
+        FailFlag =True
+    checkResult = SendCmd(c, 'fc -v')
+    checkpoint = ['ConfiguredLinkSpeed: Auto',
+                  'ConfiguredTopology: Auto',
+                  'HardALPA: ',
+                  ]
+    for cp in checkpoint:
+        if cp not in checkResult:
+            FailFlag = True
+            tolog('<font color="red"> Fail: factorydefaults -a restore -t fc </font>')
+
+    return FailFlag
+
+def bvt_factorydefaultsIscsi(c):
+    FailFlag = False
+    checkResult1 = SendCmd(c, 'iscsi -t session')
+    if 'No session in the subsystem' in checkResult1:
+        if factorydefaultsRestoreSetting(c, 'iscsi'):
+            FailFlag = True
+        checkResult2 = SendCmd(c, 'trunk')
+        if 'No iSCSI trunks are available' not in checkResult2:
+            FailFlag = True
+            tolog('<font color="red"> Fail: factorydefaults -a restore -t iscsi </font>')
+    else:
+        tolog('\n<font color="red">Fail: Some iSCSI sessions are established on the portal </font>')
+
+    return FailFlag
+
+def bvt_factorydefaultsPhydrv(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'phydrv'):
+        FailFlag =True
+    checkResult = SendCmd(c, 'phydrv -v')
+    countPD = checkResult.count('-------------------------------------------------------------------------------')
+    checkpoint = [checkResult.count('WriteCache: Enabled'),
+                  checkResult.count('RlaCache: Enabled'),
+                  checkResult.count('Alias: \r\n'),
+                  checkResult.count('TempPollInt: 245'),
+                  checkResult.count('MediumErrorThreshold: 64')
+                  ]
+    for cp in checkpoint:
+        if cp != countPD:
+            FailFlag = True
+            tolog('<font color="red"> Fail: factorydefaults -a restore -t phydrv </font>')
+
+    return FailFlag
+
+def bvt_factorydefaultsSas(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'sas'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_factorydefaultsScsi(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'scsi'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_factorydefaultsSubsys(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'subsys'):
+        FailFlag =True
+    checkResult = SendCmd(c, 'subsys -v')
+    if 'Alias:  ' not in checkResult or 'RedundancyType: Active-Active' not in checkResult or 'CacheMirroring: Enabled' not in checkResult:
+        FailFlag = True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t scsi </font>')
+
+    return FailFlag
+
+def bvt_factorydefaultsBgasched(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'bgasched'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_factorydefaultsService(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'service'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_factorydefaultsWebserver(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'webserver'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_factorydefaultsSnmp(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'snmp'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_factorydefaultsTelnet(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'telnet'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_factorydefaultsSsh(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'ssh'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_factorydefaultsEmail(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'email'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_factorydefaultsCim(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'cim'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_factorydefaultsNtp(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'ntp'):
+        FailFlag =True
+    checkResult = SendCmd(c, 'ntp')
+    if 'Ntp: Disabled' not in checkResult:
+        FailFlag = True
+        tolog('<font color="red"> Fail: factorydefaults -a restore -t ntp </font>')
+
+    return FailFlag
+
+def bvt_factorydefaultsUser(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'user'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_factorydefaultsUps(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'ups'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_factorydefaultsLdap(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'ldap'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_factorydefaultsSyslog(c):
+    FailFlag = False
+    if factorydefaultsRestoreSetting(c, 'syslog'):
+        FailFlag =True
+
+    return FailFlag
+
+def bvt_verifyFactorydefaultsHelp(c):
+    FailFlag = False
+    tolog("<b>Verify factorydefaults -h </b>")
+    result = SendCmd(c, 'factorydefaults -h')
+    if 'Error (' in result or 'restore' not in result:
+        FailFlag = True
+        tolog('\n<font color="red">Fail: factorydefaults -h </font>')
+
+    return FailFlag
+
+def bvt_verifyFactorydefaultsInvalidOption(c):
+    FailFlag = False
+    tolog("<b>Verify factorydefaults invalid option</b>")
+    command = ['factorydefaults -x', 'factorydefaults -a restore -x']
+    for com in command:
+        tolog('<b> Verify ' + com + '</b>')
+        result = SendCmd(c, com)
+        if "Error (" not in result or "Invalid option" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+
+    return FailFlag
+
+def bvt_verifyFactorydefaultsInvalidParameters(c):
+    FailFlag = False
+    tolog("<b>Verify factorydefaults invalid parameters</b>")
+    command = ['factorydefaults test', 'factorydefaults -a restore test']
+    for com in command:
+        tolog('<b> Verify ' + com + '</b>')
+        result = SendCmd(c, com)
+        if "Error (" not in result or "Invalid setting parameters" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+
+    return FailFlag
+
+def bvt_verifyFactorydefaultsMissingParameters(c):
+    FailFlag = False
+    tolog("<b>Verify factorydefaults missing parameters</b>")
+    command = ['factorydefaults -a', 'factorydefaults -a restore -t ']
+    for com in command:
+        tolog('<b> Verify ' + com + '</b>')
+        result = SendCmd(c, com)
+        if "Error (" not in result or "Missing parameter" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+
+    return FailFlag
 
 if __name__ == "__main__":
     start = time.clock()
