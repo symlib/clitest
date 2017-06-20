@@ -60,6 +60,9 @@ def BuildVerification(c):
         tolog("Start verifying pool add")
         Failflaglist.append(pool.bvtpoolcreateandlist(c, 1))
 
+        tolog("Start verifying pool global setting")
+        Failflaglist.append(pool.bvtpoolglobalsetting(c))
+
         tolog("Start verifying volume add")
         Failflaglist.append(pool.bvtvolumecreateandlist(c, 10))
 
@@ -86,6 +89,40 @@ def BuildVerification(c):
 
         tolog("Start verifying delete spare")
         Failflaglist.append(pool.bvtsparedelete(c))
+
+        tolog("Start verifying pool add")
+        Failflaglist.append(pool.bvtpoolcreateandlist(c, 0))
+
+        tolog("Start verifying pool global setting")
+        Failflaglist.append(pool.bvtpoolglobalsetting(c))
+
+        tolog("Start verifying volume add many")
+        Failflaglist.append(pool.bvtvolumeaddmany(c, 25))
+
+        tolog("Start verifying pool add")
+        Failflaglist.append(pool.bvtpoolcreateandlist(c, 0))
+
+        tolog("Start verifying volume add")
+        Failflaglist.append(pool.bvtvolumecreateandlist(c, 5))
+
+        tolog("Start verifying snapshot add")
+        Failflaglist.append(pool.bvtsnapshotcreateandlist(c, 2))
+
+        tolog("Start verifying clone add")
+        Failflaglist.append(pool.bvtclonecreateandlist(c, 2))
+
+        tolog("Start verifying clone force delete")
+        Failflaglist.append(pool.bvtforcedel(c, "clone"))
+
+        tolog("Start verifying snapshot force delete")
+        Failflaglist.append(pool.bvtforcedel(c, "snapshot"))
+
+        tolog("Start verifying volume force delete")
+        Failflaglist.append(pool.bvtforcedel(c, "volume"))
+
+        tolog("Start verifying pool force delete")
+        Failflaglist.append(pool.bvtforcedel(c, "pool"))
+
 
         Failflaglist.append(bbm.bvt_verifyBBM(c))
 

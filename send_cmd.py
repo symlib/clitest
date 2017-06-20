@@ -159,7 +159,7 @@ def SendCmdconfirm(c, cmdstr):
             if ytrue==False:
                 c.send("y" + "\n")
                 ytrue=True
-                time.sleep(15)
+                time.sleep(1)
                 data += c.recv(2000)
                 break
             if data.endswith('@cli> '):

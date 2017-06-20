@@ -89,7 +89,7 @@ if __name__ == "__main__":
     # get avail pd without deleting any pool
     #getavailpd(c)
 
-    poolcreateandlist(c,1)
+    #poolcreateandlist(c,0)
     # poolcreateandlist(c,poolnum)
     # 0 - create as many as pools according to current available pds
     # 1 - create 1 pool and try to keep available pds if possible
@@ -97,22 +97,24 @@ if __name__ == "__main__":
 
     # pool name is renamed and extend with other available disks
     #poolmodifyandlist(c)
+    forcedel(c,"pool")
+    poolcreateandlist(c,1)
+    #volumeaddmany(c,3)
 
-    volumecreateandlist(c, 1)
-    # volumecreateandlist(c,volnum)
+    volumecreateandlist(c,10)
     # create 3 volumes for each pool
 
-    snapshotcreateandlist(c,1)
+    snapshotcreateandlist(c,5)
     # snapshotcreateandlist(c,snapshotnum)
     # create snapshotnum snapshots for each volume
 
-    clonecreateandlist(c, 1)
+    clonecreateandlist(c, 5)
     # clonecreateandlist(c,clonenum)
     # create clonenum for each snapshot
     # clonedelete(c)
     # snapshotdelete(c)
     # volumedel(c)
-    pooldelforce(c)
+    #pooldelforce(c)
     #poolcreateverify(c)
     #verify pool create with all options
     # stripe/sector/raid level
