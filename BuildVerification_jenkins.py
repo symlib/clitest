@@ -97,6 +97,9 @@ def BuildVerification(c):
         tolog("Start verifying pool global setting")
         Failflaglist.append(pool.bvtpoolglobalsetting(c))
 
+        tolog("Start verifying volume add many")
+        Failflaglist.append(pool.bvtvolumeaddmany(c, 5))
+
         tolog("Start verifying volume add")
         Failflaglist.append(pool.bvtvolumecreateandlist(c, 5))
 
