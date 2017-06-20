@@ -1713,7 +1713,7 @@ def bvtpooldel(c):
     poolinfo = SendCmd(c, "pool")
     while not "No pool in the subsystem" in poolinfo:
 
-        poolnum = int(poolinfo.split("\r\n")[-2].split(" ")[0])
+        poolnum = int(poolinfo.split("\r\n")[-3].split(" ")[0])
         for i in range(0, poolnum + 1):
             SendCmd(c, "pool -a del -i " + str(i))
 
@@ -1737,7 +1737,7 @@ def bvtvolumedel(c):
     Failflag=False
     while not "No volume exists" in volinfo:
 
-        volnum=int(volinfo.split("\r\n")[-2].split(" ")[0])
+        volnum=int(volinfo.split("\r\n")[-3].split(" ")[0])
         for i in range(0,volnum+1):
             SendCmd(c,"volume -a del -i "+str(i))
             count += 1
@@ -1759,7 +1759,7 @@ def bvtsnapshotdelete(c):
     Failflag = False
     while not "No snapshot exists" in snapshotinfo:
 
-        snapshotnum = int(snapshotinfo.split("\r\n")[-2].split(" ")[0])
+        snapshotnum = int(snapshotinfo.split("\r\n")[-3].split(" ")[0])
         for i in range(0, snapshotnum + 1):
             SendCmd(c, "snapshot -a del -i " + str(i))
             count+=1
@@ -1783,7 +1783,7 @@ def bvtclonedelete(c):
     Failflag=False
     while not "No clone found" in cloneinfo:
 
-        clonenum = int(cloneinfo.split("\r\n")[-2].split(" ")[0])
+        clonenum = int(cloneinfo.split("\r\n")[-3].split(" ")[0])
         for i in range(0, clonenum + 1):
             SendCmd(c, "clone -a del -i " + str(i))
             count+=1
