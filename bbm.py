@@ -20,7 +20,7 @@ def findPdId(c):
     pdID = []
     row = result.split('\r\n')
     if 'Error (' not in result:
-        for r in range(4, (len(row) -1)):
+        for r in range(4, (len(row) -2)):
             if row[r].split()[-1] != 'Unconfigured':
                 pdID.append(row[r].split()[0])
     return pdID
@@ -59,16 +59,15 @@ def verifyBBMClear(c):
     FailFlag = False
     tolog("<b>Verify bbm -a clear -p pd ID (configured SATA physical drive)</b>")
     result = SendCmd(c, "phydrv")
-    num = 4
     pdid = []
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
+    for i in range(4, (len(result.split("\r\n")) - 2)):
+        row = result.split("\r\n")[i]
         if row.split()[2] != "SAST":
             tolog('\n<font color="red">Fail: there is no SAST type PD</font>')
             break
         if row.split()[2] == "SAST" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
-        num = num + 1
+
     if len(pdid) != 0:
         for m in pdid:
             result = SendCmd(c, "bbm -a clear " + m)
@@ -100,16 +99,15 @@ def verifyBBMClearFailedTest(c):
     FailFlag = False
     tolog("<b>Verify bbm -a clear -p pd id (unconfigured SATA physical drive)</b>")
     result = SendCmd(c, "phydrv")
-    num = 4
     pdid = []
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
+    for i in range(4, (len(result.split("\r\n")) - 2)):
+        row = result.split("\r\n")[i]
         if row.split()[2] != "SAST":
             tolog('\n<font color="red"> Fail: there is no SAST type PD </font>')
             break
         if row.split()[2] == "SAST" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
-        num = num + 1
+
     if len(pdid) != 0:
         for m in pdid:
             result = SendCmd(c, "bbm -a clear " + m)
@@ -119,13 +117,11 @@ def verifyBBMClearFailedTest(c):
 
     tolog("<b> Verify bbm -a clear -p pd id(configured not SATA physical drive)</b>")
     result = SendCmd(c, "phydrv")
-    num = 4
     pdid = []
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
+    for i in range(4, (len(result.split("\r\n"))-2)):
+        row = result.split("\r\n")[i]
         if row.split()[2] != "SAST" and row.split()[-1] == "Unconfigured":
             pdid.append(row.split()[0])
-        num = num + 1
     Rpdid = random.choice(pdid)
     result = SendCmd(c, "bbm -a clear -p " + Rpdid)
     if "Error" not in result:
@@ -134,13 +130,12 @@ def verifyBBMClearFailedTest(c):
 
     tolog("<b>Verify bbm -a clear -p pd id(Unconfigured not SATA physical drive)</b>")
     result = SendCmd(c, "phydrv")
-    num = 4
     pdid = []
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
+    for i in range(4, (len(result.split("\r\n")) - 2)):
+        row = result.split("\r\n")[i]
         if row.split()[2] != "SAST" and row.split()[-1] == "Unconfigured":
             pdid.append(row.split()[0])
-        num = num + 1
+
     Rpdid = random.choice(pdid)
     result = SendCmd(c, "bbm -a clear -p " + Rpdid)
     if "Error" not in result:
@@ -255,16 +250,14 @@ def bvt_verifyBBMClear(c):
     FailFlag = False
     tolog("<b>Verify bbm -a clear -p pd ID (configured SATA physical drive)</b>")
     result = SendCmd(c, "phydrv")
-    num = 4
     pdid = []
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
+    for i in range(4, (len(result.split("\r\n")) - 2)):
+        row = result.split("\r\n")[i]
         if row.split()[2] != "SAST":
             tolog('\n<font color="red">Fail: there is no SAST type PD</font>')
             break
         if row.split()[2] == "SAST" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
-        num = num + 1
 
     if len(pdid) != 0:
         for m in pdid:
@@ -289,16 +282,14 @@ def bvt_verifyBBMClearFailedTest(c):
     FailFlag = False
     tolog("<b>Verify bbm -a clear -p pd id (unconfigured SATA physical drive)</b>")
     result = SendCmd(c, "phydrv")
-    num = 4
     pdid = []
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
+    for i in range(4, (len(result.split("\r\n")) - 2)):
+        row = result.split("\r\n")[i]
         if row.split()[2] != "SAST":
             tolog('\n<font color="red"> Fail: there is no SAST type PD </font>')
             break
         if row.split()[2] == "SAST" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
-        num = num + 1
 
     if len(pdid) != 0:
         for m in pdid:
@@ -309,13 +300,12 @@ def bvt_verifyBBMClearFailedTest(c):
 
     tolog("<b> Verify bbm -a clear -p pd id(configured not SATA physical drive)</b>")
     result = SendCmd(c, "phydrv")
-    num = 4
     pdid = []
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
+    for i in range(4, (len(result.split("\r\n")) - 2)):
+        row = result.split("\r\n")[i]
         if row.split()[2] != "SAST" and row.split()[-1] == "Unconfigured":
             pdid.append(row.split()[0])
-        num = num + 1
+
     Rpdid = random.choice(pdid)
     result = SendCmd(c, "bbm -a clear -p " + Rpdid)
     if "Error" not in result:
@@ -324,13 +314,12 @@ def bvt_verifyBBMClearFailedTest(c):
 
     tolog("<b>Verify bbm -a clear -p pd id(Unconfigured not SATA physical drive)</b>")
     result = SendCmd(c, "phydrv")
-    num = 4
     pdid = []
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
+    for i in range(4, (len(result.split("\r\n")) - 2)):
+        row = result.split("\r\n")[i]
         if row.split()[2] != "SAST" and row.split()[-1] == "Unconfigured":
             pdid.append(row.split()[0])
-        num = num + 1
+
     Rpdid = random.choice(pdid)
     result = SendCmd(c, "bbm -a clear -p " + Rpdid)
     if "Error" not in result:
