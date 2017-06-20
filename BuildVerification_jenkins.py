@@ -110,16 +110,16 @@ def BuildVerification(c):
         Failflaglist.append(pool.bvtclonecreateandlist(c, 2))
 
         tolog("Start verifying clone force delete")
-        Failflaglist.append(pool.bvtforcedelete(c, "clone"))
+        Failflaglist.append(pool.bvtforcedel(c, "clone"))
 
         tolog("Start verifying snapshot force delete")
-        Failflaglist.append(pool.bvtforcedelete(c, "snapshot"))
+        Failflaglist.append(pool.bvtforcedel(c, "snapshot"))
 
         tolog("Start verifying volume force delete")
-        Failflaglist.append(pool.bvtforcedelete(c, "volume"))
+        Failflaglist.append(pool.bvtforcedel(c, "volume"))
 
         tolog("Start verifying pool force delete")
-        Failflaglist.append(pool.bvtforcedelete(c, "pool"))
+        Failflaglist.append(pool.bvtforcedel(c, "pool"))
 
 
         Failflaglist.append(bbm.bvt_verifyBBM(c))
