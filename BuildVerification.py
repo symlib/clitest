@@ -246,12 +246,13 @@ def BuildVerification(c):
             tolog("Failed to connect server after ptiflash.")
             Failflaglist.append(True)
 
-        for flag in Failflaglist:
-            if Failflaglist:
-                tolog(Fail)
-                break
-            else:
-                tolog(Pass)
+        if Failflaglist:
+            Failflag = True
+            tolog(Fail)
+            tolog("%d fails in BuildVerifiation" % len(Failflaglist))
+
+        else:
+            tolog(Pass)
     else:
         tolog("no new build is availlable.")
         tolog(Pass)

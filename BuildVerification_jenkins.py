@@ -209,13 +209,14 @@ def BuildVerification(c):
     else:
         tolog("Failed to connect server after ptiflash.")
         Failflag = True
-    for Failflag in Failflaglist:
 
-        if Failflag:
-            tolog(Fail)
-            break
-        else:
-            tolog(Pass)
+    if Failflaglist:
+        Failflag=True
+        tolog(Fail)
+        tolog("%d fails in Jenkins BVT"%len(Failflaglist))
+
+    else:
+        tolog(Pass)
 
 
     c.close()
