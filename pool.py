@@ -1505,7 +1505,7 @@ def bvtpoolcreateverifyoutputerror_newraidlevel(c):
                 # print eachres
                 if (("Error" in eachres) or ("Fail" in eachres) or ("Invalid" in eachres)):
                     tolog(Failprompt + eachres)
-                    Failflag = True
+                    Failflaglist.append(True)
 
             raid = "10"
             tolog("Verify 1,2,3,5 disks under Raid 10")
@@ -1582,10 +1582,9 @@ def bvtpoolcreateverifyoutputerror_newraidlevel(c):
                     tolog(Failprompt+eachres)
                     Failflaglist.append(True)
 
-    for flag in Failflaglist:
-        if flag:
-            Failflag = True
-            break
+    if Failflaglist:
+        Failflag=True
+        tolog("%d fails in bvtpoolcreateverifyoutputerror_newraidlevel"%len(Failflaglist))
 
     return Failflag
 
@@ -1754,10 +1753,9 @@ def bvtpoolcreateverifyoutputerror(c):
                     tolog(Failprompt+eachres)
                     Failflaglist.append(True)
 
-    for flag in Failflaglist:
-        if flag:
-            Failflag=True
-            break
+    if Failflaglist:
+        Failflag=True
+        tolog("%d fails in bvtpoolcreateverifyoutputerror"%len(Failflaglist))
 
     return Failflag
 
@@ -2224,7 +2222,43 @@ def exportunexport(c,obj):
         tolog(Pass)
 
 def bvtexportunexport(c,obj):
-    pass
+    FailFlag = False
+    Failflaglist=list()
+    i = j = 0
+    objlist = infodictret(c, obj, "", 1)
+    objnum = len(objlist)
+    #print "before export/unexport ", objlist
+    for id, value in objlist.items():
+
+        if "Exported" in value:
+            cmd = obj + " -a export -i " + str(id)
+            i += 1
+        else:
+            cmd = obj + " -a unexport -i " + str(id)
+            j += 1
+
+    objlist = infodictret(c, obj, "", 1)
+    #print "after export/unexport ", objlist
+
+    for id, value in objlist.items():
+        if "Exported" in value:
+            cmd = obj + " -a export -i " + str(id)
+            j += 1
+        else:
+            cmd = obj + " -a unexport -i " + str(id)
+            i += 1
+
+    if i == j == objnum:
+        tolog("%s export and unexport successfully." % obj)
+    else:
+        tolog("%s export and unexport failed." % obj)
+        Failflaglist.append(True)
+
+    if Failflaglist:
+        Failflag=True
+        tolog("%d fails in bvtexportunexport"%len(Failflaglist))
+
+    return Failflag
 
 
 def forcedel(c,obj):
