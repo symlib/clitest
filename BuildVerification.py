@@ -194,6 +194,24 @@ def BuildVerification(c):
             Failflaglist.append(bbm.bvt_verifyBBMMissingParameters(c))
 
             Failflaglist.append(bbm.bvt_verifyBBMSpecifyInexistentId(c))
+            import ctrl
+            tolog("Start verifying ctrl")
+            Failflaglist.append(ctrl.bvt_verifyCtrl(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlSpecifyId(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlSpecifyInexistentId(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlList(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlV(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlListV(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlModNormativeAlias(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlModValuesIsEnableOrDisable(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlModValuesIsTime(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlClear(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlHelp(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlInvalidOption(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlInvalidParameters(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlMissingParameters(c))
+            Failflaglist.append(ctrl.bvt_verifyCtrlSpecifyInexistentId(c))
+
         else:
             tolog("Failed to connect server after ptiflash.")
             Failflaglist.append(True)
