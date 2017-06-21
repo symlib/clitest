@@ -313,7 +313,7 @@ if __name__ == "__main__":
                                                 msg['From'] = 'jacky.li@cn.promise.com'
                                                 msg['To'] = 'jacky.li@cn.promise.com'
                                                 # rec = ['jacky.li@cn.promise.com', 'hulda.zhao@cn.promise.com']
-                                                rec = ['jacky.li@cn.promise.com']
+                                                rec = ['jacky.li@cn.promise.com','zach.feng@cn.promise.com']
                                                 # Send the message via our own SMTP server, but don't include the
                                                 # envelope header.
                                                 u = u.decode('base64')

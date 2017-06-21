@@ -1720,7 +1720,7 @@ def bvtpoolglobalsetting(c):
     else:
         settings = "\"" + "capthreshold=" + str(origthreshold + 5) + "\""
         modsetting = origthreshold + 5
-    SendCmd(c, "pool -a mod -n " + settings)
+    SendCmd(c, "pool -a mod -s " + settings)
 
     mod = SendCmd(c, "pool -v")
     modthreshold = int(mod[mod.find("CapacityThreshold: ") + len("CapacityThreshold: "):mod.find(
