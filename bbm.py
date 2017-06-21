@@ -117,36 +117,28 @@ def verifyBBMClearFailedTest(c):
 
     tolog("<b> Verify bbm -a clear -p pd id(configured not SATA physical drive)</b>")
     result = SendCmd(c, "phydrv")
-    pdid = []
-    for i in range(4, (len(result.split("\r\n"))-2)):
-        row = result.split("\r\n")[i]
-        if row.split()[2] != "SATA" and row.split()[-1] == "Unconfigured":
-            pdid.append(row.split()[0])
-    Rpdid = random.choice(pdid)
-    result = SendCmd(c, "bbm -a clear -p " + Rpdid)
-    if "Error" not in result:
-        FailFlag =True
-        tolog('\n<font color="red">Fail: bbm -a clear -p ' + Rpdid + '</font>')
-
-    tolog("<b>Verify bbm -a clear -p pd id(Unconfigured not SATA physical drive)</b>")
-    result = SendCmd(c, "phydrv")
+    xxx = False
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
         if row.split()[2] != "SATA" and row.split()[-1] == "Unconfigured":
+            xxx = True
+            pdid.append(row.split()[0])
+    if xxx:
+        SendCmd(c, 'pool -a add -s "name=testBBM,raid=0" -p ' + pdid[0])
+
+    result = SendCmd(c, 'phydrv')
+    pdid = []
+    for i in range(4, (len(result.split("\r\n"))-2)):
+        row = result.split("\r\n")[i]
+        if row.split()[2] != "SATA" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
 
     Rpdid = random.choice(pdid)
     result = SendCmd(c, "bbm -a clear -p " + Rpdid)
-    if "Error" not in result:
+    if "Error" not in result or 'Unsupported command for the drive type' not in result:
         FailFlag =True
         tolog('\n<font color="red">Fail: bbm -a clear -p ' + Rpdid + '</font>')
-
-    tolog("<b> Verify bbm -a clear -p pd's ID </b>")
-    result = SendCmd(c, "bbm -a clear -p 1")
-    if "Error" not in result:
-        FailFlag = True
-        tolog('\n<font color="red"> Fail: bbm -a clear -p pd ID </font>')
 
     if FailFlag:
         tolog('\n<font color="red">Verify bbm -a clear failed test</font>')
@@ -300,37 +292,28 @@ def bvt_verifyBBMClearFailedTest(c):
 
     tolog("<b> Verify bbm -a clear -p pd id(configured not SATA physical drive)</b>")
     result = SendCmd(c, "phydrv")
+    xxx = False
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
         if row.split()[2] != "SATA" and row.split()[-1] == "Unconfigured":
+            xxx = True
             pdid.append(row.split()[0])
+    if xxx:
+        SendCmd(c, 'pool -a add -s "name=testBBM,raid=0" -p ' + pdid[0])
 
-    Rpdid = random.choice(pdid)
-    result = SendCmd(c, "bbm -a clear -p " + Rpdid)
-    if "Error" not in result:
-        FailFlag =True
-        tolog('\n<font color="red">Fail: bbm -a clear -p ' + Rpdid + '</font>')
-
-    tolog("<b>Verify bbm -a clear -p pd id(Unconfigured not SATA physical drive)</b>")
-    result = SendCmd(c, "phydrv")
+    result = SendCmd(c, 'phydrv')
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SATA" and row.split()[-1] == "Unconfigured":
+        if row.split()[2] != "SATA" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
 
     Rpdid = random.choice(pdid)
     result = SendCmd(c, "bbm -a clear -p " + Rpdid)
-    if "Error" not in result:
-        FailFlag =True
-        tolog('\n<font color="red">Fail: bbm -a clear -p ' + Rpdid + '</font>')
-
-    tolog("<b> Verify bbm -a clear -p pd's ID </b>")
-    result = SendCmd(c, "bbm -a clear -p 1")
-    if "Error" not in result:
+    if "Error" not in result or 'Unsupported command for the drive type' not in result:
         FailFlag = True
-        tolog('\n<font color="red"> Fail: bbm -a clear -p pd ID </font>')
+        tolog('\n<font color="red">Fail: bbm -a clear -p ' + Rpdid + '</font>')
 
     return FailFlag
 
