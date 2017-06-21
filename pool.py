@@ -2255,10 +2255,10 @@ def bvtexportunexport(c,obj):
         Failflaglist.append(True)
 
     if Failflaglist:
-        Failflag=True
+        FailFlag=True
         tolog("%d fails in bvtexportunexport"%len(Failflaglist))
 
-    return Failflag
+    return FailFlag
 
 
 def forcedel(c,obj):
