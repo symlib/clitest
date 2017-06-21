@@ -64,9 +64,9 @@ def BuildVerification(c):
 
 
 
-    if flashimage:
+    if True:
         i=1
-        while i< 160:
+        while i< 1:
             # wait for rebooting
            tolog("ptiflash is in progress, please wait, %d seconds elapse" %i)
            i+=1
@@ -75,7 +75,7 @@ def BuildVerification(c):
     # check if ssh connection is ok.
     # wait for another 40 seconds
         reconnectflag=False
-        for x in range(30):
+        for x in range(3):
             try:
                 c,ssh=ssh_conn()
                 reconnectflag=True
@@ -85,10 +85,10 @@ def BuildVerification(c):
                 sleep(4)
 
 
-        if reconnectflag:
+        if True:
             tolog("Start verifying pool add")
             Failflaglist.append(pool.bvtpoolcreateandlist(c,1))
-            
+
             tolog("Start verifying pool global setting")
             Failflaglist.append(pool.bvtpoolglobalsetting(c))
 
@@ -157,8 +157,11 @@ def BuildVerification(c):
             tolog("Start verifying pool extend")
             Failflaglist.append(pool.bvtpoolmodifyandlist(c))
 
+            tolog("Start verifying pool force delete")
+            Failflaglist.append(pool.bvtforcedel(c, "pool"))
+
             tolog("Start verifying buzzer")
-            
+
             Failflaglist.append(buzzer.bvt_verifyBuzzerDisableAndSilentTurnOn((c)))
             Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSilentTurnOn((c)))
             Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSoundingTurnOn((c)))
