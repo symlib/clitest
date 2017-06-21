@@ -64,9 +64,9 @@ def BuildVerification(c):
 
 
 
-    if True:
+    if flashimage:
         i=1
-        while i< 1:
+        while i< 160:
             # wait for rebooting
            tolog("ptiflash is in progress, please wait, %d seconds elapse" %i)
            i+=1
@@ -75,7 +75,7 @@ def BuildVerification(c):
     # check if ssh connection is ok.
     # wait for another 40 seconds
         reconnectflag=False
-        for x in range(3):
+        for x in range(30):
             try:
                 c,ssh=ssh_conn()
                 reconnectflag=True
@@ -85,10 +85,10 @@ def BuildVerification(c):
                 sleep(4)
 
 
-        if True:
+        if reconnectflag:
             tolog("Start verifying pool add")
             Failflaglist.append(pool.bvtpoolcreateandlist(c,1))
-
+            
             tolog("Start verifying pool global setting")
             Failflaglist.append(pool.bvtpoolglobalsetting(c))
 
@@ -158,9 +158,6 @@ def BuildVerification(c):
             tolog("Start verifying pool extend")
             Failflaglist.append(pool.bvtpoolmodifyandlist(c))
 
-<<<<<<< HEAD
-            tolog("Start verifying pool force delete")
-=======
             tolog("Start verifying volume add")
             Failflaglist.append(pool.bvtvolumecreateandlist(c, 10))
 
@@ -180,7 +177,6 @@ def BuildVerification(c):
             Failflaglist.append(pool.bvtforcedel(c, "volume"))
 
 
->>>>>>> 9e99855361c3291efd6e1c7955d628eb1a3ef3ff
             Failflaglist.append(pool.bvtforcedel(c, "pool"))
 
             tolog("Start verifying pool create with all raid level and parameters")
@@ -191,7 +187,7 @@ def BuildVerification(c):
             Failflaglist.append(pool.bvtpoolcreateverifyoutputerror_newraidlevel(c))
 
             tolog("Start verifying buzzer")
-
+            
             Failflaglist.append(buzzer.bvt_verifyBuzzerDisableAndSilentTurnOn((c)))
             Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSilentTurnOn((c)))
             Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSoundingTurnOn((c)))
