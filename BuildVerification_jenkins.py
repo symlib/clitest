@@ -85,17 +85,47 @@ def BuildVerification(c):
         tolog("Start verifying delete pool")
         Failflaglist.append(pool.bvtpooldel(c))
 
-        tolog("Start verifying pool add")
+        tolog("Start verifying pool add for a second time")
         Failflaglist.append(pool.bvtpoolcreateandlist(c, 0))
 
         tolog("Start verifying pool global setting")
         Failflaglist.append(pool.bvtpoolglobalsetting(c))
 
-        tolog("Start verifying volume add")
-        Failflaglist.append(pool.bvtvolumecreateandlist(c, 5))
-
         tolog("Start verifying volume add many")
-        Failflaglist.append(pool.bvtvolumeaddmany(c, 5))
+        Failflaglist.append(pool.bvtvolumeaddmany(c, 2))
+
+        tolog("Start verifying snapshot add")
+        Failflaglist.append(pool.bvtsnapshotcreateandlist(c, 2))
+
+        tolog("Start verifying clone add")
+        Failflaglist.append(pool.bvtclonecreateandlist(c, 2))
+
+        tolog("Start verifying clone export/unexport")
+        Failflaglist.append(pool.bvtexportunexport(c, "clone"))
+
+        tolog("Start verifying snapshot export/unexport")
+        Failflaglist.append(pool.bvtexportunexport(c, "snapshot"))
+
+        tolog("Start verifying volume export/unexport")
+        Failflaglist.append(pool.bvtexportunexport(c, "volume"))
+
+        tolog("Start verifying pool force delete")
+        Failflaglist.append(pool.bvtforcedel(c, "pool"))
+
+        tolog("Start verifying pool add for 3rd time")
+        Failflaglist.append(pool.bvtpoolcreateandlist(c, 2))
+
+        tolog("Start verifying spare add")
+        Failflaglist.append(pool.bvtsparedrvcreate(c, 2))
+
+        tolog("Start verifying delete spare")
+        Failflaglist.append(pool.bvtsparedelete(c))
+
+        tolog("Start verifying pool extend")
+        Failflaglist.append(pool.bvtpoolmodifyandlist(c))
+
+        tolog("Start verifying volume add")
+        Failflaglist.append(pool.bvtvolumecreateandlist(c, 10))
 
         tolog("Start verifying snapshot add")
         Failflaglist.append(pool.bvtsnapshotcreateandlist(c, 2))
@@ -112,20 +142,13 @@ def BuildVerification(c):
         tolog("Start verifying volume force delete")
         Failflaglist.append(pool.bvtforcedel(c, "volume"))
 
-        tolog("Start verifying pool force delete")
         Failflaglist.append(pool.bvtforcedel(c, "pool"))
 
-        tolog("Start verifying pool add")
-        Failflaglist.append(pool.bvtpoolcreateandlist(c, 2))
-
-        tolog("Start verifying spare add")
-        Failflaglist.append(pool.bvtsparedrvcreate(c, 2))
-
-        tolog("Start verifying delete spare")
-        Failflaglist.append(pool.bvtsparedelete(c))
-
-        tolog("Start verifying pool extend")
-        Failflaglist.append(pool.bvtpoolmodifyandlist(c))
+        # tolog("Start verifying pool create with all raid level and parameters")
+        # Failflaglist.append(pool.bvtpoolcreateverify_newraidlevel(c))
+        #
+        # tolog("Start verifying pool output error")
+        # Failflaglist.append(pool.bvtpoolcreateverifyoutputerror_newraidlevel(c))
 
         tolog("Start verifying buzzer")
 
@@ -164,6 +187,25 @@ def BuildVerification(c):
         Failflaglist.append(bbm.bvt_verifyBBMMissingParameters(c))
 
         Failflaglist.append(bbm.bvt_verifyBBMSpecifyInexistentId(c))
+
+        import ctrl
+        tolog("Start verifying ctrl")
+        Failflaglist.append(ctrl.bvt_verifyCtrl(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlSpecifyId(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlSpecifyInexistentId(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlList(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlV(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlListV(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlModNormativeAlias(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlModValuesIsEnableOrDisable(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlModValuesIsTime(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlClear(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlHelp(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlInvalidOption(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlInvalidParameters(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlMissingParameters(c))
+        Failflaglist.append(ctrl.bvt_verifyCtrlSpecifyInexistentId(c))
+
     else:
         tolog("Failed to connect server after ptiflash.")
         Failflag = True
