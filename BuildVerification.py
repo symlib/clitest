@@ -157,6 +157,15 @@ def BuildVerification(c):
             tolog("Start verifying pool extend")
             Failflaglist.append(pool.bvtpoolmodifyandlist(c))
 
+            Failflaglist.append(pool.bvtforcedel(c, "pool"))
+
+            tolog("Start verifying pool create with all raid level and parameters")
+            Failflaglist.append(pool.bvtpoolcreateverify_newraidlevel(c))
+
+
+            tolog("Start verifying pool output error")
+            Failflaglist.append(pool.bvtpoolcreateverifyoutputerror_newraidlevel(c))
+
             tolog("Start verifying buzzer")
             
             Failflaglist.append(buzzer.bvt_verifyBuzzerDisableAndSilentTurnOn((c)))
@@ -194,6 +203,7 @@ def BuildVerification(c):
             Failflaglist.append(bbm.bvt_verifyBBMMissingParameters(c))
 
             Failflaglist.append(bbm.bvt_verifyBBMSpecifyInexistentId(c))
+
             import ctrl
             tolog("Start verifying ctrl")
             Failflaglist.append(ctrl.bvt_verifyCtrl(c))

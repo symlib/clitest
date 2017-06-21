@@ -1229,6 +1229,75 @@ def poolcreateverify_newraidlevel(c):
     else:
         tolog(Fail)
 
+def bvtpoolcreateverify_newraidlevel(c):
+    # stripelst = ("64kb", "128kb", "256kb", "512kb", "1mb", "64Kb", "64kB", "64KB", "128Kb", "128KB", "128kB", "256Kb",
+    #              "256KB", "256kB", "512Kb", "512KB", "512kB", "1Mb", "1MB", "1mB")
+    stripelst = ("64kb", "128kb", "256kb", "512kb", "1mb")
+    # sectorlst = ["512b", "1kb", "2kb", "4kb","512B", "1Kb", "2Kb", "4Kb","1KB", "2KB", "4KB","1kB", "2kB", "4kB"]
+    sectorlst = ("512b", "1kb", "2kb","4kb")
+    #raidlevel=("1","5","6")
+    raidlevel = ("0","1", "5","6")
+    raidlevel2 =("10", "50", "60")
+    pdlist=getavailpd(c)
+    i=j=0
+    for hdtype in pdlist:
+        if len(hdtype)>0:
+
+
+            for stripe in stripelst:
+                for sector in sectorlst:
+                    for raid in raidlevel:
+
+                        if raid=="0":
+                            pdid = random.sample(hdtype, 1)
+
+                        elif raid=="1":
+                            pdid=random.sample(hdtype,2)
+
+                        elif raid=="5":
+                            pdid = random.sample(hdtype,3)
+                        elif raid=="6":
+                            pdid = random.sample(hdtype, 4)
+
+                        pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                        aliasname = random_key(4) + "_" + raid + "_" + stripe + "_" + sector
+                        settings = "name=" + aliasname + " ,raid=" + raid + ", stripe=" + stripe + ", sector=" + sector
+                        res = SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids)
+                        i += 1
+                        if "Error" in res or "Fail" in res:
+                            tolog(Failprompt + " creating " + aliasname + " with pd " + pdids)
+
+                        else:
+                            SendCmd(c, "pool -a del -i 0")
+                            j += 1
+
+                    for raid in raidlevel2:
+                        if raid=="10":
+                            pdid=random.sample(hdtype,4)
+                        elif raid=="50":
+                            pdid=random.sample(hdtype,6)
+                        elif raid=="60":
+                            pdid = random.sample(hdtype, 8)
+
+                        pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                        aliasname = random_key(4) + "_" + raid + "_" + stripe + "_" + sector
+                        settings = "name=" + aliasname + " ,raid=" + raid + ", stripe=" + stripe + ", sector=" + sector +", axle=2"
+                        res = SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids)
+                        i += 1
+                        if "Error" in res or "Fail" in res:
+                            tolog(Failprompt + " creating " + aliasname + " with pd " + pdids)
+
+                        else:
+                            SendCmd(c, "pool -a del -i 0")
+                            j += 1
+
+    tolog("Created %s and deleted %s" % (str(i),str(j)))
+    if i==j:
+        return False
+    else:
+        return True
+
+
 def poolcreateverifyoutputerror_newraidlevel(c):
     # output error validation
     # raid 1 with 1 disks, 3 disks
@@ -1373,6 +1442,154 @@ def poolcreateverifyoutputerror_newraidlevel(c):
     else:
         tolog(Pass)
 
+def bvtpoolcreateverifyoutputerror_newraidlevel(c):
+    # output error validation
+    # raid 1 with 1 disks, 3 disks
+    # raid 5 with 1,2 disks
+    # raid 6 with 1,2,3 disks
+    pdlist = getavailpd(c)
+    results=list()
+    raid0results=list()
+    Failflag=False
+    Failflaglist=list()
+    for hdtype in pdlist:
+        if hdtype:
+            raid="1"
+            tolog("Verify 1,3,4,5 disks Raid 1")
+            disknum=(1,3,4,5)
+            for eachnum in disknum:
+                pdid= random.sample(hdtype, eachnum)
+                pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                aliasname = random_key(4) + "_raid_" + raid
+                settings = "name=" + aliasname + ",raid=" + raid
+                results.append(SendCmd(c,"pool -a add -s "+"\""+settings+ "\"" + " -p " + pdids))
+                SendCmd(c,"pool -a del -i 0")
+
+            raid="5"
+            tolog("Verify 1,2 disks Raid 5")
+
+            disknum=(1,2)
+            for eachnum in disknum:
+                pdid= random.sample(hdtype, eachnum)
+                pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                aliasname = random_key(4) + "_raid_" + raid
+                settings = "name=" + aliasname + ",raid=" + raid
+                results.append(SendCmd(c,"pool -a add -s "+"\""+settings+ "\"" + " -p " + pdids))
+                SendCmd(c, "pool -a del -i 0")
+
+            raid = "6"
+            tolog("Verify 1 disk, 2 disks, 3 disks under Raid 6")
+
+            disknum = (1,2,3)
+
+            for eachnum in disknum:
+                pdid = random.sample(hdtype, eachnum)
+                pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                aliasname = random_key(4) + "_raid_" + raid
+                settings = "name=" + aliasname + ",raid=" + raid
+                results.append(SendCmd(c, "pool -a add -s " + "\""+settings + "\"" + " -p " + pdids))
+                SendCmd(c, "pool -a del -i 0")
+
+
+            raid = "0"
+            tolog("Verify 2 disks,3 disks,4 disks under Raid 0")
+            disknum = (2,3,4)
+            for eachnum in disknum:
+                pdid = random.sample(hdtype, eachnum)
+                pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                aliasname = random_key(4) + "_raid_" + raid
+                settings = "name=" + aliasname + ",raid=" + raid
+                raid0results.append(SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids))
+                SendCmd(c, "pool -a del -i 0")
+            for eachres in raid0results:
+                # print eachres
+                if (("Error" in eachres) or ("Fail" in eachres) or ("Invalid" in eachres)):
+                    tolog(Failprompt + eachres)
+                    Failflag = True
+
+            raid = "10"
+            tolog("Verify 1,2,3,5 disks under Raid 10")
+
+            disknum = (1, 2,3,5)
+            for eachnum in disknum:
+                pdid = random.sample(hdtype, eachnum)
+                pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                aliasname = random_key(4) + "_raid_" + raid
+                settings = "name=" + aliasname + ",raid=" + raid +", axle=2"
+                results.append(SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids))
+                SendCmd(c, "pool -a del -i 0")
+
+            raid = "50"
+            tolog("Verify 1,2,3,4,5 disks under Raid 50")
+
+            disknum = (1, 2, 3,4,5)
+
+            for eachnum in disknum:
+                pdid = random.sample(hdtype, eachnum)
+                pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                aliasname = random_key(4) + "_raid_" + raid
+                settings = "name=" + aliasname + ",raid=" + raid +", axle=2"
+                results.append(SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids))
+                SendCmd(c, "pool -a del -i 0")
+
+            raid = "60"
+            tolog("Verify 1,2,3,4,5,6,7 disks under Raid 60")
+
+            disknum = (1, 2, 3, 4, 5,6,7)
+
+            for eachnum in disknum:
+                pdid = random.sample(hdtype, eachnum)
+                pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                aliasname = random_key(4) + "_raid_" + raid
+                settings = "name=" + aliasname + ",raid=" + raid +", axle=2"
+                results.append(SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids))
+                SendCmd(c, "pool -a del -i 0")
+
+            i = 0
+            for eachres in results:
+                # print eachres
+                if not (("Error" in eachres) or ("Fail" in eachres) or ("Invalid" in eachres)):
+                    tolog(Failprompt + eachres)
+                    Failflaglist.append(True)
+                    i += 1
+
+            tolog("There are %s errors when validating output error." %str(i))
+
+            invalidstriplist=("0kb", "2mb")
+            invalidsectorlist=("0kb","8kb")
+            invalidraildlevel=("01","05","06","8","100")
+            stripelst = ("64kb", "128kb", "256kb", "512kb", "1mb")
+            # sectorlst = ["512b", "1kb", "2kb", "4kb","512B", "1Kb", "2Kb", "4Kb","1KB", "2KB", "4KB","1kB", "2kB", "4kB"]
+            sectorlst = ("512b", "1kb", "2kb", "4kb")
+            raidlevellst = ("1", "5", "6")
+
+            results1=list()
+            for stripe in invalidstriplist:
+
+                settings = "name=" + aliasname + ",raid=" + random.choice(raidlevellst) + ", stripe=" + stripe + ", sector=" + random.choice(sectorlst)
+                results1.append(SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + str(pdid).replace("[", "").replace("]", "").replace(" ", "")))
+            for sector in invalidsectorlist:
+                settings = "name=" + aliasname + ",raid=" + random.choice(
+                    raidlevellst) + ", stripe=" + random.choice(stripelst) + ", sector=" + sector
+                results1.append(SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + str(pdid).replace("[", "").replace("]", "").replace(" ", "")))
+            for raidlevel in invalidraildlevel:
+                settings = "name=" + aliasname + ",raid=" + raidlevel + ", stripe=" + random.choice(stripelst) + ", sector=" + random.choice(sectorlst)
+                results1.append(SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + str(pdid).replace("[",
+                                                                                                                  "").replace(
+                    "]", "").replace(" ", "")))
+            for eachres in results1:
+                if not(("Error" in eachres) or ("Fail" in eachres) or ("Invalid" in eachres)):
+                    tolog(Failprompt+eachres)
+                    Failflaglist.append(True)
+
+    for flag in Failflaglist:
+        if flag:
+            Failflag = True
+            break
+
+    return Failflag
+
+
 def poolcreateverifyoutputerror(c):
     # output error validation
     # raid 1 with 1 disks, 3 disks
@@ -1456,6 +1673,93 @@ def poolcreateverifyoutputerror(c):
         tolog(Fail)
     else:
         tolog(Pass)
+
+def bvtpoolcreateverifyoutputerror(c):
+    # output error validation
+    # raid 1 with 1 disks, 3 disks
+    # raid 5 with 1,2 disks
+    # raid 6 with 1,2,3 disks
+    pdlist = getavailpd(c)
+    results=list()
+    Failflag=False
+    Failflaglist=list()
+    for hdtype in pdlist:
+        if hdtype:
+            raid="1"
+            tolog("Verify 1 disk and 3 disks Raid 1")
+            disknum=(1,3)
+            for eachnum in disknum:
+                pdid= random.sample(hdtype, eachnum)
+                pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                aliasname = random_key(4) + "_raid_" + raid
+                settings = "name=" + aliasname + ",raid=" + raid
+                results.append(SendCmd(c,"pool -a add -s "+"\""+settings+ "\"" + " -p " + pdids))
+                SendCmd(c,"pool -a del -i 0")
+            raid="5"
+            tolog("Verify 1 disk and 1 disks Raid 5")
+
+            disknum=(1,2)
+            for eachnum in disknum:
+                pdid= random.sample(hdtype, eachnum)
+                pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                aliasname = random_key(4) + "_raid_" + raid
+                settings = "name=" + aliasname + ",raid=" + raid
+                results.append(SendCmd(c,"pool -a add -s "+"\""+settings+ "\"" + " -p " + pdids))
+                SendCmd(c, "pool -a del -i 0")
+
+            raid = "6"
+            tolog("Verify 1 disk and 1 disks Raid 5")
+
+            disknum = (1, 2,3)
+
+            for eachnum in disknum:
+                pdid = random.sample(hdtype, eachnum)
+                pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                aliasname = random_key(4) + "_raid_" + raid
+                settings = "name=" + aliasname + ",raid=" + raid
+                results.append(SendCmd(c, "pool -a add -s " + "\""+settings + "\"" + " -p " + pdids))
+                SendCmd(c, "pool -a del -i 0")
+            i=0
+            for eachres in results:
+                # print eachres
+                if not(("Error" in eachres) or ("Fail" in eachres) or ("Invalid" in eachres)):
+                    tolog(Failprompt+eachres)
+                    Failflaglist.append(True)
+                    i+=1
+
+            tolog("There are %s errors when validating output error." %str(i))
+            invalidstriplist=("0kb", "2mb")
+            invalidsectorlist=("0kb","8kb")
+            invalidraildlevel=("0","10","50","60","100")
+            stripelst = ("64kb", "128kb", "256kb", "512kb", "1mb")
+            # sectorlst = ["512b", "1kb", "2kb", "4kb","512B", "1Kb", "2Kb", "4Kb","1KB", "2KB", "4KB","1kB", "2kB", "4kB"]
+            sectorlst = ("512b", "1kb", "2kb", "4kb")
+            raidlevellst = ("1", "5", "6")
+            results1=list()
+            for stripe in invalidstriplist:
+
+                settings = "name=" + aliasname + ",raid=" + random.choice(raidlevellst) + ", stripe=" + stripe + ", sector=" + random.choice(sectorlst)
+                results1.append(SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + str(pdid).replace("[", "").replace("]", "").replace(" ", "")))
+            for sector in invalidsectorlist:
+                settings = "name=" + aliasname + ",raid=" + random.choice(
+                    raidlevellst) + ", stripe=" + random.choice(stripelst) + ", sector=" + sector
+                results1.append(SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + str(pdid).replace("[", "").replace("]", "").replace(" ", "")))
+            for raidlevel in invalidraildlevel:
+                settings = "name=" + aliasname + ",raid=" + raidlevel + ", stripe=" + random.choice(stripelst) + ", sector=" + random.choice(sectorlst)
+                results1.append(SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + str(pdid).replace("[",
+                                                                                                                  "").replace(
+                    "]", "").replace(" ", "")))
+            for eachres in results1:
+                if not(("Error" in eachres) or ("Fail" in eachres) or ("Invalid" in eachres)):
+                    tolog(Failprompt+eachres)
+                    Failflaglist.append(True)
+
+    for flag in Failflaglist:
+        if flag:
+            Failflag=True
+            break
+
+    return Failflag
 
 def spareinfo(c):
 
