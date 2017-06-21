@@ -11,7 +11,7 @@
 
 buildserverurl="http://192.168.208.5/release/hyperion_ds/daily/"
 tftpserver="/work/tftpboot/"
-import pool
+import pool,buzzer
 from time import sleep
 
 import os
@@ -51,6 +51,7 @@ def BuildVerification(c):
             try:
                 c,ssh=ssh_conn()
                 reconnectflag=True
+                break
             except Exception, e:
                 print e
                 sleep(4)
@@ -141,6 +142,24 @@ def BuildVerification(c):
         Failflaglist.append(bbm.bvt_verifyBBMMissingParameters(c))
 
         Failflaglist.append(bbm.bvt_verifyBBMSpecifyInexistentId(c))
+        tolog("Start verifying buzzer")
+
+        Failflaglist.append(buzzer.bvt_verifyBuzzerDisableAndSilentTurnOn((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSilentTurnOn((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSoundingTurnOn((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerDisableAndSilentTurnOff((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSilentTurnOff((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSoundingTurnOff((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerDisableAndSilentEnable((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSilentEnable((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSoundingEnable((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSoundingDisable((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSilentDisable((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerDisableAndSilentDisable((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerInfo((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerHelp((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerInvalidParameters((c)))
+        Failflaglist.append(buzzer.bvt_verifyBuzzerInvalidOption((c)))
 
 
     else:
