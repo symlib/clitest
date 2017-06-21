@@ -1715,10 +1715,10 @@ def bvtpoolglobalsetting(c):
     if origthreshold < 75 or origthreshold > 95:
         tolog("Threshold %d has something wrong" % origthreshold)
     elif origthreshold + 5 > 95:
-        settings = "\"" + "capthrehold=" + str(origthreshold - 5) + "\""
+        settings = "\"" + "capthreshold=" + str(origthreshold - 5) + "\""
         modsetting = origthreshold - 5
     else:
-        settings = "\"" + "capthrehold=" + str(origthreshold + 5) + "\""
+        settings = "\"" + "capthreshold=" + str(origthreshold + 5) + "\""
         modsetting = origthreshold + 5
     SendCmd(c, "pool -a mod -n " + settings)
 
