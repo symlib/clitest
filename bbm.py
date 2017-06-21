@@ -62,10 +62,10 @@ def verifyBBMClear(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SAST":
-            tolog('\n<font color="red">Fail: there is no SAST type PD</font>')
+        if row.split()[2] != "SATA":
+            tolog('\n<font color="red">Fail: there is no SATA type PD</font>')
             break
-        if row.split()[2] == "SAST" and row.split()[-1] != "Unconfigured":
+        if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
 
     if len(pdid) != 0:
@@ -102,10 +102,10 @@ def verifyBBMClearFailedTest(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SAST":
-            tolog('\n<font color="red"> Fail: there is no SAST type PD </font>')
+        if row.split()[2] != "SATA":
+            tolog('\n<font color="red"> Fail: there is no SATA type PD </font>')
             break
-        if row.split()[2] == "SAST" and row.split()[-1] != "Unconfigured":
+        if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
 
     if len(pdid) != 0:
@@ -120,7 +120,7 @@ def verifyBBMClearFailedTest(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n"))-2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SAST" and row.split()[-1] == "Unconfigured":
+        if row.split()[2] != "SATA" and row.split()[-1] == "Unconfigured":
             pdid.append(row.split()[0])
     Rpdid = random.choice(pdid)
     result = SendCmd(c, "bbm -a clear -p " + Rpdid)
@@ -133,7 +133,7 @@ def verifyBBMClearFailedTest(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SAST" and row.split()[-1] == "Unconfigured":
+        if row.split()[2] != "SATA" and row.split()[-1] == "Unconfigured":
             pdid.append(row.split()[0])
 
     Rpdid = random.choice(pdid)
@@ -253,10 +253,10 @@ def bvt_verifyBBMClear(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SAST":
-            tolog('\n<font color="red">Fail: there is no SAST type PD</font>')
+        if row.split()[2] != "SATA":
+            tolog('\n<font color="red">Fail: there is no SATA type PD</font>')
             break
-        if row.split()[2] == "SAST" and row.split()[-1] != "Unconfigured":
+        if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
 
     if len(pdid) != 0:
@@ -285,10 +285,10 @@ def bvt_verifyBBMClearFailedTest(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SAST":
-            tolog('\n<font color="red"> Fail: there is no SAST type PD </font>')
+        if row.split()[2] != "SATA":
+            tolog('\n<font color="red"> Fail: there is no SATA type PD </font>')
             break
-        if row.split()[2] == "SAST" and row.split()[-1] != "Unconfigured":
+        if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
 
     if len(pdid) != 0:
@@ -303,7 +303,7 @@ def bvt_verifyBBMClearFailedTest(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SAST" and row.split()[-1] == "Unconfigured":
+        if row.split()[2] != "SATA" and row.split()[-1] == "Unconfigured":
             pdid.append(row.split()[0])
 
     Rpdid = random.choice(pdid)
@@ -317,7 +317,7 @@ def bvt_verifyBBMClearFailedTest(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SAST" and row.split()[-1] == "Unconfigured":
+        if row.split()[2] != "SATA" and row.split()[-1] == "Unconfigured":
             pdid.append(row.split()[0])
 
     Rpdid = random.choice(pdid)
