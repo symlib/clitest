@@ -101,8 +101,6 @@ def BuildVerification(c):
             tolog("Start verifying clone add")
             Failflaglist.append(pool.bvtclonecreateandlist(c,2))
 
-            tolog("Start verifying spare add")
-            Failflaglist.append( pool.bvtsparedrvcreate(c, 2))
 
             tolog("Start verifying delete clone")
             Failflaglist.append( pool.bvtclonedelete(c))
@@ -116,8 +114,6 @@ def BuildVerification(c):
             tolog("Start verifying delete pool")
             Failflaglist.append(pool.bvtpooldel(c))
 
-            tolog("Start verifying delete spare")
-            Failflaglist.append(pool.bvtsparedelete(c))
 
             tolog("Start verifying pool add")
             Failflaglist.append(pool.bvtpoolcreateandlist(c, 0))
@@ -149,6 +145,18 @@ def BuildVerification(c):
             tolog("Start verifying pool force delete")
             Failflaglist.append(pool.bvtforcedel(c, "pool"))
 
+            tolog("Start verifying pool add")
+            Failflaglist.append(pool.bvtpoolcreateandlist(c, 2))
+
+            tolog("Start verifying spare add")
+            Failflaglist.append(pool.bvtsparedrvcreate(c, 2))
+
+            tolog("Start verifying delete spare")
+            Failflaglist.append(pool.bvtsparedelete(c))
+
+            tolog("Start verifying pool extend")
+            Failflaglist.append(pool.bvtpoolmodifyandlist(c))
+
             tolog("Start verifying buzzer")
             
             Failflaglist.append(buzzer.bvt_verifyBuzzerDisableAndSilentTurnOn((c)))
@@ -168,6 +176,7 @@ def BuildVerification(c):
             Failflaglist.append(buzzer.bvt_verifyBuzzerInvalidParameters((c)))
             Failflaglist.append(buzzer.bvt_verifyBuzzerInvalidOption((c)))
 
+            tolog("Start verifying BBM")
             Failflaglist.append(bbm.bvt_verifyBBM(c))
 
             Failflaglist.append(bbm.bvt_verifyBBMClear(c))

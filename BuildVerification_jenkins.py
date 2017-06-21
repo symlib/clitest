@@ -73,9 +73,6 @@ def BuildVerification(c):
         tolog("Start verifying clone add")
         Failflaglist.append(pool.bvtclonecreateandlist(c, 2))
 
-        tolog("Start verifying spare add")
-        Failflaglist.append(pool.bvtsparedrvcreate(c, 2))
-
         tolog("Start verifying delete clone")
         Failflaglist.append(pool.bvtclonedelete(c))
 
@@ -88,23 +85,17 @@ def BuildVerification(c):
         tolog("Start verifying delete pool")
         Failflaglist.append(pool.bvtpooldel(c))
 
-        tolog("Start verifying delete spare")
-        Failflaglist.append(pool.bvtsparedelete(c))
-
         tolog("Start verifying pool add")
         Failflaglist.append(pool.bvtpoolcreateandlist(c, 0))
 
         tolog("Start verifying pool global setting")
         Failflaglist.append(pool.bvtpoolglobalsetting(c))
 
-        tolog("Start verifying volume add many")
-        Failflaglist.append(pool.bvtvolumeaddmany(c, 25))
-
-        tolog("Start verifying pool add")
-        Failflaglist.append(pool.bvtpoolcreateandlist(c, 0))
-
         tolog("Start verifying volume add")
         Failflaglist.append(pool.bvtvolumecreateandlist(c, 5))
+
+        tolog("Start verifying volume add many")
+        Failflaglist.append(pool.bvtvolumeaddmany(c, 5))
 
         tolog("Start verifying snapshot add")
         Failflaglist.append(pool.bvtsnapshotcreateandlist(c, 2))
@@ -124,24 +115,18 @@ def BuildVerification(c):
         tolog("Start verifying pool force delete")
         Failflaglist.append(pool.bvtforcedel(c, "pool"))
 
+        tolog("Start verifying pool add")
+        Failflaglist.append(pool.bvtpoolcreateandlist(c, 2))
 
-        Failflaglist.append(bbm.bvt_verifyBBM(c))
+        tolog("Start verifying spare add")
+        Failflaglist.append(pool.bvtsparedrvcreate(c, 2))
 
-        Failflaglist.append(bbm.bvt_verifyBBMClear(c))
+        tolog("Start verifying delete spare")
+        Failflaglist.append(pool.bvtsparedelete(c))
 
-        Failflaglist.append(bbm.bvt_verifyBBMClearFailedTest(c))
+        tolog("Start verifying pool extend")
+        Failflaglist.append(pool.bvtpoolmodifyandlist(c))
 
-        Failflaglist.append(bbm.bvt_verifyBBMHelp(c))
-
-        Failflaglist.append(bbm.bvt_verifyBBMInvalidOption(c))
-
-        Failflaglist.append(bbm.bvt_verifyBBMInvalidParameters(c))
-
-        Failflaglist.append(bbm.bvt_verifyBBMList(c))
-
-        Failflaglist.append(bbm.bvt_verifyBBMMissingParameters(c))
-
-        Failflaglist.append(bbm.bvt_verifyBBMSpecifyInexistentId(c))
         tolog("Start verifying buzzer")
 
         Failflaglist.append(buzzer.bvt_verifyBuzzerDisableAndSilentTurnOn((c)))
@@ -161,7 +146,24 @@ def BuildVerification(c):
         Failflaglist.append(buzzer.bvt_verifyBuzzerInvalidParameters((c)))
         Failflaglist.append(buzzer.bvt_verifyBuzzerInvalidOption((c)))
 
+        tolog("Start verifying BBM")
+        Failflaglist.append(bbm.bvt_verifyBBM(c))
 
+        Failflaglist.append(bbm.bvt_verifyBBMClear(c))
+
+        Failflaglist.append(bbm.bvt_verifyBBMClearFailedTest(c))
+
+        Failflaglist.append(bbm.bvt_verifyBBMHelp(c))
+
+        Failflaglist.append(bbm.bvt_verifyBBMInvalidOption(c))
+
+        Failflaglist.append(bbm.bvt_verifyBBMInvalidParameters(c))
+
+        Failflaglist.append(bbm.bvt_verifyBBMList(c))
+
+        Failflaglist.append(bbm.bvt_verifyBBMMissingParameters(c))
+
+        Failflaglist.append(bbm.bvt_verifyBBMSpecifyInexistentId(c))
     else:
         tolog("Failed to connect server after ptiflash.")
         Failflag = True
