@@ -970,8 +970,55 @@ def poolmodifyandlist(c):
     else:
         tolog(Pass)
 
+def bvtpoolmodifyandlist(c):
+
+    # the preconditions of this case are:
+    # 1. one pool with raid 5 or raid 6
+    # 2. several numbers of volumes are created under the pool
+    # 3. several snapshots/clones are created under the volume
+    # 4. pool modify name
+    # 5. pool extend
+    # 6. pool transfer
+    # pool -a mod -i 1 -s "name=xxx"
+    #
+    # pool -a transfer -i 1
+    #
+    # pool -a del -i 3
+    #
+    # pool -a extend -i 1 -p 1,3,5~9
+    FailFlag = False
+    FailFlaglist=list()
+    pooldct=getpoolinfo(c)
+    for poolid,poolvalue in pooldct.items():
+    # modify pool name
+        if "OK" in poolvalue or "OK, Synch" in poolvalue or "OK, Sync" in poolvalue:
+
+            modifiedpoolname=random_key(5)
+            SendCmd(c,"pool -a mod -i "+poolid +" -s \"name="+modifiedpoolname+"\"")
+        # verify modified name
+            res=SendCmd(c,"pool -i "+poolid)
+            if modifiedpoolname not in res:
+                tolog(Failprompt+"modifying name to "+modifiedpoolname)
+                FailFlaglist.append(True)
+        # pool extend
+            pdhddsddlst=getavailpd(c)
+            for pdlst in pdhddsddlst:
+                if pdlst:
+                    pdids=str(pdlst).replace("[","").replace("]","")
+                    SendCmd(c,"pool -a extend -i "+poolid +" -p "+pdids.replace(" ",""))
+            SendCmd(c,"phydrv")
+            res=getpdlist(c)
+            for key,value in res.items():
+                if "Pool0" not in value:
+                    FailFlaglist.append(True)
+                    break
 
 
+    for flag in FailFlaglist:
+        if flag:
+            FailFlag=True
+            break
+    return FailFlag
 def getctrlinfo(c):
 # administrator@cli> ctrl
 # ===============================================================================
@@ -1610,10 +1657,10 @@ def bvtsparedrvcreate(c,sparenum):
 
     res=SendCmd(c,"spare")
     if len(res.split("\r\n")) == sparenum + 6 and str(sparenum - 1) in res:
-        tolog("Snapshots are created succesfully.")
+        tolog("Spares are created succesfully.")
     else:
         FailFlag = True
-        tolog("Snapshots are created failed: expected number is: %d" % sparenum)
+        tolog("Spares are created failed: expected number is: %d" % sparenum)
 
     return FailFlag
 
