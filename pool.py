@@ -547,12 +547,12 @@ def bvtpoolcreateandlist(c, poolnum):
             for eachres in poolres:
                 if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                     if "-a list" in eachres:
-                        tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
+                        tolog("pool -a list with phydrvum " + str(phydrvnum) + " raid 0 succeeded.")
                     else:
-                        tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
+                        tolog("pool with phydrvum " + str(phydrvnum) + " raid 0 succeeded.")
                 else:
                     FailFlag = True
-                    tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
+                    tolog("Pool list with phydrvum " + str(phydrvnum) + "raid 0 failed.")
                     break
         elif poolnum == 1:
             if phydrvnum == 1:
@@ -564,12 +564,12 @@ def bvtpoolcreateandlist(c, poolnum):
                 for eachres in poolres:
                     if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                         if "-a list" in eachres:
-                            tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
+                            tolog("pool -a list with phydrvum " + str(phydrvnum) + " raid 0 succeeded.")
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
+                            tolog("pool with phydrvum " + str(phydrvnum) + " raid 0 succeeded.")
                     else:
                         FailFlag = True
-                        tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
+                        tolog("Pool list with phydrvum " + str(phydrvnum) + " raid 0 failed.")
                         break
             if phydrvnum == 2:
                 tolog("Two phydrvs are in the system, raid 1 level pool will be created.")
@@ -580,12 +580,12 @@ def bvtpoolcreateandlist(c, poolnum):
                 for eachres in poolres:
                     if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                         if "-a list" in eachres:
-                            tolog("pool -a list with phydrvum " + str(phydrvnum) + " succeeded.")
+                            tolog("pool -a list with phydrvum " + str(phydrvnum) + " raid 1 succeeded.")
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
+                            tolog("pool with phydrvum " + str(phydrvnum) + " raid 1 succeeded.")
                     else:
                         FailFlag = True
-                        tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
+                        tolog("Pool list with phydrvum " + str(phydrvnum) + " raid 1 failed.")
                         break
 
             if phydrvnum == 3:
@@ -615,12 +615,12 @@ def bvtpoolcreateandlist(c, poolnum):
                 for eachres in poolres:
                     if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
                         if "-a list" in eachres:
-                            tolog("pool -a list with phydrvum " + str(phydrvnum) + "raid 1 succeeded.")
+                            tolog("pool -a list with phydrvum " + str(phydrvnum) + "raid 5 succeeded.")
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + "raid 1 succeeded.")
+                            tolog("pool with phydrvum " + str(phydrvnum) + "raid 5 succeeded.")
                     else:
                         FailFlag = True
-                        tolog("Pool list with phydrvum " + str(phydrvnum) + "raid 1 failed.")
+                        tolog("Pool list with phydrvum " + str(phydrvnum) + "raid 5 failed.")
                         break
 
             if phydrvnum >= 5:
@@ -651,7 +651,8 @@ def bvtpoolcreateandlist(c, poolnum):
             tolog(
                 "1 raid 0 level pool will be created and %d phydrvs are unconfigure for further use" % (phydrvnum - 1))
             poolname = random_key(maxnamelength)
-            createpoolpd(c, poolname, "0", "", "", str(pdlist[0]))
+            raidlevel="0"
+            createpoolpd(c, poolname, raidlevel, "", "", str(pdlist[0]))
             poolcount += 1
             poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
             for eachres in poolres:
