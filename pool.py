@@ -1918,14 +1918,14 @@ def bvtforcedel(c, obj):
     i = 0
     for num in objlist:
 
-        if int(num) % 2 == 0:
-            cmd = obj + " -a del -f -i " + str(num)
-            SendCmdconfirm(c, cmd)
-            i += 1
-        else:
-            cmd = obj + " -a del -y -f -i " + num
-            SendCmd(c, cmd)
-            i += 1
+        # if int(num) % 2 == 0:
+        #     cmd = obj + " -a del -f -i " + str(num)
+        #     SendCmdconfirm(c, cmd)
+        #     i += 1
+        # else:
+        cmd = obj + " -a del -y -f -i " + num
+        SendCmd(c, cmd)
+        i += 1
     if objnum != i:
         FailFlag = True
         tolog("%s force delete, expected number is %d, actual number is %d" % (obj, objnum, i))
