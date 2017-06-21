@@ -18,6 +18,7 @@ import os
 
 from send_cmd import *
 from ssh_connect import *
+import bbm
 forBVT = True
 from to_log import *
 import buzzer
@@ -149,22 +150,40 @@ def BuildVerification(c):
 
             tolog("Start verifying buzzer")
             
-            Failflaglist.append(buzzer.BVTverifyBuzzerDisableAndSilentTurnOn((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSilentTurnOn((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSoundingTurnOn((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerDisableAndSilentTurnOff((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSilentTurnOff((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSoundingTurnOff((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerDisableAndSilentEnable((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSilentEnable((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSoundingEnable((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSoundingDisable((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerEnableAndSilentDisable((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerDisableAndSilentDisable((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerInfo((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerHelp((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerInvalidParameters((c)))
-            Failflaglist.append(buzzer.BVTverifyBuzzerInvalidOption((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerDisableAndSilentTurnOn((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSilentTurnOn((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSoundingTurnOn((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerDisableAndSilentTurnOff((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSilentTurnOff((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSoundingTurnOff((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerDisableAndSilentEnable((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSilentEnable((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSoundingEnable((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSoundingDisable((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerEnableAndSilentDisable((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerDisableAndSilentDisable((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerInfo((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerHelp((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerInvalidParameters((c)))
+            Failflaglist.append(buzzer.bvt_verifyBuzzerInvalidOption((c)))
+
+            Failflaglist.append(bbm.bvt_verifyBBM(c))
+
+            Failflaglist.append(bbm.bvt_verifyBBMClear(c))
+
+            Failflaglist.append(bbm.bvt_verifyBBMClearFailedTest(c))
+
+            Failflaglist.append(bbm.bvt_verifyBBMHelp(c))
+
+            Failflaglist.append(bbm.bvt_verifyBBMInvalidOption(c))
+
+            Failflaglist.append(bbm.bvt_verifyBBMInvalidParameters(c))
+
+            Failflaglist.append(bbm.bvt_verifyBBMList(c))
+
+            Failflaglist.append(bbm.bvt_verifyBBMMissingParameters(c))
+
+            Failflaglist.append(bbm.bvt_verifyBBMSpecifyInexistentId(c))
         else:
             tolog("Failed to connect server after ptiflash.")
             Failflaglist.append(True)
