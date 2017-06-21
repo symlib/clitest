@@ -51,6 +51,7 @@ def BuildVerification(c):
             try:
                 c,ssh=ssh_conn()
                 reconnectflag=True
+                break
             except Exception, e:
                 print e
                 sleep(4)
