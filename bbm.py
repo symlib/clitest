@@ -63,7 +63,7 @@ def verifyBBMClear(c):
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
         if row.split()[2] != "SATA":
-            tolog('\n<font color="red">Fail: there is no SATA type PD</font>')
+            tolog('\n<font color="red"> there is no SATA type PD</font>')
             break
         if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
@@ -103,7 +103,7 @@ def verifyBBMClearFailedTest(c):
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
         if row.split()[2] != "SATA":
-            tolog('\n<font color="red"> Fail: there is no SATA type PD </font>')
+            tolog('\n<font color="red"> there is no SATA type PD </font>')
             break
         if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
@@ -246,7 +246,7 @@ def bvt_verifyBBMClear(c):
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
         if row.split()[2] != "SATA":
-            tolog('\n<font color="red">Fail: there is no SATA type PD</font>')
+            tolog('\n<font color="red">there is no SATA type PD</font>')
             break
         if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
@@ -278,7 +278,7 @@ def bvt_verifyBBMClearFailedTest(c):
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
         if row.split()[2] != "SATA":
-            tolog('\n<font color="red"> Fail: there is no SATA type PD </font>')
+            tolog('\n<font color="red"> there is no SATA type PD </font>')
             break
         if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
