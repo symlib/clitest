@@ -1416,7 +1416,7 @@ def poolcreateverifyoutputerror_newraidlevel(c):
             stripelst = ("64kb", "128kb", "256kb", "512kb", "1mb")
             # sectorlst = ["512b", "1kb", "2kb", "4kb","512B", "1Kb", "2Kb", "4Kb","1KB", "2KB", "4KB","1kB", "2kB", "4kB"]
             sectorlst = ("512b", "1kb", "2kb", "4kb")
-            raidlevellst = ("1", "5", "6")
+            raidlevellst = ("0","10","50","60","1", "5", "6")
 
             results1=list()
             for stripe in invalidstriplist:
