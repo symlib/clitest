@@ -26,8 +26,11 @@ Pass = "'result': 'p'"
 Fail = "'result': 'f'"
 
 def BuildVerification(c):
-    Failflaglist=list()
+
     flashimage=False
+    Failflag=False
+    count = 0
+    Failflaglist = list()
     c, ssh = ssh_conn()
 
     versioninfo = SendCmd(c, "about")
@@ -246,11 +249,15 @@ def BuildVerification(c):
             tolog("Failed to connect server after ptiflash.")
             Failflaglist.append(True)
 
-        if Failflaglist:
-            Failflag = True
-            tolog(Fail)
-            tolog("%d fails in BuildVerifiation" % len(Failflaglist))
+        for flag in Failflaglist:
+            if flag:
+                Failflag = True
+                count+=1
 
+        tolog("%d fails in BuildVerifiation" % count)
+
+        if Failflag:
+            tolog(Fail)
         else:
             tolog(Pass)
     else:

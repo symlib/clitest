@@ -25,8 +25,11 @@ Pass = "'result': 'p'"
 Fail = "'result': 'f'"
 
 def BuildVerification(c):
-    Failflaglist=list()
+
+    Failflag=False
     flashimage=False
+    count=0
+    Failflaglist = list()
     c, ssh = ssh_conn()
 
     import glob
@@ -210,11 +213,15 @@ def BuildVerification(c):
         tolog("Failed to connect server after ptiflash.")
         Failflag = True
 
-    if Failflaglist:
-        Failflag=True
-        tolog(Fail)
-        tolog("%d fails in Jenkins BVT"%len(Failflaglist))
+    for flag in Failflaglist:
+        if flag:
+            Failflag = True
+            count += 1
 
+    tolog("%d fails in BuildVerifiation_Jenkins" % count)
+
+    if Failflag:
+        tolog(Fail)
     else:
         tolog(Pass)
 
