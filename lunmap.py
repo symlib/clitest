@@ -194,12 +194,25 @@ def verifyLunmapAddlun(c):
 
     tolog('<b> Verify addlun volume </b>')
     m = 512
+
+    dic1=dict()
+
+    for i in range(31):
+
+        dic1[str(i)]=[volumeID[31-i],"volume"]
+        result = SendCmd(c, 'lunmap -a addlun -p '+dic1[str(i)][-1]+' -i ' + initID[1] + ' -l ' + dic1[str(i)][0] + ' -m ' + str(i))
+
+    import pool
+    dic2=pool.infodictret(c,"lunmap",7,1)
+
+    print dic2
+    print dic1
     for vID in volumeID[1:]:
         tolog('<b>lunmap -a addlun -p volume -i ' + initID[1] + ' -l ' + vID + ' -m ' + str(m) + '</b>')
         result = SendCmd(c, 'lunmap -a addlun -p volume -i ' + initID[1] + ' -l ' + vID + ' -m ' + str(m))
         checkResult = SendCmd(c, 'lunmap')
         chp = str(m) + '                     ' + vID + '                       volume'
-        print 'dddddddddddddd\n\n',chp
+        #print len(chp),len("512                      1                       volume")
         if 'Error (' in result or chp not in checkResult:
             FailFlag = True
             tolog('<font color="red">Fail: lunmap -a addlun -p volume -i ' + initID[1] + ' -l ' + vID + ' -m ' + str(m) + ' </font>')
@@ -435,7 +448,7 @@ def verifyLunmapMissingParameters(c):
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyLunmapAdd(c)
+    #verifyLunmapAdd(c)
     # verifyLunmap(c)
     # verifyLunmapList(c)
     verifyLunmapAddlun(c)
