@@ -2327,7 +2327,7 @@ def volumeaddmany(c,n):
     i=0
 
     poollist = infodictret(c, "pool", "", 1)
-    print poollist,type(poollist)
+    #print poollist,type(poollist)
     for poolid in poollist:
         while i<5:
             if i==0:
@@ -2344,6 +2344,12 @@ def volumeaddmany(c,n):
                 pass
             i+=1
         break
+    res1=SendCmd(c,"volume -a add -p " + str(poolid)+ " -s \"name="+originalname +",capacity=1GB\" -c "+str(n))
+    if "Error" in res1 or "Volume prefix_name is duplicated." in res1:
+        pass
+    else:
+        FailFlag = True
+        tolog("Verify duplicated add many volumes failed")
 
     for r in res:
         if "Error" in r or "Volume prefix_name is duplicated." in r:
@@ -2389,6 +2395,12 @@ def bvtvolumeaddmany(c,n):
             i += 1
         break
 
+    res1 = SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + originalname + ",capacity=1GB\" -c " + str(n))
+    if "Error" in res1 or "Volume prefix_name is duplicated." in res1:
+        pass
+    else:
+        FailFlag = True
+        tolog("Verify duplicated add many volumes failed")
     for r in res:
         if "Error" in r or "Volume prefix_name is duplicated." in r:
             FailFlag = True
@@ -2426,7 +2438,7 @@ if __name__ == "__main__":
     # get avail pd without deleting any pool
     #getavailpd(c)
 
-    poolcreateandlist(c,0)
+    poolcreateandlist(c,1)
 
     # poolcreateandlist(c,poolnum)
     # 0 - create as many as pools according to current available pds
