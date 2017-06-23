@@ -231,7 +231,7 @@ def BuildVerification(c):
         else:
             Failflag=True
 
-            tolog("%d fails in BuildVerifiation_Jenkins" % (count+1))
+            tolog("The %d case in BuildVerifiation_Jenkins failed" % (count+1))
 
     if Failflag:
         tolog(Fail)
