@@ -209,6 +209,17 @@ def BuildVerification(c):
         Failflaglist.append(ctrl.bvt_verifyCtrlMissingParameters(c))
         Failflaglist.append(ctrl.bvt_verifyCtrlSpecifyInexistentId(c))
 
+        import fc
+        tolog("Start verifying fc")
+        Failflaglist.append(fc.bvt_verifyFc(c))
+        Failflaglist.append(fc.bvt_verifyFcList(c))
+        Failflaglist.append(fc.bvt_verifyFcListV(c))
+        Failflaglist.append(fc.bvt_verifyFcMod(c))
+        Failflaglist.append(fc.bvt_verifyFcReset(c))
+        Failflaglist.append(fc.bvt_verifyFcClear(c))
+        Failflaglist.append(fc.bvt_verifyFcInvalidOption(c))
+        Failflaglist.append(fc.bvt_verifyFcInvalidParameters(c))
+        Failflaglist.append(fc.bvt_verifyFcMissingParameters(c))
     else:
         tolog("Failed to connect server after ptiflash.")
         Failflag = True
