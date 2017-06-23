@@ -250,11 +250,13 @@ def BuildVerification(c):
             Failflaglist.append(True)
 
         for flag in Failflaglist:
-            if flag:
+            if flag == False:
+                # Failflag = True
+                count += 1
+            else:
                 Failflag = True
-                count+=1
 
-        tolog("%d fails in BuildVerifiation" % count)
+                tolog("%d fails in BuildVerifiation_Jenkins" % (count + 1))
 
         if Failflag:
             tolog(Fail)
