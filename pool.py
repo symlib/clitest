@@ -2327,21 +2327,23 @@ def volumeaddmany(c,n):
     i=0
 
     poollist = infodictret(c, "pool", "", 1)
-
+    print poollist,type(poollist)
     for poolid in poollist:
-        if i==0:
-            res.append(SendCmd(c,"volume -a add -p " + str(poolid)+ " -s \"name="+originalname +",capacity=1GB\" -c "+str(n)))
-        elif i==1:
-            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test" + ",capacity=1GB\" -c "+str(n)))
-        elif i==2:
-            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "many" + ",capacity=1GB\" -c "+str(n)))
-        elif i==3:
-            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "vol" + ",capacity=1GB\" -c "+str(n)))
-        elif i==4:
-            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test_many_vol_" + ",capacity=1GB\" -c "+str(n)))
-        else:
-            pass
-        i+=1
+        while i<5:
+            if i==0:
+                res.append(SendCmd(c,"volume -a add -p " + str(poolid)+ " -s \"name="+originalname +",capacity=1GB\" -c "+str(n)))
+            elif i==1:
+                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test" + ",capacity=1GB\" -c "+str(n)))
+            elif i==2:
+                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "many" + ",capacity=1GB\" -c "+str(n)))
+            elif i==3:
+                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "vol" + ",capacity=1GB\" -c "+str(n)))
+            elif i==4:
+                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test_many_vol_" + ",capacity=1GB\" -c "+str(n)))
+            else:
+                pass
+            i+=1
+        break
 
     for r in res:
         if "Error" in r or "Volume prefix_name is duplicated." in r:
@@ -2364,26 +2366,28 @@ def bvtvolumeaddmany(c,n):
     poollist = infodictret(c, "pool", "", 1)
 
     for poolid in poollist:
-        if i == 0:
-            res.append(
-                SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + originalname + ",capacity=1GB\" -c "+str(n)))
-            count+=n
-        elif i == 1:
-            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test" + ",capacity=1GB\" -c "+str(n)))
-            count += n
-        elif i == 2:
-            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "many" + ",capacity=1GB\" -c "+str(n)))
-            count += n
-        elif i == 3:
-            res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "vol" + ",capacity=1GB\" -c "+str(n)))
-            count += n
-        elif i == 4:
-            res.append(SendCmd(c, "volume -a add -p " + str(
-                poolid) + " -s \"name=" + "test_many_vol_" + ",capacity=1GB\" -c "+str(n)))
-            count += n
-        else:
-            break
-        i += 1
+        while i < 5:
+            if i == 0:
+                res.append(
+                    SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + originalname + ",capacity=1GB\" -c "+str(n)))
+                count+=n
+            elif i == 1:
+                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test" + ",capacity=1GB\" -c "+str(n)))
+                count += n
+            elif i == 2:
+                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "many" + ",capacity=1GB\" -c "+str(n)))
+                count += n
+            elif i == 3:
+                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "vol" + ",capacity=1GB\" -c "+str(n)))
+                count += n
+            elif i == 4:
+                res.append(SendCmd(c, "volume -a add -p " + str(
+                    poolid) + " -s \"name=" + "test_many_vol_" + ",capacity=1GB\" -c "+str(n)))
+                count += n
+            else:
+                pass
+            i += 1
+        break
 
     for r in res:
         if "Error" in r or "Volume prefix_name is duplicated." in r:
@@ -2414,7 +2418,7 @@ if __name__ == "__main__":
     # for i in range(10):
     #
     #     poolglobalsetting(c)
-    pooldelforce(c)
+    #pooldelforce(c)
     # remove pool/volume/snapshot/clone if possible.
     # forcedel(c, "pool")
     #poolforceclean(c)
@@ -2447,7 +2451,7 @@ if __name__ == "__main__":
     #exportunexport(c, "snapshot")
     #exportunexport(c, "clone")
 
-    volumeaddmany(c)
+    volumeaddmany(c,10)
     # forcedel(c,"clone")
     #
     # forcedel(c,"snapshot")
