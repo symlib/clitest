@@ -198,9 +198,7 @@ def verifyLunmapAddlun(c):
         tolog('<b>lunmap -a addlun -p volume -i ' + initID[1] + ' -l ' + vID + ' -m ' + str(m) + '</b>')
         result = SendCmd(c, 'lunmap -a addlun -p volume -i ' + initID[1] + ' -l ' + vID + ' -m ' + str(m))
         checkResult = SendCmd(c, 'lunmap')
-        chp = str(m) + '                     ' + vID + '                       volume'
-        print 'dddddddddddddd\n\n',chp
-        if 'Error (' in result or chp not in checkResult:
+        if 'Error (' in result or str(m) not in checkResult or 'volume' not in checkResult:
             FailFlag = True
             tolog('<font color="red">Fail: lunmap -a addlun -p volume -i ' + initID[1] + ' -l ' + vID + ' -m ' + str(m) + ' </font>')
         m = m + 1
@@ -211,8 +209,7 @@ def verifyLunmapAddlun(c):
         tolog('<b>lunmap -a addlun -p snapshot -i ' + initID[0] + ' -l ' + ssID + ' -m ' + str(m) + '</b>')
         result = SendCmd(c, 'lunmap -a addlun -p volume -i ' + initID[0] + ' -l ' + ssID + ' -m ' + str(m))
         checkResult = SendCmd(c, 'lunmap')
-        chp = str(m) + '                     ' + ssID + '                       snapshot'
-        if 'Error (' in result or chp not in checkResult:
+        if 'Error (' in result or str(m) not in checkResult or 'snapshot' not in checkResult:
             FailFlag = True
             tolog('<font color="red">Fail: lunmap -a addlun -p volume -i ' + initID[0] + ' -l ' + ssID + ' -m ' + str(m) + ' </font>')
         m = m + 1
@@ -223,8 +220,7 @@ def verifyLunmapAddlun(c):
         tolog('<b>lunmap -a addlun -p clone -i ' + initID[0] + ' -l ' + cID + ' -m ' + str(m) + '</b>')
         result = SendCmd(c, 'lunmap -a addlun -p volume -i ' + initID[0] + ' -l ' + cID + ' -m ' + str(m))
         checkResult = SendCmd(c, 'lunmap')
-        chp = str(m) + '                     ' + cID + '                       clone'
-        if 'Error (' in result or chp not in checkResult:
+        if 'Error (' in result or str(m) not in checkResult or 'clone':
             FailFlag = True
             tolog('<font color="red">Fail: lunmap -a addlun -p volume -i ' + initID[0] + ' -l ' + cID + ' -m ' + str(m) + ' </font>')
         m = m + 1
@@ -238,18 +234,52 @@ def verifyLunmapAddlun(c):
 
 def verifyLunmapDellun(c):
     FailFlag = False
-    tolog("<b>Verify lunmap -a dellun</b>")
-    initiatorInfo = SendCmd(c, 'initiator')
-    initiatorID = [initiatorInfo.split('Id: ')[-1].split()[0]]
+    tolog("<b>Verify lunmap -a dellun volume </b>")
+    initID = []
+    initIfor = SendCmd(c, 'initiator')
+    row = initIfor.split('Id: ')
+    for i in range(1, len(row)):
+        if 'test.lunmapadd' in row[i] or 'aa-aa-aa-aa-aa-aa-aa-1' in row[i]:
+            initID.append(row[i].split()[0])
 
     volumeInfo = SendCmd(c, 'volume')
     volumeID = [volumeInfo.split('\r\n')[-3].split()[0]]
 
-    result = SendCmd(c, 'lunmap -a dellun -p volume -i ' + initiatorID[0] + ' -l ' + volumeID[0])
-    checkResult = SendCmd(c, 'lunmap')
-    if 'Error (' in result or 'Error (' in checkResult:
-        FailFlag = True
-        tolog('<font color="red">Fail: lunmap -a dellun -p volume -i ' + initiatorID[0] + ' -l ' + volumeID[0] + '</font>')
+    for vID in volumeID:
+        result = SendCmd(c, 'lunmap -a dellun -p volume -i ' + initID[1] + ' -l ' + vID)
+        checkResult = SendCmd(c, 'lunmap')
+        if 'Error (' in result or vID in checkResult:
+            FailFlag = True
+            tolog('<font color="red">Fail: lunmap -a dellun -p volume -i ' + initID[1] + ' -l ' + vID + '</font>')
+
+    tolog('<b> lunmap -a dellun -p snapshot </b>')
+    snapshotID = []
+    snapshotInfo = SendCmd(c, 'snapshot')
+    row = snapshotInfo.split('\r\n')
+
+    for i in range(4, (len(row) - 2)):
+        if 'testlunmapss' in row[i]:
+            snapshotID.append(row[i].split()[0])
+    for ssID in snapshotID:
+        result = SendCmd(c, 'lunmap -a dellun -p snapshot -i ' + initID[0] + ' -l ' + ssID)
+        checkResult = SendCmd(c, 'lunmap')
+        if 'Error (' in result or ssID in checkResult:
+            FailFlag = True
+            tolog('<font color="red">Fail: lunmap -a dellun -p volume -i ' + initID[0] + ' -l ' + ssID + '</font>')
+
+    tolog('<b> lunmap -a dellun -p clone </b>')
+    cloneID = []
+    cloneInfo = SendCmd(c, 'clone')
+    row = cloneInfo.split('\r\n')
+    for i in range(4, (len(row)-2)):
+        if 'testlunmapcl' in row[i]:
+            cloneID.append(row[i].split()[0])
+    for cID in cloneID:
+        result = SendCmd(c, 'lunmap -a dellun -p clone -i ' + initID[0] + ' -l ' + cID)
+        checkResult = SendCmd(c, 'lunmap')
+        if 'Error (' in result or cID in checkResult:
+            FailFlag = True
+            tolog('<font color="red">Fail: lunmap -a dellun -p volume -i ' + initID[0] + ' -l ' + cID + '</font>')
 
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify lunmap -a dellun </font>')
@@ -352,8 +382,9 @@ def verifyLunmapSpecifyInexistentId(c):
     # -i <InitiatorId> (0,2047)
     # -l <Volume ID list> (0,1023)
     initiatorInfo = SendCmd(c, 'initiator')
-    volumeInfo = SendCmd(c, 'volume')
     initID = initiatorInfo.split('Id: ')[-1].split()[0]
+
+    volumeInfo = SendCmd(c, 'volume')
     volumeID = volumeInfo.split('\r\n')[-3].split()[0]
     if int(initID) != 2047:
         result = SendCmd(c, 'lunmap -a add -i ' + str(int(initID)+1) + ' -p volume -l ' + volumeID + ' -m 0')
@@ -431,22 +462,46 @@ def verifyLunmapMissingParameters(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
+def cleanUp(c):
+    poolInfo = SendCmd(c, 'pool')
+    row = poolInfo.split('\r\n')
+    for i in range(4, len(row)):
+        if 'Ptestlunmap' in row[i]:
+            SendCmd(c, 'pool -a del -i ' + row[i].split()[0])
+    else:
+        volumeID = []
+        volumeInfo = SendCmd(c, 'volume')
+        row = volumeInfo.split('\r\n')
+        for i in range(4, (len(row)-2)):
+            if 'Vtestlunmap' in row[i]:
+                volumeID.append(row[i].split()[0])
+        for vID in volumeID:
+            SendCmd(c, 'volume -a del -i ' + vID)
+
+    initInfo = SendCmd(c, 'initiator')
+    row = initInfo.split('Id: ')
+    for i in range(1, len(row)):
+        if 'test.lunmapadd' in row[i] or 'aa-aa-aa-aa-aa-aa-aa-1' in row[i]:
+            SendCmd(c, 'initiator -a del -i ' + row[i].split()[0])
+
+
 
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
     verifyLunmapAdd(c)
-    # verifyLunmap(c)
-    # verifyLunmapList(c)
+    verifyLunmap(c)
+    verifyLunmapList(c)
     verifyLunmapAddlun(c)
-    # verifyLunmapDellun(c)
-    # verifyLunmapEnable(c)
-    # verifyLunmapDel(c)
-    # verifyLunmapDisable(c)
-    # verifyLunmapSpecifyInexistentId(c)
-    # verifyLunmapInvalidOption(c)
-    # verifyLunmapInvalidParameters(c)
-    # verifyLunmapMissingParameters(c)
+    verifyLunmapDellun(c)
+    verifyLunmapEnable(c)
+    verifyLunmapDel(c)
+    verifyLunmapDisable(c)
+    verifyLunmapSpecifyInexistentId(c)
+    verifyLunmapInvalidOption(c)
+    verifyLunmapInvalidParameters(c)
+    verifyLunmapMissingParameters(c)
+    cleanUp(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped
