@@ -956,15 +956,21 @@ def poolmodifyandlist(c):
             pdhddsddlst=getavailpd(c)
             for pdlst in pdhddsddlst:
                 if pdlst:
+                    #if pd list is not empty.
                     pdids=str(pdlst).replace("[","").replace("]","")
                     SendCmd(c,"pool -a extend -i "+poolid +" -p "+pdids.replace(" ",""))
-            SendCmd(c,"phydrv")
-            res=getpdlist(c)
-            for key,value in res.items():
-                if "Pool0" not in value:
-                    FailFlag=True
                     break
-
+            # SendCmd(c,"phydrv")
+            # res=getpdlist(c)
+            # for key,value in res.items():
+            #     if "Pool0" not in value:
+            #         FailFlag=True
+            #         break
+            pdinfo=infodictret(c,"phydrv","",1)
+            for key,valule in pdinfo.items():
+                if key in pdlst and pdinfo[key][-1]!="Pool0":
+                    FailFlag=True
+            break
 
     if FailFlag:
         tolog(Fail)
@@ -1000,26 +1006,23 @@ def bvtpoolmodifyandlist(c):
             res=SendCmd(c,"pool -i "+poolid)
             if modifiedpoolname not in res:
                 tolog(Failprompt+"modifying name to "+modifiedpoolname)
-                FailFlaglist.append(True)
+                FailFlag = True
         # pool extend
             pdhddsddlst=getavailpd(c)
             for pdlst in pdhddsddlst:
                 if pdlst:
                     pdids=str(pdlst).replace("[","").replace("]","")
                     SendCmd(c,"pool -a extend -i "+poolid +" -p "+pdids.replace(" ",""))
-            SendCmd(c,"phydrv")
-            res=getpdlist(c)
-            for key,value in res.items():
-                if "Pool0" not in value:
-                    FailFlaglist.append(True)
                     break
-
-
-    for flag in FailFlaglist:
-        if flag:
-            FailFlag=True
+            pdinfo = infodictret(c, "phydrv", "", 1)
+            for key, valule in pdinfo.items():
+                if key in pdlst and pdinfo[key][-1] != "Pool0":
+                    FailFlag = True
             break
+
     return FailFlag
+
+
 def getctrlinfo(c):
 # administrator@cli> ctrl
 # ===============================================================================
@@ -2439,7 +2442,7 @@ if __name__ == "__main__":
     #getavailpd(c)
 
     poolcreateandlist(c,1)
-
+    poolmodifyandlist(c)
     # poolcreateandlist(c,poolnum)
     # 0 - create as many as pools according to current available pds
     # 1 - create 1 pool and try to keep available pds if possible
@@ -2463,7 +2466,7 @@ if __name__ == "__main__":
     #exportunexport(c, "snapshot")
     #exportunexport(c, "clone")
 
-    volumeaddmany(c,10)
+    #volumeaddmany(c,10)
     # forcedel(c,"clone")
     #
     # forcedel(c,"snapshot")
