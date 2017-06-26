@@ -40,19 +40,23 @@ def verifyDateMod(c):
     tolog("<b>Verify date -a mod </b>")
     # yyyy/mm/dd where month's range is 1-12 and day's range is 1-31.
     # hh:mm:ss where hour's range is 0-23, minute's and seconds'range are 0-59
-    SendCmd(c, 'date -a mod -d 2018/01/01')
+    SendCmd(c, 'date -a mod -d 2018/01/01 -t 08:08:08')
     c, ssh = ssh_conn()
-    result = SendCmd(c, 'date')
-    if '2018-01-01' not in result:
+    time.sleep(10)
+    checkResult = SendCmd(c, 'date')
+    if '2018-01-01' not in checkResult or '08:08:' not in checkResult:
         FailFlag = True
-        tolog('\n<font color="red">Fail: date -a mod -d 2018/01/01 </font>')
+        tolog('\n<font color="red">Fail: date -a mod -d 2018/01/01 -t 08:08:08 </font>')
 
-    SendCmd(c, 'date -a mod -t 08:08:08')
-    c, ssh = ssh_conn()
-    result = SendCmd(c, 'date')
-    if '08:08:' not in result:
+    d = time.strftime('%Y/%m/%d', time.localtime(time.time()))
+    t = time.strftime('%H:%M:%S', time.localtime(time.time()))
+    SendCmd(c, 'date -a mod -d ' + d + ' -t ' + t)
+    # c, ssh = ssh_conn()
+    # time.sleep(10)
+    checkResult = SendCmd(c, 'date')
+    if d.split('/')[0] + '-' + d.split('/')[1] + '-' + d.split('/')[2] not in checkResult or t not in checkResult:
         FailFlag = True
-        tolog('\n<font color="red">Fail: date -a mod -t 08:08:08 </font>')
+        tolog('\n<font color="red">Fail: date -a mod -d ' + d + ' -t ' + t + ' </font>')
 
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify date -a mod </font>')
@@ -64,6 +68,7 @@ def verifyDateMod(c):
 def verifyDateHelp(c):
     FailFlag = False
     tolog("<b>Verify date -h </b>")
+    c, ssh = ssh_conn()
     result = SendCmd(c, 'date -h')
     if 'Error (' in result or 'date' not in result:
         FailFlag = True
@@ -78,6 +83,7 @@ def verifyDateHelp(c):
 def verifyDateInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify date invalid option</b>")
+    c, ssh = ssh_conn()
     command = ['date -x', 'date -a list -x', 'date -a mod -x']
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
@@ -95,6 +101,7 @@ def verifyDateInvalidOption(c):
 def verifyDateInvalidParameters(c):
     FailFlag = False
     tolog("<b>Verify date invalid parameters</b>")
+    c, ssh = ssh_conn()
     command = ['date test', 'date -a test', 'date -a mod -d 2017/13/30', 'date -a mod -d 2017/05/33',
                'date -a mod -t 24:00:00', 'date -a mod -t 00:61:00', 'date -a mod -t 00:00:61']
     for com in command:
@@ -113,6 +120,7 @@ def verifyDateInvalidParameters(c):
 def verifyDateMissingParameters(c):
     FailFlag = False
     tolog("<b>Verify date missing parameters</b>")
+    c, ssh = ssh_conn()
     command = ['date -a mod -d', 'date -a mod -t']
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
@@ -153,25 +161,30 @@ def bvt_verifyDateMod(c):
     tolog("<b>Verify date -a mod </b>")
     # yyyy/mm/dd where month's range is 1-12 and day's range is 1-31.
     # hh:mm:ss where hour's range is 0-23, minute's and seconds'range are 0-59
-    SendCmd(c, 'date -a mod -d 2018/01/01')
+    SendCmd(c, 'date -a mod -d 2018/01/01 -t 08:08:08')
     c, ssh = ssh_conn()
-    result = SendCmd(c, 'date')
-    if '2018-01-01' not in result:
+    time.sleep(10)
+    checkResult = SendCmd(c, 'date')
+    if '2018-01-01' not in checkResult or '08:08:' not in checkResult:
         FailFlag = True
-        tolog('\n<font color="red">Fail: date -a mod -d 2018/01/01 </font>')
+        tolog('\n<font color="red">Fail: date -a mod -d 2018/01/01 -t 08:08:08 </font>')
 
-    SendCmd(c, 'date -a mod -t 08:08:08')
-    c, ssh = ssh_conn()
-    result = SendCmd(c, 'date')
-    if '08:08:' not in result:
+    d = time.strftime('%Y/%m/%d', time.localtime(time.time()))
+    t = time.strftime('%H:%M:%S', time.localtime(time.time()))
+    SendCmd(c, 'date -a mod -d ' + d + ' -t ' + t)
+    # c, ssh = ssh_conn()
+    # time.sleep(10)
+    checkResult = SendCmd(c, 'date')
+    if d.split('/')[0] + '-' + d.split('/')[1] + '-' + d.split('/')[2] not in checkResult or t not in checkResult:
         FailFlag = True
-        tolog('\n<font color="red">Fail: date -a mod -t 08:08:08 </font>')
+        tolog('\n<font color="red">Fail: date -a mod -d ' + d + ' -t ' + t + ' </font>')
 
     return FailFlag
 
 def bvt_verifyDateHelp(c):
     FailFlag = False
     tolog("<b>Verify date -h </b>")
+    c, ssh = ssh_conn()
     result = SendCmd(c, 'date -h')
     if 'Error (' in result or 'date' not in result:
         FailFlag = True
@@ -182,6 +195,7 @@ def bvt_verifyDateHelp(c):
 def bvt_verifyDateInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify date invalid option</b>")
+    c, ssh = ssh_conn()
     command = ['date -x', 'date -a list -x', 'date -a mod -x']
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
@@ -195,6 +209,7 @@ def bvt_verifyDateInvalidOption(c):
 def bvt_verifyDateInvalidParameters(c):
     FailFlag = False
     tolog("<b>Verify date invalid parameters</b>")
+    c, ssh = ssh_conn()
     command = ['date test', 'date -a test', 'date -a mod -d 2017/13/30', 'date -a mod -d 2017/05/33',
                'date -a mod -t 24:00:00', 'date -a mod -t 00:61:00', 'date -a mod -t 00:00:61']
 
@@ -210,6 +225,7 @@ def bvt_verifyDateInvalidParameters(c):
 def bvt_verifyDateMissingParameters(c):
     FailFlag = False
     tolog("<b>Verify date missing parameters</b>")
+    c, ssh = ssh_conn()
     command = ['date -a mod -d', 'date -a mod -t']
 
     for com in command:
