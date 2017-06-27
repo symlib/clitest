@@ -7,6 +7,37 @@ from ssh_connect import ssh_conn
 Pass = "'result': 'p'"
 Fail = "'result': 'f'"
 
+def verifyInitiatorAdd(c):
+    FailFlag = False
+    tolog('<b> Verify add type iscsi initiator </b>')
+    command = lambda type, name: 'initiator -a add -t ' + type + ' -n ' + name
+
+    # create 10 iscsi of type initiator
+    for i in range(11):
+        tolog('<b>' + command('iscsi','Test.addInitiator' + str(i) + '.com') + '</b>')
+        result = SendCmd(c, command('iscsi','Test.addInitiator' + str(i) + '.com'))
+        checkResult = SendCmd(c, 'initiator')
+        if 'Error (' in result or 'Type: iscsi' not in checkResult or 'Name: Test.addInitiator' + str(i) + '.com' not in checkResult:
+            FailFlag = True
+            tolog('<font color="red">Fail: ' + command('iscsi','Test.addInitiator' + str(i) + '.com') + '</font>')
+
+    tolog('<b> Verify add type iscsi initiator </b>')
+    # create 9 fc of type initiator
+    for i in range(10):
+        result = SendCmd(c, command('fc', 'aa-bb-cc-dd-ee-ff-11-0' + str(i)))
+        checkResult = SendCmd(c, 'initiator')
+        if 'Error (' in result or 'Type: fc' not in checkResult or 'Name: aa-bb-cc-dd-ee-ff-11-0' + str(i) not in checkResult:
+            FailFlag = True
+            tolog('<font color="red">Fail: ' + command('fc', 'aa-bb-cc-dd-ee-ff-11-0' + str(i)) + '</font>')
+        tolog('<b>' + command('fc', 'aa-bb-cc-dd-ee-ff-11-0' + str(i)) + '</b>')
+
+    if FailFlag:
+        tolog('\n<font color="red">Fail: Verify initiator -a add </font>')
+        tolog(Fail)
+    else:
+        tolog('\n<font color="green">Pass</font>')
+        tolog(Pass)
+
 def verifyInitiator(c):
     FailFlag = False
     tolog("<b>Verify initiator </b>")
@@ -57,50 +88,34 @@ def verifyInitiatorList(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
-def verifyInitiatorAdd(c):
-    FailFlag = False
-    command = lambda type,name:'initiator -a add -t ' + type + ' -n ' + name
-    tolog('<b>' + command('iscsi','a.b.com') + '</b>')
-    result = SendCmd(c, command('iscsi','a.b.com'))
-    checkResult = SendCmd(c, 'initiator')
-    if 'Error (' in result or 'Type: iscsi' not in checkResult or 'Name: a.b.com' not in checkResult:
-        FailFlag = True
-        tolog('<font color="red">Fail: ' + command('iscsi', 'a.b.com') + '</font>')
-    tolog('<b>' + command('fc', 'aa-bb-cc-dd-ee-ff-11-22') + '</b>')
-    result = SendCmd(c, command('fc', 'aa-bb-cc-dd-ee-ff-11-22'))
-    checkResult = SendCmd(c, 'initiator')
-    if 'Error (' in result or 'Type: fc' not in checkResult or 'Name: aa-bb-cc-dd-ee-ff-11-22' not in checkResult:
-        FailFlag = True
-        tolog('<font color="red">Fail: ' + command('iscsi', 'a.b.com') + '</font>')
-    tolog('<b>' + command('fc', 'aa-bb-cc-dd-ee-ff-11-22') + '</b>')
-    if FailFlag:
-        tolog('\n<font color="red">Fail: Verify initiator -a add </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-
 def verifyInitiatorDel(c):
     FailFlag = False
     result = SendCmd(c, 'initiator')
+    # To get initiator id in this case were created
     ii = []
     if 'No initiator entry available' not in result:
         row = result.split('Id: ')
         for l in range(1, len(row)):
-            ii.append(row[l].split()[0])
+            if 'Name: Test.addInitiator' in row[l] or 'Name: aa-bb-cc-dd-ee-ff-11-0' in row[l]:
+                ii.append(row[l].split()[0])
+
+        # To delete initiator in this case were created
         for i in ii:
             tolog('<b> initiator -a del -i ' + i + '</b>')
             result = SendCmd(c, 'initiator -a del -i ' + i)
             if 'Error (' in result:
                 FailFlag = True
                 tolog('<font color="red"> initiator -a del -i ' + i + '</font>')
+
+        # check delete
         checkResult = SendCmd(c, 'initiator')
-        if 'Error (' in checkResult or 'No initiator entry available' not in checkResult:
+        if 'Name: Test.addInitiator' in checkResult or 'Name: aa-bb-cc-dd-ee-ff-11-0' in checkResult:
             FailFlag = True
             tolog('\n<font color="red">Fail: initiator -a del </font>')
     else:
         FailFlag = True
         tolog('\n<font color="red">Fail: There is no initiator can be deleted </font>')
+
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify initiator -a del </font>')
         tolog(Fail)
@@ -209,6 +224,35 @@ def verifyInitiatorMissingParameters(c):
         tolog(Pass)
 
 
+
+def bvt_verifyInitiatorAdd(c):
+    FailFlag = False
+    tolog('<b> Verify add type iscsi initiator </b>')
+    command = lambda type, name: 'initiator -a add -t ' + type + ' -n ' + name
+
+    # create 10 iscsi of type initiator
+    for i in range(11):
+        tolog('<b>' + command('iscsi', 'Test.addInitiator' + str(i) + '.com') + '</b>')
+        result = SendCmd(c, command('iscsi', 'Test.addInitiator' + str(i) + '.com'))
+        checkResult = SendCmd(c, 'initiator')
+        if 'Error (' in result or 'Type: iscsi' not in checkResult or 'Name: Test.addInitiator' + str(
+                i) + '.com' not in checkResult:
+            FailFlag = True
+            tolog('<font color="red">Fail: ' + command('iscsi', 'Test.addInitiator' + str(i) + '.com') + '</font>')
+
+    tolog('<b> Verify add type iscsi initiator </b>')
+    # create 9 fc of type initiator
+    for i in range(10):
+        result = SendCmd(c, command('fc', 'aa-bb-cc-dd-ee-ff-11-0' + str(i)))
+        checkResult = SendCmd(c, 'initiator')
+        if 'Error (' in result or 'Type: fc' not in checkResult or 'Name: aa-bb-cc-dd-ee-ff-11-0' + str(
+                i) not in checkResult:
+            FailFlag = True
+            tolog('<font color="red">Fail: ' + command('fc', 'aa-bb-cc-dd-ee-ff-11-0' + str(i)) + '</font>')
+        tolog('<b>' + command('fc', 'aa-bb-cc-dd-ee-ff-11-0' + str(i)) + '</b>')
+
+    return FailFlag
+
 def bvt_verifyInitiator(c):
     FailFlag = False
     tolog("<b>Verify initiator </b>")
@@ -251,41 +295,28 @@ def bvt_verifyInitiatorList(c):
 
     return FailFlag
 
-def bvt_verifyInitiatorAdd(c):
-    FailFlag = False
-    command = lambda type,name:'initiator -a add -t ' + type + ' -n ' + name
-    tolog('<b>' + command('iscsi','a.b.com') + '</b>')
-    result = SendCmd(c, command('iscsi','a.b.com'))
-    checkResult = SendCmd(c, 'initiator')
-    if 'Error (' in result or 'Type: iscsi' not in checkResult or 'Name: a.b.com' not in checkResult:
-        FailFlag = True
-        tolog('<font color="red">Fail: ' + command('iscsi', 'a.b.com') + '</font>')
-    tolog('<b>' + command('fc', 'aa-bb-cc-dd-ee-ff-11-22') + '</b>')
-    result = SendCmd(c, command('fc', 'aa-bb-cc-dd-ee-ff-11-22'))
-    checkResult = SendCmd(c, 'initiator')
-    if 'Error (' in result or 'Type: fc' not in checkResult or 'Name: aa-bb-cc-dd-ee-ff-11-22' not in checkResult:
-        FailFlag = True
-        tolog('<font color="red">Fail: ' + command('iscsi', 'a.b.com') + '</font>')
-    tolog('<b>' + command('fc', 'aa-bb-cc-dd-ee-ff-11-22') + '</b>')
-
-    return FailFlag
-
 def bvt_verifyInitiatorDel(c):
     FailFlag = False
     result = SendCmd(c, 'initiator')
+    # To get initiator id in this case were created
     ii = []
     if 'No initiator entry available' not in result:
         row = result.split('Id: ')
         for l in range(1, len(row)):
-            ii.append(row[l].split()[0])
+            if 'Name: Test.addInitiator' in row[l] or 'Name: aa-bb-cc-dd-ee-ff-11-0' in row[l]:
+                ii.append(row[l].split()[0])
+
+        # To delete initiator in this case were created
         for i in ii:
             tolog('<b> initiator -a del -i ' + i + '</b>')
             result = SendCmd(c, 'initiator -a del -i ' + i)
             if 'Error (' in result:
                 FailFlag = True
                 tolog('<font color="red"> initiator -a del -i ' + i + '</font>')
+
+        # check delete
         checkResult = SendCmd(c, 'initiator')
-        if 'Error (' in checkResult or 'No initiator entry available' not in checkResult:
+        if 'Name: Test.addInitiator' in checkResult or 'Name: aa-bb-cc-dd-ee-ff-11-0' in checkResult:
             FailFlag = True
             tolog('\n<font color="red">Fail: initiator -a del </font>')
     else:
@@ -382,9 +413,9 @@ def bvt_verifyInitiatorMissingParameters(c):
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
+    verifyInitiatorAdd(c)
     verifyInitiator(c)
     verifyInitiatorList(c)
-    verifyInitiatorAdd(c)
     verifyInitiatorDel(c)
     verifyInitiatorSpecifyInexistentId(c)
     verifyInitiatorInvalidOption(c)
