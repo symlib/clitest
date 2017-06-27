@@ -10,10 +10,9 @@ def findBId(c):
     result = SendCmd(c, 'battery')
     num = 4
     BId = []
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
-        BId.append(row.split()[0])
-        num = num + 1
+    row = result.split('\r\n')
+    for i in range(4, len(row)-2):
+        BId.append(row[i].split()[0])
     return BId
 
 def verifyBattery(c):
