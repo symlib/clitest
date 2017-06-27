@@ -39,7 +39,7 @@ def verifyIsnsMod(c):
     FailFlag = False
     SendCmd(c, 'iscsi -a add -t portal -r 2 -p 2 -m phy  -s "iptype=4,dhcp=enable"')
     pInfor = SendCmd(c, 'iscsi -t portal')
-    pID = pInfor.split('\r\n')[-2][0]
+    pID = pInfor.split('\r\n')[-3][0]
 
     tolog('<b> isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
     result = SendCmd(c, 'isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1"')
@@ -64,7 +64,7 @@ def verifyIsnsMod(c):
 def verifyIsnsSpecifyInexistentId(c):
     FailFlag = False
     pInfor = SendCmd(c, 'iscsi -t portal')
-    pID = pInfor.split('\r\n')[-2][0]
+    pID = pInfor.split('\r\n')[-3][0]
     if int(pID[0]) < 31:
         tolog('<b> isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
         result = SendCmd(c, 'isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1"')
@@ -153,7 +153,7 @@ def bvt_verifyIsnsMod(c):
     FailFlag = False
     SendCmd(c, 'iscsi -a add -t portal -r 2 -p 2 -m phy  -s "iptype=4,dhcp=enable"')
     pInfor = SendCmd(c, 'iscsi -t portal')
-    pID = pInfor.split('\r\n')[-2][0]
+    pID = pInfor.split('\r\n')[-3][0]
 
     tolog('<b> isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
     result = SendCmd(c, 'isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1"')
@@ -174,7 +174,7 @@ def bvt_verifyIsnsMod(c):
 def bvt_verifyIsnsSpecifyInexistentId(c):
     FailFlag = False
     pInfor = SendCmd(c, 'iscsi -t portal')
-    pID = pInfor.split('\r\n')[-2][0]
+    pID = pInfor.split('\r\n')[-3][0]
     if int(pID[0]) < 31:
         tolog('<b> isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
         result = SendCmd(c, 'isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1"')
