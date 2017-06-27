@@ -93,7 +93,7 @@ def bvt_verifyAboutInvalidOption(c):
     command = ['about -x', 'about -1']
     for com in command:
         result = SendCmd(c, com)
-        if "Error (" not in result or "Invalid option" not in result:
+        if "Error (" not in result or "Invalid" not in result:
             FailFlag = True
             tolog('\n<font color="red">Fail: ' + com + '</font>')
 
