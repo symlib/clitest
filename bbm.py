@@ -23,12 +23,16 @@ def findPdId(c):
         for r in range(4, (len(row) -2)):
             if row[r].split()[-1] != 'Unconfigured':
                 pdID.append(row[r].split()[0])
+
+    if len(pdID) == 0:
+        SendCmd(c, 'pool -a add -s "name=Ptestbbm,raid=0" -p ' + row[4].split()[0] + ',' + row[5].split()[0] + ',' + row[6].split()[0])
+        findPdId(c)
     return pdID
 
 def verifyBBM(c):
     FailFlag = False
     for i in findPdId(c):
-        tolog('\n<b> Verify bbm -p ' + i)
+        tolog('\n<b> Verify bbm -p ' + i + '</b>')
         result = SendCmd(c, 'bbm -p ' + i)
         if 'Error (' in result:
             FailFlag = True
@@ -43,7 +47,7 @@ def verifyBBM(c):
 def verifyBBMList(c):
     FailFlag = False
     for i in findPdId(c):
-        tolog('\n<b> Verify bbm -a list -p ' + i)
+        tolog('\n<b> Verify bbm -a list -p ' + i + '</b>')
         result = SendCmd(c, 'bbm -a list -p ' + i)
         if 'Error (' in result:
             FailFlag = True
@@ -67,6 +71,10 @@ def verifyBBMClear(c):
             break
         if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
+        elif row.split()[2] == "SATA" and row.split()[-1] == "Unconfigured":
+            SendCmd(c, 'pool -a add -s "name=PtestbbmClear,raid=0" -p ' + row.split()[0])
+            pdid.append(row.split()[0])
+            break
 
     if len(pdid) != 0:
         for m in pdid:
@@ -116,17 +124,6 @@ def verifyBBMClearFailedTest(c):
                 tolog('\n<font color="red">Fail: Verify bbm -a clear ' + m + '</font>')
 
     tolog("<b> Verify bbm -a clear -p pd id(configured not SATA physical drive)</b>")
-    result = SendCmd(c, "phydrv")
-    xxx = False
-    pdid = []
-    for i in range(4, (len(result.split("\r\n")) - 2)):
-        row = result.split("\r\n")[i]
-        if row.split()[2] != "SATA" and row.split()[-1] == "Unconfigured":
-            xxx = True
-            pdid.append(row.split()[0])
-    if xxx:
-        SendCmd(c, 'pool -a add -s "name=testBBM,raid=0" -p ' + pdid[0])
-
     result = SendCmd(c, 'phydrv')
     pdid = []
     for i in range(4, (len(result.split("\r\n"))-2)):
@@ -215,11 +212,21 @@ def verifyBBMMissingParameters(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
+def cleanUp(c):
+    pdID = []
+    result = SendCmd(c, 'pool')
+    row = result.split('\r\n')
+    for r in range(4, (len(row) -2)):
+        if row[r].split()[1] == 'Ptestbbm' or row[r].split()[1] == 'PtestbbmClear':
+            pdID.append(row[r].split()[0])
+
+    for p in pdID:
+        SendCmd(c, 'pool -a del -i ' + p)
 
 def bvt_verifyBBM(c):
     FailFlag = False
     for i in findPdId(c):
-        tolog('\n<b> Verify bbm -p ' + i)
+        tolog('\n<b> Verify bbm -p ' + i + '</b>')
         result = SendCmd(c, 'bbm -p ' + i)
         if 'Error (' in result:
             FailFlag = True
@@ -230,7 +237,7 @@ def bvt_verifyBBM(c):
 def bvt_verifyBBMList(c):
     FailFlag = False
     for i in findPdId(c):
-        tolog('\n<b> Verify bbm -a list -p ' + i)
+        tolog('\n<b> Verify bbm -a list -p ' + i + '</b>')
         result = SendCmd(c, 'bbm -a list -p ' + i)
         if 'Error (' in result:
             FailFlag = True
@@ -246,10 +253,14 @@ def bvt_verifyBBMClear(c):
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
         if row.split()[2] != "SATA":
-            tolog('\n<font color="red">there is no SATA type PD</font>')
+            tolog('\n<font color="red"> there is no SATA type PD</font>')
             break
         if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
             pdid.append(row.split()[0])
+        elif row.split()[2] == "SATA" and row.split()[-1] == "Unconfigured":
+            SendCmd(c, 'pool -a add -s "name=PtestbbmClear,raid=0" -p ' + row.split()[0])
+            pdid.append(row.split()[0])
+            break
 
     if len(pdid) != 0:
         for m in pdid:
@@ -291,17 +302,6 @@ def bvt_verifyBBMClearFailedTest(c):
                 tolog('\n<font color="red">Fail: Verify bbm -a clear ' + m + '</font>')
 
     tolog("<b> Verify bbm -a clear -p pd id(configured not SATA physical drive)</b>")
-    result = SendCmd(c, "phydrv")
-    xxx = False
-    pdid = []
-    for i in range(4, (len(result.split("\r\n")) - 2)):
-        row = result.split("\r\n")[i]
-        if row.split()[2] != "SATA" and row.split()[-1] == "Unconfigured":
-            xxx = True
-            pdid.append(row.split()[0])
-    if xxx:
-        SendCmd(c, 'pool -a add -s "name=testBBM,raid=0" -p ' + pdid[0])
-
     result = SendCmd(c, 'phydrv')
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
@@ -369,6 +369,18 @@ def bvt_verifyBBMMissingParameters(c):
 
     return FailFlag
 
+def bvt_cleanUp(c):
+    pdID = []
+    result = SendCmd(c, 'pool')
+    row = result.split('\r\n')
+    for r in range(4, (len(row) -2)):
+        if row[r].split()[1] == 'Ptestbbm' or row[r].split()[1] == 'PtestbbmClear':
+            pdID.append(row[r].split()[0])
+
+    for p in pdID:
+        SendCmd(c, 'pool -a del -i ' + p)
+
+
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
@@ -381,6 +393,7 @@ if __name__ == "__main__":
     verifyBBMInvalidOption(c)
     verifyBBMInvalidParameters(c)
     verifyBBMMissingParameters(c)
+    cleanUp(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped

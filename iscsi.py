@@ -1,6 +1,5 @@
 # coding=utf-8
-# initial work on 2017.2.20
-# this section includes list pd
+
 from send_cmd import *
 from to_log import *
 from ssh_connect import ssh_conn
@@ -10,17 +9,19 @@ Fail = "'result': 'f'"
 
 def verifyIscsi(c):
     FailFlag = False
-    tolog("<b>Verify iscsi </b>")
+    tolog("<b> Verify iscsi </b>")
+    # Test default iscsi list
     result = SendCmd(c, 'iscsi')
     if 'Error (' in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: iscsi </font>')
-    tolog("<b>Verify iscsi -v </b>")
+    tolog("<b> Verify iscsi -v </b>")
     result = SendCmd(c, 'iscsi -v')
     if 'AssnPortalIds: ' not in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: iscsi -v </font>')
 
+    # Test iscsi list by type
     command = ['iscsi -t target', 'iscsi -t port', 'iscsi -t portal -c 32', 'iscsi -t session', 'iscsi -t device']
     for com in command:
         tolog('<b>' + com + '</b>')
@@ -38,6 +39,7 @@ def verifyIscsi(c):
 def verifyIscsiList(c):
     FailFlag = False
     tolog("<b>Verify iscsi -a list</b>")
+    # Test default iscis list
     result = SendCmd(c, 'iscsi -a list')
     if 'Error (' in result:
         FailFlag = True
@@ -47,6 +49,8 @@ def verifyIscsiList(c):
     if 'AssnPortalIds: ' not in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: iscsi -a list -v </font>')
+
+    # Test iscsi list by type
     command = ['iscsi -a list -t target',
                'iscsi -a list -t port',
                'iscsi -a list -t portal -c 1',
@@ -70,20 +74,22 @@ def verifyIscsiAdd(c):
     FailFlag = False
     checkTrunk = False
     tolog("<b>Create trunk</b>")
+    # to create trunk uses for to create trunk type iscsi portal
     result = SendCmd(c, 'trunk')
     if 'Error (' not in result and 'No iSCSI trunks are available'in result:
         PortalID = []
+        # del portal and add trunk
         result = SendCmd(c, 'iscsi -t portal')
         if 'No portal in the subsystem' not in result and 'Error (' not in result:
             row = result.split('\r\n')
-            for x in range(4, (len(row)-1)):
+            for x in range(4, (len(row)-2)):
                 element = row[x].split()
                 PortalID.append(element[0])
         for i in PortalID:
             if 'Error (' in SendCmd(c, 'iscsi -a del -t portal -i ' + i):
-                tolog('<font color="red">Fail: To delete portal is failed</font>')
+                tolog('<font color="red"> To delete portal is failed </font>')
         if 'Error (' in SendCmd(c, 'trunk -a add -s "ctrlid=2,masterport=1,slaveport=2"'):
-            tolog('<font color="red">Fail: To add the type trunk portal</font>')
+            tolog('<font color="red"> To add the type trunk portal</font>')
         if 'No iSCSI trunks are available' not in SendCmd(c, 'trunk'):
             checkTrunk = True
 
@@ -93,7 +99,7 @@ def verifyIscsiAdd(c):
         trunkinfo = SendCmd(c, 'trunk')
         trunkID = []
         if 'No portal in the subsystem' not in trunkinfo:
-            for r in range(4, (len(trunkinfo.split('\r\n'))-1)):
+            for r in range(4, (len(trunkinfo.split('\r\n'))-2)):
                 element = trunkinfo.split('\r\n')[r].split()
                 if element[0] != 'N/A':
                     trunkID.append(element[0])
@@ -101,7 +107,7 @@ def verifyIscsiAdd(c):
         checkResult = SendCmd(c, 'iscsi -t portal')
         tkportalID = []
         if 'No portal in the subsystem' not in checkResult:
-            for r in range(4, (len(checkResult.split('\r\n'))-1)):
+            for r in range(4, (len(checkResult.split('\r\n'))-2)):
                 element = checkResult.split('\r\n')[r].split()
                 if element[4] != 'N/A':
                     tkportalID.append(element[0])
@@ -114,13 +120,13 @@ def verifyIscsiAdd(c):
     result = SendCmd(c, 'iscsi -t portal')
     if 'No portal in the subsystem' not in result and 'Error (' not in result:
         row = result.split('\r\n')
-        for x in range(4, (len(row) - 1)):
+        for x in range(4, (len(row) - 2)):
             element = row[x].split()
             PortalID.append(element[0])
     for i in PortalID:
         SendCmd(c, 'iscsi -a del -t portal -i ' + i)
+    SendCmd(c, 'trunk -a del -i 0')
     SendCmd(c, 'trunk -a del -i 1')
-    SendCmd(c, 'trunk -a del -i 2')
 
     com = lambda type, setting:'iscsi -a add -t portal -r 2 -p 1 -m ' + type + setting
     tolog('<b> To add the type VLAN portal </b>')
@@ -128,7 +134,7 @@ def verifyIscsiAdd(c):
     checkResult = SendCmd(c, 'iscsi -t portal')
     vlanportalID = []
     if 'No portal in the subsystem' not in checkResult:
-        for r in range(4, (len(checkResult.split('\r\n')) - 1)):
+        for r in range(4, (len(checkResult.split('\r\n')) - 2)):
             element = checkResult.split('\r\n')[r].split()
             if element[3] != 'N/A':
                 vlanportalID.append(element[0])
@@ -141,7 +147,7 @@ def verifyIscsiAdd(c):
     checkResult = SendCmd(c, 'iscsi -t portal')
     vlanportalID = []
     if 'No portal in the subsystem' not in checkResult:
-        for r in range(4, (len(checkResult.split('\r\n')) - 1)):
+        for r in range(4, (len(checkResult.split('\r\n')) - 2)):
             element = checkResult.split('\r\n')[r].split()
             if element[3] == 'N/A' and element[4] == 'N/A':
                 vlanportalID.append(element[0])
@@ -210,7 +216,7 @@ def verifyIscsiDel(c):
     result = SendCmd(c, 'iscsi -t portal')
     if 'No portal in the subsystem' not in result and 'Error (' not in result:
         row = result.split('\r\n')
-        for x in range(4, (len(row)-1)):
+        for x in range(4, (len(row)-2)):
             element = row[x].split()
             PortalID.append(element[0])
     else:
@@ -231,7 +237,7 @@ def verifyIscsiDel(c):
     # result = SendCmd(c, 'iscsi -t session')
     # if 'No session in the subsystem' not in result and 'Error (' not in result:
     #     row = result.split('\r\n')
-    #     for x in range(4, (len(row)-1)):
+    #     for x in range(4, (len(row)-2)):
     #         element = row[x].split()
     #         sessionID.append(element[0])
     # else:
@@ -328,6 +334,7 @@ def verifyIscsiMissingParameters(c):
         tolog(Pass)
 
 
+
 def bvt_verifyIscsi(c):
     FailFlag = False
     tolog("<b>Verify iscsi </b>")
@@ -382,30 +389,32 @@ def bvt_verifyIscsiAdd(c):
     FailFlag = False
     checkTrunk = False
     tolog("<b>Create trunk</b>")
+    # to create trunk uses for to create trunk type iscsi portal
     result = SendCmd(c, 'trunk')
-    if 'Error (' not in result and 'No iSCSI trunks are available'in result:
+    if 'Error (' not in result and 'No iSCSI trunks are available' in result:
         PortalID = []
+        # del portal and add trunk
         result = SendCmd(c, 'iscsi -t portal')
         if 'No portal in the subsystem' not in result and 'Error (' not in result:
             row = result.split('\r\n')
-            for x in range(4, (len(row)-1)):
+            for x in range(4, (len(row) - 2)):
                 element = row[x].split()
                 PortalID.append(element[0])
         for i in PortalID:
             if 'Error (' in SendCmd(c, 'iscsi -a del -t portal -i ' + i):
-                tolog('<font color="red">Fail: To delete portal is failed</font>')
+                tolog('<font color="red"> To delete portal is failed </font>')
         if 'Error (' in SendCmd(c, 'trunk -a add -s "ctrlid=2,masterport=1,slaveport=2"'):
-            tolog('<font color="red">Fail: To add the type trunk portal</font>')
+            tolog('<font color="red"> To add the type trunk portal</font>')
         if 'No iSCSI trunks are available' not in SendCmd(c, 'trunk'):
             checkTrunk = True
 
     if checkTrunk:
         tolog('<b> To verify add the type trunk portal </b> ')
-        command = lambda parameter, setting : 'iscsi -a add -t portal -m trunk -i ' + parameter + setting
+        command = lambda parameter, setting: 'iscsi -a add -t portal -m trunk -i ' + parameter + setting
         trunkinfo = SendCmd(c, 'trunk')
         trunkID = []
         if 'No portal in the subsystem' not in trunkinfo:
-            for r in range(4, (len(trunkinfo.split('\r\n'))-1)):
+            for r in range(4, (len(trunkinfo.split('\r\n')) - 2)):
                 element = trunkinfo.split('\r\n')[r].split()
                 if element[0] != 'N/A':
                     trunkID.append(element[0])
@@ -413,7 +422,7 @@ def bvt_verifyIscsiAdd(c):
         checkResult = SendCmd(c, 'iscsi -t portal')
         tkportalID = []
         if 'No portal in the subsystem' not in checkResult:
-            for r in range(4, (len(checkResult.split('\r\n'))-1)):
+            for r in range(4, (len(checkResult.split('\r\n')) - 2)):
                 element = checkResult.split('\r\n')[r].split()
                 if element[4] != 'N/A':
                     tkportalID.append(element[0])
@@ -426,21 +435,21 @@ def bvt_verifyIscsiAdd(c):
     result = SendCmd(c, 'iscsi -t portal')
     if 'No portal in the subsystem' not in result and 'Error (' not in result:
         row = result.split('\r\n')
-        for x in range(4, (len(row) - 1)):
+        for x in range(4, (len(row) - 2)):
             element = row[x].split()
             PortalID.append(element[0])
     for i in PortalID:
         SendCmd(c, 'iscsi -a del -t portal -i ' + i)
+    SendCmd(c, 'trunk -a del -i 0')
     SendCmd(c, 'trunk -a del -i 1')
-    SendCmd(c, 'trunk -a del -i 2')
 
-    com = lambda type, setting:'iscsi -a add -t portal -r 2 -p 1 -m ' + type + setting
+    com = lambda type, setting: 'iscsi -a add -t portal -r 2 -p 1 -m ' + type + setting
     tolog('<b> To add the type VLAN portal </b>')
     result = SendCmd(c, com('vlan', ' -s "vlantag=1,iptype=4,dhcp=enable"'))
     checkResult = SendCmd(c, 'iscsi -t portal')
     vlanportalID = []
     if 'No portal in the subsystem' not in checkResult:
-        for r in range(4, (len(checkResult.split('\r\n')) - 1)):
+        for r in range(4, (len(checkResult.split('\r\n')) - 2)):
             element = checkResult.split('\r\n')[r].split()
             if element[3] != 'N/A':
                 vlanportalID.append(element[0])
@@ -453,7 +462,7 @@ def bvt_verifyIscsiAdd(c):
     checkResult = SendCmd(c, 'iscsi -t portal')
     vlanportalID = []
     if 'No portal in the subsystem' not in checkResult:
-        for r in range(4, (len(checkResult.split('\r\n')) - 1)):
+        for r in range(4, (len(checkResult.split('\r\n')) - 2)):
             element = checkResult.split('\r\n')[r].split()
             if element[3] == 'N/A' and element[4] == 'N/A':
                 vlanportalID.append(element[0])
