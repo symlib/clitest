@@ -126,7 +126,7 @@ if __name__ == "__main__":
 
     # # new_testlink="http://192.168.252.175/testlink/lib/api/xmlrpc/v1/xmlrpc.php"
     #new_ip_testlink = "http://10.10.10.3/testlink/lib/api/xmlrpc/v1/xmlrpc.php"
-    new_ip_testlink = "http://192.168.252.175/testlink/lib/api/xmlrpc/v1/xmlrpc.php"
+    new_ip_testlink = "http://192.168.252.104/testlink/lib/api/xmlrpc/v1/xmlrpc.php"
     tls = testlink.TestlinkAPIClient(new_ip_testlink, new_adminjl_key)
 
     # test case notes
