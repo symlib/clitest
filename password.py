@@ -17,6 +17,7 @@ def verifyChangePassword(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyPasswordSpecifyInexistentUsername(c):
     FailFlag = False
     tolog("<b> Verify password specify inexistent username </b>")
@@ -30,6 +31,7 @@ def verifyPasswordSpecifyInexistentUsername(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyPasswordInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify password invalid option</b>")
@@ -46,6 +48,7 @@ def verifyPasswordInvalidOption(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyPasswordInvalidParameters(c):
     FailFlag = False
     tolog("<b>Verify password invalid parameters</b>")
@@ -62,6 +65,7 @@ def verifyPasswordInvalidParameters(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
 def verifyPasswordMissingParameters(c):
     FailFlag = False
     tolog("<b>Verify password missing parameters</b>")
@@ -78,6 +82,62 @@ def verifyPasswordMissingParameters(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
+
+
+def bvt_verifyChangePassword(c):
+    FailFlag = False
+    tolog('\n<font color="red"> Need to manually test </font>')
+
+    return FailFlag
+
+def bvt_verifyPasswordSpecifyInexistentUsername(c):
+    FailFlag = False
+    tolog("<b> Verify password specify inexistent username </b>")
+    result = SendCmd(c, 'password -u inexistentusername')
+    if 'Username not found'not in result:
+        FailFlag =True
+        tolog('\n<font color="red">Fail: password -u inexistentusername </font>')
+
+    return FailFlag
+
+def bvt_verifyPasswordInvalidOption(c):
+    FailFlag = False
+    tolog("<b>Verify password invalid option</b>")
+    command = ['password -x']
+    for com in command:
+        tolog('<b> Verify ' + com + '</b>')
+        result = SendCmd(c, com)
+        if "Error (" not in result or "Invalid option" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+
+    return FailFlag
+
+def bvt_verifyPasswordInvalidParameters(c):
+    FailFlag = False
+    tolog("<b>Verify password invalid parameters</b>")
+    command = ['password test']
+    for com in command:
+        tolog('<b> Verify ' + com + '</b>')
+        result = SendCmd(c, com)
+        if "Error (" not in result or "Invalid setting parameters" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+
+    return FailFlag
+
+def bvt_verifyPasswordMissingParameters(c):
+    FailFlag = False
+    tolog("<b>Verify password missing parameters</b>")
+    command = ['password -u ', 'password -u snmpuser -t', 'password -u snmpuser -t snmp -p']
+    for com in command:
+        tolog('<b> Verify ' + com + '</b>')
+        result = SendCmd(c, com)
+        if "Error (" not in result or "Missing parameter" not in result:
+            FailFlag = True
+            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+
+    return FailFlag
 
 if __name__ == "__main__":
     start = time.clock()
