@@ -9,8 +9,7 @@ Fail = "'result': 'f'"
 
 def verifyChangePassword(c):
     FailFlag = False
-    tolog("<b>Verify change password </b>")
-    # password[-u < username >][-t < type >][-p < protocol >]
+    tolog('\n<font color="red"> Need to manually test </font>')
 
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify change password </font>')
@@ -18,7 +17,6 @@ def verifyChangePassword(c):
     else:
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
-
 def verifyPasswordSpecifyInexistentUsername(c):
     FailFlag = False
     tolog("<b> Verify password specify inexistent username </b>")
