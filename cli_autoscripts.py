@@ -379,7 +379,7 @@ if __name__ == "__main__":
                                             from email.mime.text import MIMEText
 
                                             if getExecution[0]['status']:
-                                                link = "http://192.168.252.175/testlink/lib/execute/execPrint.php?id=" + str(
+                                                link = "http://192.168.252.104/testlink/lib/execute/execPrint.php?id=" + str(
                                                     getExecution[0]['id'])
 
                                                 fp = urllib.urlopen(link)
@@ -388,7 +388,7 @@ if __name__ == "__main__":
                                                     strip_tags(fp.read()).replace(".notprintable { display:none;}",
                                                                                   "").replace("lnl.php?type=exec=",
                                                                                               "execPrint.php?id=").replace(
-                                                        "<!-- var fRoot = 'http://192.168.252.175/testlink/lib/execute/'; -->",
+                                                        "<!-- var fRoot = 'http://192.168.252.104/testlink/lib/execute/'; -->",
                                                         ""))
 
                                                 msg[
