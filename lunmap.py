@@ -84,7 +84,7 @@ def verifyLunmapAdd(c):
         FailFlag = True
         tolog('<font color="red">Fail: lunmap -a add -i ' + initID[2] + ' -p volume -l ' + volumeID[0] + ' -m 1</font>')
 
-    tolog('<b> Verify initiator map snapshot')
+    tolog('<b> Verify initiator map snapshot </b>')
     tolog('<b> lunmap -a add -i ' + initID[1] + ' -p snapshot -l ' + snapshotID[0] + ' -m 1022 </b>')
     result = SendCmd(c, ' lunmap -a add -i ' + initID[1] + ' -p snapshot -l ' + snapshotID[0] + ' -m 1022')
     checkResult = SendCmd(c, 'lunmap')
@@ -92,7 +92,7 @@ def verifyLunmapAdd(c):
         FailFlag = True
         tolog('<font color="red">Fail: lunmap -a add -i ' + initID[1] + ' -p snapshot -l ' + snapshotID[0] + ' -m 1022</font>')
 
-    tolog('<b> Verify initiator map clone')
+    tolog('<b> Verify initiator map clone </b>')
     tolog('<b> lunmap -a add -i ' + initID[3] + ' -p clone -l ' + cloneID[0] + ' -m 1023 </b>')
     result = SendCmd(c, ' lunmap -a add -i ' + initID[3] + ' -p clone -l ' + cloneID[0] + ' -m 1023')
     checkResult = SendCmd(c, 'lunmap')
@@ -505,7 +505,7 @@ def bvt_verifyLunmapAdd(c):
         FailFlag = True
         tolog('<font color="red">Fail: lunmap -a add -i ' + initID[2] + ' -p volume -l ' + volumeID[0] + ' -m 1</font>')
 
-    tolog('<b> Verify initiator map snapshot')
+    tolog('<b> Verify initiator map snapshot</b>')
     tolog('<b> lunmap -a add -i ' + initID[1] + ' -p snapshot -l ' + snapshotID[0] + ' -m 1022 </b>')
     result = SendCmd(c, ' lunmap -a add -i ' + initID[1] + ' -p snapshot -l ' + snapshotID[0] + ' -m 1022')
     checkResult = SendCmd(c, 'lunmap')
@@ -513,7 +513,7 @@ def bvt_verifyLunmapAdd(c):
         FailFlag = True
         tolog('<font color="red">Fail: lunmap -a add -i ' + initID[1] + ' -p snapshot -l ' + snapshotID[0] + ' -m 1022</font>')
 
-    tolog('<b> Verify initiator map clone')
+    tolog('<b> Verify initiator map clone </b>')
     tolog('<b> lunmap -a add -i ' + initID[3] + ' -p clone -l ' + cloneID[0] + ' -m 1023 </b>')
     result = SendCmd(c, ' lunmap -a add -i ' + initID[3] + ' -p clone -l ' + cloneID[0] + ' -m 1023')
     checkResult = SendCmd(c, 'lunmap')
