@@ -84,7 +84,7 @@ def verifyLunmapAdd(c):
         FailFlag = True
         tolog('<font color="red">Fail: lunmap -a add -i ' + initID[2] + ' -p volume -l ' + volumeID[0] + ' -m 1</font>')
 
-    tolog('<b> Verify initiator map snapshot')
+    tolog('<b> Verify initiator map snapshot </b>')
     tolog('<b> lunmap -a add -i ' + initID[1] + ' -p snapshot -l ' + snapshotID[0] + ' -m 1022 </b>')
     result = SendCmd(c, ' lunmap -a add -i ' + initID[1] + ' -p snapshot -l ' + snapshotID[0] + ' -m 1022')
     checkResult = SendCmd(c, 'lunmap')
@@ -92,7 +92,7 @@ def verifyLunmapAdd(c):
         FailFlag = True
         tolog('<font color="red">Fail: lunmap -a add -i ' + initID[1] + ' -p snapshot -l ' + snapshotID[0] + ' -m 1022</font>')
 
-    tolog('<b> Verify initiator map clone')
+    tolog('<b> Verify initiator map clone </b>')
     tolog('<b> lunmap -a add -i ' + initID[3] + ' -p clone -l ' + cloneID[0] + ' -m 1023 </b>')
     result = SendCmd(c, ' lunmap -a add -i ' + initID[3] + ' -p clone -l ' + cloneID[0] + ' -m 1023')
     checkResult = SendCmd(c, 'lunmap')
@@ -207,22 +207,22 @@ def verifyLunmapAddlun(c):
     m = 10
     for ssID in snapshotID:
         tolog('<b>lunmap -a addlun -p snapshot -i ' + initID[0] + ' -l ' + ssID + ' -m ' + str(m) + '</b>')
-        result = SendCmd(c, 'lunmap -a addlun -p volume -i ' + initID[0] + ' -l ' + ssID + ' -m ' + str(m))
+        result = SendCmd(c, 'lunmap -a addlun -p snapshot -i ' + initID[0] + ' -l ' + ssID + ' -m ' + str(m))
         checkResult = SendCmd(c, 'lunmap')
         if 'Error (' in result or str(m) not in checkResult or 'snapshot' not in checkResult:
             FailFlag = True
-            tolog('<font color="red">Fail: lunmap -a addlun -p volume -i ' + initID[0] + ' -l ' + ssID + ' -m ' + str(m) + ' </font>')
+            tolog('<font color="red">Fail: lunmap -a addlun -p snapshot -i ' + initID[0] + ' -l ' + ssID + ' -m ' + str(m) + ' </font>')
         m = m + 1
 
     tolog('<b> Verify addlun clone</b>')
     m = 1000
     for cID in cloneID:
         tolog('<b>lunmap -a addlun -p clone -i ' + initID[0] + ' -l ' + cID + ' -m ' + str(m) + '</b>')
-        result = SendCmd(c, 'lunmap -a addlun -p volume -i ' + initID[0] + ' -l ' + cID + ' -m ' + str(m))
+        result = SendCmd(c, 'lunmap -a addlun -p clone -i ' + initID[0] + ' -l ' + cID + ' -m ' + str(m))
         checkResult = SendCmd(c, 'lunmap')
         if 'Error (' in result or str(m) not in checkResult or 'clone':
             FailFlag = True
-            tolog('<font color="red">Fail: lunmap -a addlun -p volume -i ' + initID[0] + ' -l ' + cID + ' -m ' + str(m) + ' </font>')
+            tolog('<font color="red">Fail: lunmap -a addlun -p clone -i ' + initID[0] + ' -l ' + cID + ' -m ' + str(m) + ' </font>')
         m = m + 1
 
     if FailFlag:
@@ -265,7 +265,7 @@ def verifyLunmapDellun(c):
         checkResult = SendCmd(c, 'lunmap')
         if 'Error (' in result or ssID in checkResult:
             FailFlag = True
-            tolog('<font color="red">Fail: lunmap -a dellun -p volume -i ' + initID[0] + ' -l ' + ssID + '</font>')
+            tolog('<font color="red">Fail: lunmap -a dellun -p snapshot -i ' + initID[0] + ' -l ' + ssID + '</font>')
 
     tolog('<b> lunmap -a dellun -p clone </b>')
     cloneID = []
@@ -279,7 +279,7 @@ def verifyLunmapDellun(c):
         checkResult = SendCmd(c, 'lunmap')
         if 'Error (' in result or cID in checkResult:
             FailFlag = True
-            tolog('<font color="red">Fail: lunmap -a dellun -p volume -i ' + initID[0] + ' -l ' + cID + '</font>')
+            tolog('<font color="red">Fail: lunmap -a dellun -p clone -i ' + initID[0] + ' -l ' + cID + '</font>')
 
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify lunmap -a dellun </font>')
@@ -505,7 +505,7 @@ def bvt_verifyLunmapAdd(c):
         FailFlag = True
         tolog('<font color="red">Fail: lunmap -a add -i ' + initID[2] + ' -p volume -l ' + volumeID[0] + ' -m 1</font>')
 
-    tolog('<b> Verify initiator map snapshot')
+    tolog('<b> Verify initiator map snapshot</b>')
     tolog('<b> lunmap -a add -i ' + initID[1] + ' -p snapshot -l ' + snapshotID[0] + ' -m 1022 </b>')
     result = SendCmd(c, ' lunmap -a add -i ' + initID[1] + ' -p snapshot -l ' + snapshotID[0] + ' -m 1022')
     checkResult = SendCmd(c, 'lunmap')
@@ -513,7 +513,7 @@ def bvt_verifyLunmapAdd(c):
         FailFlag = True
         tolog('<font color="red">Fail: lunmap -a add -i ' + initID[1] + ' -p snapshot -l ' + snapshotID[0] + ' -m 1022</font>')
 
-    tolog('<b> Verify initiator map clone')
+    tolog('<b> Verify initiator map clone </b>')
     tolog('<b> lunmap -a add -i ' + initID[3] + ' -p clone -l ' + cloneID[0] + ' -m 1023 </b>')
     result = SendCmd(c, ' lunmap -a add -i ' + initID[3] + ' -p clone -l ' + cloneID[0] + ' -m 1023')
     checkResult = SendCmd(c, 'lunmap')
@@ -613,22 +613,22 @@ def bvt_verifyLunmapAddlun(c):
     m = 10
     for ssID in snapshotID:
         tolog('<b>lunmap -a addlun -p snapshot -i ' + initID[0] + ' -l ' + ssID + ' -m ' + str(m) + '</b>')
-        result = SendCmd(c, 'lunmap -a addlun -p volume -i ' + initID[0] + ' -l ' + ssID + ' -m ' + str(m))
+        result = SendCmd(c, 'lunmap -a addlun -p snapshot -i ' + initID[0] + ' -l ' + ssID + ' -m ' + str(m))
         checkResult = SendCmd(c, 'lunmap')
         if 'Error (' in result or str(m) not in checkResult or 'snapshot' not in checkResult:
             FailFlag = True
-            tolog('<font color="red">Fail: lunmap -a addlun -p volume -i ' + initID[0] + ' -l ' + ssID + ' -m ' + str(m) + ' </font>')
+            tolog('<font color="red">Fail: lunmap -a addlun -p snapshot -i ' + initID[0] + ' -l ' + ssID + ' -m ' + str(m) + ' </font>')
         m = m + 1
 
     tolog('<b> Verify addlun clone</b>')
     m = 1000
     for cID in cloneID:
         tolog('<b>lunmap -a addlun -p clone -i ' + initID[0] + ' -l ' + cID + ' -m ' + str(m) + '</b>')
-        result = SendCmd(c, 'lunmap -a addlun -p volume -i ' + initID[0] + ' -l ' + cID + ' -m ' + str(m))
+        result = SendCmd(c, 'lunmap -a addlun -p clone -i ' + initID[0] + ' -l ' + cID + ' -m ' + str(m))
         checkResult = SendCmd(c, 'lunmap')
         if 'Error (' in result or str(m) not in checkResult or 'clone':
             FailFlag = True
-            tolog('<font color="red">Fail: lunmap -a addlun -p volume -i ' + initID[0] + ' -l ' + cID + ' -m ' + str(m) + ' </font>')
+            tolog('<font color="red">Fail: lunmap -a addlun -p clone -i ' + initID[0] + ' -l ' + cID + ' -m ' + str(m) + ' </font>')
         m = m + 1
 
     return FailFlag
@@ -666,7 +666,7 @@ def bvt_verifyLunmapDellun(c):
         checkResult = SendCmd(c, 'lunmap')
         if 'Error (' in result or ssID in checkResult:
             FailFlag = True
-            tolog('<font color="red">Fail: lunmap -a dellun -p volume -i ' + initID[0] + ' -l ' + ssID + '</font>')
+            tolog('<font color="red">Fail: lunmap -a dellun -p snapshot -i ' + initID[0] + ' -l ' + ssID + '</font>')
 
     tolog('<b> lunmap -a dellun -p clone </b>')
     cloneID = []
@@ -680,7 +680,7 @@ def bvt_verifyLunmapDellun(c):
         checkResult = SendCmd(c, 'lunmap')
         if 'Error (' in result or cID in checkResult:
             FailFlag = True
-            tolog('<font color="red">Fail: lunmap -a dellun -p volume -i ' + initID[0] + ' -l ' + cID + '</font>')
+            tolog('<font color="red">Fail: lunmap -a dellun -p clone -i ' + initID[0] + ' -l ' + cID + '</font>')
 
     return FailFlag
 
