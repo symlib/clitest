@@ -60,6 +60,9 @@ def BuildVerification(c):
         elif "12.1" in tftpbuildnumber:
 
             filename = "d5k-multi-12_1_9999_" + tftpbuildnumber.split(".")[-1]
+        elif "12.2" in tftpbuildnumber:
+
+            filename = "d5k-multi-12_2_9999_" + tftpbuildnumber.split(".")[-1]
 
         tolog("%s will be updated to the %s" % (filename, server))
         flashimage = True
