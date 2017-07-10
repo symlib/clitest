@@ -48,7 +48,8 @@ def BuildVerification(c):
         int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1])) or (
         "12.01" in currentbuild and "12.1" in tftpbuildnumber) and (
         int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1])) or (
-        "12.00" in currentbuild and "12.1" in tftpbuildnumber):
+        "12.00" in currentbuild and "12.1" in tftpbuildnumber) or (
+        "12.02" in currentbuild and "12.2" in tftpbuildnumber) :
         #filename="d5k-multi-13_0_0000_"+tftpbuildnumber.split(".")[-1]
         if "13." in tftpbuildnumber:
 
