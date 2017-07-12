@@ -49,7 +49,8 @@ def precondition(c):
         if 'testlunmapss' in row[i]:
             snapshotID.append(row[i].split()[0])
     for i in snapshotID:
-        SendCmd(c, 'snapshot -a export -i ' + i)
+        if 'Exported' not in snapshotInfo:
+            SendCmd(c, 'snapshot -a export -i ' + i)
 
     tolog('<b> add clone</b>')
     for i in range(1, 11):
@@ -61,7 +62,8 @@ def precondition(c):
         if 'testlunmapcl' in row[i]:
             cloneID.append(row[i].split()[0])
     for i in snapshotID:
-        SendCmd(c, 'clone -a export -i ' + i)
+        if 'Exported' not in cloneInfo:
+            SendCmd(c, 'clone -a export -i ' + i)
 
     return initID, volumeID, snapshotID, cloneID
 
