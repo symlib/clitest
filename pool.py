@@ -2360,15 +2360,32 @@ def infodictret(c, name,leading,tailing):
             preinfolist=infolist[:]
             Outinfo[info.split(" ")[0]] = infolist
             key=info.split(" ")[0]
+            reset=True
         else:
             i = 0
-            mergeinfolist=list()
+            tmp=""
+            count=0
+            update=False
+
+            for tmp in infolist:
+                if tmp=="":
+                    count+=1
+            if count>2 and reset==True:
+                mergeinfolist=list()
+                reset = False
+            else:
+                preinfolist=mergeinfolist[:]
+                update=True
+
             for item in infolist:
                 #print "preinfolist,",preinfolist
                 #print "infolist[i].",infolist[i]
                 mergeitem=""
                 mergeitem=preinfolist[i]+infolist[i]
-                mergeinfolist.append(mergeitem)
+                if update==False:
+                    mergeinfolist.append(mergeitem)
+                else:
+                    mergeinfolist[i]=mergeitem
                 i += 1
             Outinfo[key]=mergeinfolist
             preinfolist = list()
@@ -2627,9 +2644,11 @@ if __name__ == "__main__":
 
     # get avail pd without deleting any pool
     #getavailpd(c)
-    print infodictret(c, "phydrv", "", 1)
+    #print infodictret(c, "phydrv", "", 1)
+    print infodictret(c, "volume", "", 1)
+    print infodictret(c, "pool", "", 1)
     poolcreateandlist(c,1)
-    poolmodifyandlist(c)
+    #poolmodifyandlist(c)
     #poolmodifyandlist(c)
     # poolcreateandlist(c,poolnum)
     # 0 - create as many as pools according to current available pds
@@ -2643,11 +2662,11 @@ if __name__ == "__main__":
     # volumecreateandlist(c,volnum)
     # create 3 volumes for each pool
 
-    #snapshotcreateandlist(c,2)
+    snapshotcreateandlist(c,2)
     # snapshotcreateandlist(c,snapshotnum)
     # create snapshotnum snapshots for each volume
     #SendCmd(c,"snapshot")
-    #clonecreateandlist(c, 2)
+    clonecreateandlist(c, 2)
     # clonecreateandlist(c,clonenum)
     # create clonenum for each snapshot
     #exportunexport(c, "volume")
@@ -2663,9 +2682,9 @@ if __name__ == "__main__":
     #
     # forcedel(c,"pool")
 
-    print infodictret(c,"pool","",1)
-    print sortedDictValues(infodictret(c,"phydrv","",1))
-    print sortedDictKeys(infodictret(c, "phydrv", "", 1))
+    # print infodictret(c,"pool","",1)
+    # print sortedDictValues(infodictret(c,"phydrv","",1))
+    # print sortedDictKeys(infodictret(c, "phydrv", "", 1))
     #poolcreateverify(c)
     #verify pool create with all options
     # stripe/sector/raid level
