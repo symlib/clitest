@@ -139,8 +139,11 @@ def factorydefaultsPhydrv(c):
 
 def factorydefaultsSas(c):
     FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'sas'):
-        FailFlag =True
+    result = SendCmd(c, 'factorydefaults -a restore -t sas')
+    if 'Error (' in result:
+        if 'Command is not supported by this product type' not in result:
+            FailFlag = True
+            tolog('<font color="red">Fail: factorydefaults -a restore -t sas </font>')
 
     if FailFlag:
         tolog('\n<font color="red">Fail: factorydefaults -a restore -t sas </font>')
@@ -151,9 +154,11 @@ def factorydefaultsSas(c):
 
 def factorydefaultsScsi(c):
     FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'scsi'):
-        FailFlag =True
-
+    result = SendCmd(c, 'factorydefaults -a restore -t scsi')
+    if 'Error (' in result:
+        if 'Command is not supported by this product type' not in result:
+            FailFlag = True
+            tolog('<font color="red">Fail: factorydefaults -a restore -t scsi </font>')
 
     if FailFlag:
         tolog('\n<font color="red">Fail: factorydefaults -a restore -t scsi </font>')
@@ -221,18 +226,6 @@ def factorydefaultsSnmp(c):
 
     if FailFlag:
         tolog('\n<font color="red">Fail: factorydefaults -a restore -t snmp </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-
-def factorydefaultsTelnet(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'telnet'):
-        FailFlag =True
-
-    if FailFlag:
-        tolog('\n<font color="red">Fail: factorydefaults -a restore -t telnet </font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
@@ -308,18 +301,6 @@ def factorydefaultsUps(c):
 
     if FailFlag:
         tolog('\n<font color="red">Fail: factorydefaults -a restore -t ups </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-
-def factorydefaultsLdap(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'ldap'):
-        FailFlag =True
-
-    if FailFlag:
-        tolog('\n<font color="red">Fail: factorydefaults -a restore -t ldap </font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
@@ -503,15 +484,21 @@ def bvt_factorydefaultsPhydrv(c):
 
 def bvt_factorydefaultsSas(c):
     FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'sas'):
-        FailFlag =True
+    result = SendCmd(c, 'factorydefaults -a restore -t sas')
+    if 'Error (' in result:
+        if 'Command is not supported by this product type' not in result:
+            FailFlag = True
+            tolog('<font color="red">Fail: factorydefaults -a restore -t sas </font>')
 
     return FailFlag
 
 def bvt_factorydefaultsScsi(c):
     FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'scsi'):
-        FailFlag =True
+    result = SendCmd(c, 'factorydefaults -a restore -t scsi')
+    if 'Error (' in result:
+        if 'Command is not supported by this product type' not in result:
+            FailFlag = True
+            tolog('<font color="red">Fail: factorydefaults -a restore -t scsi </font>')
 
     return FailFlag
 
@@ -550,13 +537,6 @@ def bvt_factorydefaultsWebserver(c):
 def bvt_factorydefaultsSnmp(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'snmp'):
-        FailFlag =True
-
-    return FailFlag
-
-def bvt_factorydefaultsTelnet(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'telnet'):
         FailFlag =True
 
     return FailFlag
@@ -603,13 +583,6 @@ def bvt_factorydefaultsUser(c):
 def bvt_factorydefaultsUps(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'ups'):
-        FailFlag =True
-
-    return FailFlag
-
-def bvt_factorydefaultsLdap(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'ldap'):
         FailFlag =True
 
     return FailFlag
@@ -686,14 +659,12 @@ if __name__ == "__main__":
     factorydefaultsService(c)
     factorydefaultsWebserver(c)
     factorydefaultsSnmp(c)
-    factorydefaultsTelnet(c)
     factorydefaultsSsh(c)
     factorydefaultsEmail(c)
     factorydefaultsCim(c)
     factorydefaultsNtp(c)
     factorydefaultsUser(c)
     factorydefaultsUps(c)
-    factorydefaultsLdap(c)
     factorydefaultsSyslog(c)
     verifyFactorydefaultsHelp(c)
     verifyFactorydefaultsInvalidOption(c)
