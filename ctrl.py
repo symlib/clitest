@@ -100,7 +100,7 @@ def verifyCtrlL(c):
 
 def verifyCtrlModNormativeAlias(c):
     FailFlag = False
-    tolog("<b> verify ctrl alias by character type and length  </b>")
+    tolog("<b> verify ctrl alias by character type and length </b>")
     result = SendCmd(c, "ctrl")
     for index in [4, 5]:
         row = result.split("\r\n")[index]
@@ -112,7 +112,7 @@ def verifyCtrlModNormativeAlias(c):
             if "Error (" in result or values not in checkResult:
                 FailFlag = True
                 tolog('\n<font color="red">Fail: ctrl -a mod -i ' + str(CtrlID) + ' -s "alias = ' + values + '" </font>')
-            for values in ['test_12', '12_test', 'test 12', '_', '123', '  TEST  ', ""]:
+            for values in ['test_12', '12_test', 'test 12', '_', '123', '  TEST  ']:
                 result = SendCmd(c, "ctrl -a mod -i " + str(CtrlID) + " -s " + '"alias = ' + values + '"')
                 checkResult = SendCmd(c, "ctrl -i " + str(CtrlID))
                 if "Error (" in result or values not in checkResult:
@@ -420,7 +420,7 @@ def bvt_verifyCtrlModNormativeAlias(c):
             if "Error (" in result or values not in checkResult:
                 FailFlag = True
                 tolog('\n<font color="red">Fail: ctrl -a mod -i ' + str(CtrlID) + ' -s "alias = ' + values + '" </font>')
-            for values in ['test_12', '12_test', 'test 12', '_', '123', '  TEST  ', ""]:
+            for values in ['test_12', '12_test', 'test 12', '_', '123', '  TEST  ']:
                 result = SendCmd(c, "ctrl -a mod -i " + str(CtrlID) + " -s " + '"alias = ' + values + '"')
                 checkResult = SendCmd(c, "ctrl -i " + str(CtrlID))
                 if "Error (" in result or values not in checkResult:
