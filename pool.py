@@ -204,43 +204,62 @@ def poolcleanup(c):
     # it will remove pool, volume, snapshot/clone if there's any.
 
     #pddict = getpdlist(c)
-    pddict = infodictret(c, "phydrv", "", 1)
-    poollist = list()
+    # commented out on July, 12, 2017
+    pooldelforce(c)
 
-    for key, value in pddict.items():
-        if "Pool" in value[-1]:
-            # create pool id list
-            if value[-1].split(" ")[0][4:] not in poollist:
-                poollist.append(value[-1].split(" ")[0][4:])
+    arraysinfo = SendCmd(c, "arrays")
+    while "Alias" in arraysinfo:
 
-    resp = ""
-    if poollist:
-        for eachpool in poollist:
-            resp = SendCmd(c, "pool -a del -i " + eachpool)
-            while "Can\'t delete Pool due to there exists derivatives" in resp:
-                # remove forcefully if possible
-                voldict = getvolinfo(c)
+        arraysnum = int(arraysinfo.split("\r\n")[-3].split(" ")[0])
+        for i in range(0, arraysnum + 1):
+            SendCmd(c, "arrays -a del -d " + str(i))
+        arraysinfo = SendCmd(c, "arrays")
+        if "Subsystem lock by other is present" in arraysinfo:
+            time.sleep(5)
+    spareinfo = SendCmd(c, "spare")
+    while "Revertible" in spareinfo:
+        sparenum = int(spareinfo.split("\r\n")[-3].split(" ")[0])
+        for i in range(0, sparenum + 1):
+            SendCmd(c, "spare -a del -i " + str(i))
+        spareinfo = SendCmd(c, "spare")
 
-                for volkey, volvalue in voldict.items():
-
-                    if volvalue[1] == eachpool:
-                        volresp = SendCmd(c, "volume -a del -i " + volkey)
-                        while "Fail to delete Volume" in volresp:
-                            snapinfo = SendCmd(c, "volume -v -i " + volkey)
-                            snapshotslist = (snapinfo.split("Snapshots: ", 1)[1].split("\r\n")[0]).split(", ")
-                            for eachsnapshot in snapshotslist:
-                                snapresp = SendCmd(c, "snapshot -a del -i " + eachsnapshot)
-                                while "Fail to delete Snapshot" in snapresp:
-                                    cloneinfo = SendCmd(c, "snapshot -v -i " + eachsnapshot)
-                                    cloneslist = (cloneinfo.split("Clones: ", 1)[1].split("\r\n")[0]).split(", ")
-                                    for eachclone in cloneslist:
-                                        cloneresult = SendCmd(c, "clone -a del -i " + eachclone)
-                                        if not (
-                                                    "Error" in cloneresult or "Invalid" in cloneresult or "Fail" in cloneresult):
-                                            tolog("Clone " + eachclone + " is deleted successfully.")
-                                    snapresp = SendCmd(c, "snapshot -a del -i " + eachsnapshot)
-                            volresp = SendCmd(c, "volume -a del -i " + volkey)
-                resp = SendCmd(c, "pool -a del -i " + eachpool)
+    # pddict = infodictret(c, "phydrv", "", 1)
+    # poollist = list()
+    #
+    # for key, value in pddict.items():
+    #     if "Pool" in value[-1]:
+    #         # create pool id list
+    #         if value[-1].split(" ")[0][4:] not in poollist:
+    #             poollist.append(value[-1].split(" ")[0][4:])
+    #
+    # resp = ""
+    # if poollist:
+    #     for eachpool in poollist:
+    #         resp = SendCmd(c, "pool -a del -i " + eachpool)
+    #         while "Can\'t delete Pool due to there exists derivatives" in resp:
+    #             # remove forcefully if possible
+    #             voldict = getvolinfo(c)
+    #
+    #             for volkey, volvalue in voldict.items():
+    #
+    #                 if volvalue[1] == eachpool:
+    #                     volresp = SendCmd(c, "volume -a del -i " + volkey)
+    #                     while "Fail to delete Volume" in volresp:
+    #                         snapinfo = SendCmd(c, "volume -v -i " + volkey)
+    #                         snapshotslist = (snapinfo.split("Snapshots: ", 1)[1].split("\r\n")[0]).split(", ")
+    #                         for eachsnapshot in snapshotslist:
+    #                             snapresp = SendCmd(c, "snapshot -a del -i " + eachsnapshot)
+    #                             while "Fail to delete Snapshot" in snapresp:
+    #                                 cloneinfo = SendCmd(c, "snapshot -v -i " + eachsnapshot)
+    #                                 cloneslist = (cloneinfo.split("Clones: ", 1)[1].split("\r\n")[0]).split(", ")
+    #                                 for eachclone in cloneslist:
+    #                                     cloneresult = SendCmd(c, "clone -a del -i " + eachclone)
+    #                                     if not (
+    #                                                 "Error" in cloneresult or "Invalid" in cloneresult or "Fail" in cloneresult):
+    #                                         tolog("Clone " + eachclone + " is deleted successfully.")
+    #                                 snapresp = SendCmd(c, "snapshot -a del -i " + eachsnapshot)
+    #                         volresp = SendCmd(c, "volume -a del -i " + volkey)
+    #             resp = SendCmd(c, "pool -a del -i " + eachpool)
 
 
 # Returns a random alphanumeric string of length 'length'
@@ -363,10 +382,11 @@ def poolcreateandlist(c,poolnum):
     # June 1, 2017
     # added new raidlevel
     #
-    poolforceclean(c)
-
+    # poolforceclean(c)
+    poolcleanup(c)
     pdhddssdlist = getavailpd(c)
     poolnum=int(poolnum)
+    poolnamelist = list()
     for pdlist in pdhddssdlist:
 
         phydrvnum = len(pdlist)
@@ -385,6 +405,7 @@ def poolcreateandlist(c,poolnum):
                 poolname = random_key(maxnamelength) + str(phydrvnum)
                 createpoolpd(c, poolname, "0", "", "", str(pdlist[i]))
                 poolcount+=1
+                poolnamelist.append(poolname)
             # poolres = SendCmd(c, "pool"), SendCmd(c, "pool -a list")
             # for eachres in poolres:
                 # if len(eachres.split("\r\n")) == poolcount + 6 and poolname in eachres:
@@ -397,16 +418,20 @@ def poolcreateandlist(c,poolnum):
                 #     tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
                 #     break
             poollist=infodictret(c,"pool","",1)
-            for key,value in poollist.items():
-                if int(key)+1==poolcount:
-                    if poolname in value:
-                        tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
-                        break
-                    else:
-                        tolog("pool with phydrvum " + str(phydrvnum) + " failed.")
-                        FailFlag = True
-                        break
+            # to verify the pool num
+            if len(poollist.keys()) == poolcount:
 
+            # verify all pool names
+                i=0
+                for poolname in poolnamelist:
+                    if poolname in poollist[str(i)]:
+
+                        tolog("Verify pool %s name %s with phydrvum %s succeeded." %(str(i),poolname,str(phydrvnum)))
+
+                    else:
+                        tolog("Verify pool %s name %s with phydrvum %s failed."  %(str(i),poolname,str(phydrvnum)))
+                        FailFlag = True
+                    i+=1
 
         elif poolnum==1:
             if phydrvnum==1:
@@ -415,30 +440,43 @@ def poolcreateandlist(c,poolnum):
                 createpoolpd(c, poolname, "0", "", "", str(pdlist[0]))
                 poolcount+=1
                 poollist = infodictret(c, "pool", "", 1)
-                for key, value in poollist.items():
-                    if key + 1 == poolcount:
-                        if poolname in value:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
-                            break
+                if len(poollist.keys()) == poolcount:
+
+                    # verify all pool names
+                    i = 0
+                    for poolname in poolnamelist:
+                        if poolname in poollist[str(i)]:
+
+                            tolog("Verify pool %s name %s with phydrvum %s succeeded." % (
+                            str(i), poolname,str(phydrvnum)))
+
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " failed.")
+                            tolog(
+                                "Verify pool %s name %s with phydrvum %s failed." % (str(i), poolname,str(phydrvnum)))
                             FailFlag = True
-                            break
+                        i += 1
+
             elif phydrvnum == 2:
                 tolog("Two phydrvs are in the system, raid 1 level pool will be created.")
                 poolname = random_key(maxnamelength) + str(phydrvnum)
                 createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
                 poolcount += 1
                 poollist = infodictret(c, "pool", "", 1)
-                for key, value in poollist.items():
-                    if key + 1 == poolcount:
-                        if poolname in value:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
-                            break
+                if len(poollist.keys()) == poolcount:
+
+                    # verify all pool names
+                    i = 0
+                    for poolname in poolnamelist:
+                        if poolname in poollist[str(i)]:
+
+                            tolog("Verify pool %s name %s with phydrvum %s succeeded." % (
+                            str(i), poolname,str(phydrvnum)))
+
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " failed.")
+                            tolog(
+                                "Verify pool %s name %s with phydrvum %s failed." % (str(i), poolname,str(phydrvnum)))
                             FailFlag = True
-                            break
+                        i += 1
 
             elif phydrvnum == 3:
 
@@ -449,30 +487,42 @@ def poolcreateandlist(c,poolnum):
                 createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
                 poolcount += 1
                 poollist = infodictret(c, "pool", "", 1)
-                for key, value in poollist.items():
-                    if key + 1 == poolcount:
-                        if poolname in value:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " raid 1 succeeded.")
-                            break
+                if len(poollist.keys()) == poolcount:
+
+                    # verify all pool names
+                    i = 0
+                    for poolname in poolnamelist:
+                        if poolname in poollist[str(i)]:
+
+                            tolog("Verify pool %s name %s with phydrvum %s succeeded." % (
+                            str(i), poolname,str(phydrvnum)))
+
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " raid 1 failed.")
+                            tolog(
+                                "Verify pool %s name %s with phydrvum %s failed." % (str(i), poolname,str(phydrvnum)))
                             FailFlag = True
-                            break
+                        i += 1
 
             elif phydrvnum == 4:
                 poolname = random_key(maxnamelength) + str(phydrvnum - 1)
                 createpoolpd(c, poolname, "5", "", "", str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]))
                 poolcount += 1
                 poollist = infodictret(c, "pool", "", 1)
-                for key, value in poollist.items():
-                    if key + 1 == poolcount:
-                        if poolname in value:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " raid 1 succeeded.")
-                            break
+                if len(poollist.keys()) == poolcount:
+
+                    # verify all pool names
+                    i = 0
+                    for poolname in poolnamelist:
+                        if poolname in poollist[str(i)]:
+
+                            tolog("Verify pool %s name %s with phydrvum %s succeeded." % (
+                            str(i), poolname,str(phydrvnum)))
+
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " raid 1 failed.")
+                            tolog(
+                                "Verify pool %s name %s with phydrvum %s failed." % (str(i), poolname,str(phydrvnum)))
                             FailFlag = True
-                            break
+                        i += 1
 
             else:
 
@@ -485,32 +535,45 @@ def poolcreateandlist(c,poolnum):
                              str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]) + "," + str(pdlist[3]))
                 poolcount += 1
                 poollist = infodictret(c, "pool", "", 1)
-                for key, value in poollist.items():
-                    if key + 1 == poolcount:
-                        if poolname in value:
-                            tolog("pool -a list with phydrvum " + str(
-                                phydrvnum) + " raid level" + raidlevel + " succeeded.")
-                            break
+                if len(poollist.keys()) == poolcount:
+
+                    # verify all pool names
+                    i = 0
+                    for poolname in poolnamelist:
+                        if poolname in poollist[str(i)]:
+
+                            tolog("Verify pool %s name %s with phydrvum %s succeeded." % (
+                            str(i), poolname,str(phydrvnum)))
+
                         else:
+                            tolog(
+                                "Verify pool %s name %s with phydrvum %s failed." % (str(i), poolname,str(phydrvnum)))
                             FailFlag = True
-                            tolog("Pool list with phydrvum " + str(phydrvnum) + " raid level" + raidlevel + " failed.")
-                            break
+                        i += 1
 
         elif poolnum == 2:
-            tolog("1 raid 0 level pool will be created and %d phydrvs are unconfigure for further use" %(phydrvnum-1))
+            tolog(str(
+                phydrvnum) + " phydrvs are in the system, 1 raid 5 or raid 6 level pools will be created and no phydrv is avaible.")
             poolname = random_key(maxnamelength)
-            createpoolpd(c, poolname, "0", "", "", str(pdlist[0]))
+            raidlevel = random.choice(["5", "6"])
+            createpoolpd(c, poolname, raidlevel, "", "", str(pdlist).replace("[", "").replace("]", "").replace(" ", ""))
             poolcount+=1
             poollist = infodictret(c, "pool", "", 1)
-            for key, value in poollist.items():
-                if key + 1 == poolcount:
-                    if poolname in value:
-                        tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
-                        break
+
+            if len(poollist.keys()) == poolcount:
+
+            # verify all pool names
+                i=0
+                for poolname in poolnamelist:
+                    if poolname in poollist[str(i)]:
+
+                        tolog("Verify pool %s name %s with phydrvum %s succeeded." %(str(i),poolname,str(phydrvnum)))
+
                     else:
-                        tolog("pool with phydrvum " + str(phydrvnum) + " failed.")
+                        tolog("Verify pool %s name %s with phydrvum %s failed."  %(str(i),poolname,str(phydrvnum)))
                         FailFlag = True
-                        break
+                    i+=1
+
     if FailFlag:
 
         tolog(Fail)
@@ -534,6 +597,7 @@ def bvtpoolcreateandlist(c, poolnum):
 
     pdhddssdlist = getavailpd(c)
     poolnum = int(poolnum)
+    poolnamelist = list()
     for pdlist in pdhddssdlist:
 
         phydrvnum = len(pdlist)
@@ -564,15 +628,19 @@ def bvtpoolcreateandlist(c, poolnum):
                 #     tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
                 #     break
             poollist = infodictret(c, "pool", "", 1)
-            for key, value in poollist.items():
-                if key + 1 == poolcount:
-                    if poolname in value:
-                        tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
-                        break
+            if len(poollist.keys()) == poolcount:
+
+            # verify all pool names
+                i=0
+                for poolname in poolnamelist:
+                    if poolname in poollist[str(i)]:
+
+                        tolog("Verify pool %s name %s with phydrvum %s succeeded." %(str(i),poolname,str(phydrvnum)))
+
                     else:
-                        tolog("pool with phydrvum " + str(phydrvnum) + " failed.")
+                        tolog("Verify pool %s name %s with phydrvum %s failed."  %(str(i),poolname,str(phydrvnum)))
                         FailFlag = True
-                        break
+                    i+=1
 
 
         elif poolnum == 1:
@@ -582,30 +650,42 @@ def bvtpoolcreateandlist(c, poolnum):
                 createpoolpd(c, poolname, "0", "", "", str(pdlist[0]))
                 poolcount += 1
                 poollist = infodictret(c, "pool", "", 1)
-                for key, value in poollist.items():
-                    if key + 1 == poolcount:
-                        if poolname in value:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
-                            break
+                if len(poollist.keys()) == poolcount:
+
+                    # verify all pool names
+                    i = 0
+                    for poolname in poolnamelist:
+                        if poolname in poollist[str(i)]:
+
+                            tolog("Verify pool %s name %s with phydrvum %s succeeded." % (
+                            str(i), poolname, str(phydrvnum)))
+
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " failed.")
+                            tolog(
+                                "Verify pool %s name %s with phydrvum %s failed." % (str(i), poolname, str(phydrvnum)))
                             FailFlag = True
-                            break
+                        i += 1
             elif phydrvnum == 2:
                 tolog("Two phydrvs are in the system, raid 1 level pool will be created.")
                 poolname = random_key(maxnamelength) + str(phydrvnum)
                 createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
                 poolcount += 1
                 poollist = infodictret(c, "pool", "", 1)
-                for key, value in poollist.items():
-                    if key + 1 == poolcount:
-                        if poolname in value:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
-                            break
+                if len(poollist.keys()) == poolcount:
+
+                    # verify all pool names
+                    i = 0
+                    for poolname in poolnamelist:
+                        if poolname in poollist[str(i)]:
+
+                            tolog("Verify pool %s name %s with phydrvum %s succeeded." % (
+                            str(i), poolname, str(phydrvnum)))
+
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " failed.")
+                            tolog(
+                                "Verify pool %s name %s with phydrvum %s failed." % (str(i), poolname, str(phydrvnum)))
                             FailFlag = True
-                            break
+                        i += 1
 
             elif phydrvnum == 3:
 
@@ -616,30 +696,42 @@ def bvtpoolcreateandlist(c, poolnum):
                 createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
                 poolcount += 1
                 poollist = infodictret(c, "pool", "", 1)
-                for key, value in poollist.items():
-                    if key + 1 == poolcount:
-                        if poolname in value:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " raid 1 succeeded.")
-                            break
+                if len(poollist.keys()) == poolcount:
+
+                    # verify all pool names
+                    i = 0
+                    for poolname in poolnamelist:
+                        if poolname in poollist[str(i)]:
+
+                            tolog("Verify pool %s name %s with phydrvum %s succeeded." % (
+                            str(i), poolname, str(phydrvnum)))
+
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " raid 1 failed.")
+                            tolog(
+                                "Verify pool %s name %s with phydrvum %s failed." % (str(i), poolname, str(phydrvnum)))
                             FailFlag = True
-                            break
+                        i += 1
 
             elif phydrvnum == 4:
                 poolname = random_key(maxnamelength) + str(phydrvnum - 1)
                 createpoolpd(c, poolname, "5", "", "", str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]))
                 poolcount += 1
                 poollist = infodictret(c, "pool", "", 1)
-                for key, value in poollist.items():
-                    if key + 1 == poolcount:
-                        if poolname in value:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " raid 1 succeeded.")
-                            break
+                if len(poollist.keys()) == poolcount:
+
+                    # verify all pool names
+                    i = 0
+                    for poolname in poolnamelist:
+                        if poolname in poollist[str(i)]:
+
+                            tolog("Verify pool %s name %s with phydrvum %s succeeded." % (
+                            str(i), poolname, str(phydrvnum)))
+
                         else:
-                            tolog("pool with phydrvum " + str(phydrvnum) + " raid 1 failed.")
+                            tolog(
+                                "Verify pool %s name %s with phydrvum %s failed." % (str(i), poolname, str(phydrvnum)))
                             FailFlag = True
-                            break
+                        i += 1
 
             else:
 
@@ -652,16 +744,21 @@ def bvtpoolcreateandlist(c, poolnum):
                              str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]) + "," + str(pdlist[3]))
                 poolcount += 1
                 poollist = infodictret(c, "pool", "", 1)
-                for key, value in poollist.items():
-                    if key + 1 == poolcount:
-                        if poolname in value:
-                            tolog("pool -a list with phydrvum " + str(
-                                phydrvnum) + " raid level" + raidlevel + " succeeded.")
-                            break
+                if len(poollist.keys()) == poolcount:
+
+                    # verify all pool names
+                    i = 0
+                    for poolname in poolnamelist:
+                        if poolname in poollist[str(i)]:
+
+                            tolog("Verify pool %s name %s with phydrvum %s succeeded." % (
+                            str(i), poolname, str(phydrvnum)))
+
                         else:
+                            tolog(
+                                "Verify pool %s name %s with phydrvum %s failed." % (str(i), poolname, str(phydrvnum)))
                             FailFlag = True
-                            tolog("Pool list with phydrvum " + str(phydrvnum) + " raid level" + raidlevel + " failed.")
-                            break
+                        i += 1
 
         elif poolnum == 2:
             tolog(
@@ -670,15 +767,19 @@ def bvtpoolcreateandlist(c, poolnum):
             createpoolpd(c, poolname, "0", "", "", str(pdlist[0]))
             poolcount += 1
             poollist = infodictret(c, "pool", "", 1)
-            for key, value in poollist.items():
-                if key + 1 == poolcount:
-                    if poolname in value:
-                        tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
-                        break
+            if len(poollist.keys()) == poolcount:
+
+            # verify all pool names
+                i=0
+                for poolname in poolnamelist:
+                    if poolname in poollist[str(i)]:
+
+                        tolog("Verify pool %s name %s with phydrvum %s succeeded." %(str(i),poolname,str(phydrvnum)))
+
                     else:
-                        tolog("pool with phydrvum " + str(phydrvnum) + " failed.")
+                        tolog("Verify pool %s name %s with phydrvum %s failed."  %(str(i),poolname,str(phydrvnum)))
                         FailFlag = True
-                        break
+                    i+=1
 
     return FailFlag
 
@@ -716,8 +817,17 @@ def volumecreateandlist(c,volnum):
     # Id    Name    Status    TotalCapacity    UsedCapacity    FreeCapacity
     # ===============================================================================
     # 1     11      OK        72.48 GB         69.63 KB        72.48 GB
+
+
+# pool
+#===============================================================================
+#Id   Name                        TotalCap  UsedCap   FreeCap   OpStatus
+#===============================================================================
+#0    fSa5HeZY9AZtTbj9QeZpZioM9dW 216.90 GB 395.26 KB 216.90 GB OK,
+#     Lux4                                                      Synchronizing
     for poolid,poolvalue in pooldct.items():
-        if (poolvalue[1]=="OK") or (poolvalue[1]=="OK, Synchronizing") and float(poolvalue[-1].split(" ")[0])<=float(poolvalue[-3].split(" ")[0]):
+
+        if "OK" in (poolvalue[-1]):
             for i in range(1,volnum+1):
                 volumename="pool"+random_key(3)+poolid+"_"+str(i)
                 volumecreate(c,poolid,volumename,"","","")
@@ -756,7 +866,7 @@ def bvtvolumecreateandlist(c,volnum):
     # ===============================================================================
     # 1     11      OK        72.48 GB         69.63 KB        72.48 GB
     for poolid,poolvalue in pooldct.items():
-        if (poolvalue[1]=="OK") or (poolvalue[1]=="OK, Synchronizing") and float(poolvalue[-1].split(" ")[0])<=float(poolvalue[-3].split(" ")[0]):
+        if (poolvalue[-1]=="OK") or (poolvalue[-1]=="OK, Synchronizing"):
             for i in range(1,volnum+1):
                 volumename = "pool" + random_key(3) + poolid + "_" + str(i)
                 volumecreate(c, poolid, volumename, "", "", "")
@@ -956,9 +1066,10 @@ def poolmodifyandlist(c):
     # pool -a extend -i 1 -p 1,3,5~9
     FailFlag=False
     pooldct=getpoolinfo(c)
+
     for poolid,poolvalue in pooldct.items():
     # modify pool name
-        if "OK" in poolvalue or "OK, Synchronizing" in poolvalue or "OK, Sync" in poolvalue:
+        if "OK" in poolvalue or "OK,Synchronizing" in poolvalue:
 
             modifiedpoolname=random_key(5)
             SendCmd(c,"pool -a mod -i "+poolid +" -s \"name="+modifiedpoolname+"\"")
@@ -1188,6 +1299,7 @@ def poolcreateverify_newraidlevel(c):
     #raidlevel=("1","5","6")
     raidlevel = ("0","1", "5","6")
     raidlevel2 =("10", "50", "60")
+    poolcleanup(c)
     pdlist=getavailpd(c)
     i=j=0
     for hdtype in pdlist:
@@ -1256,6 +1368,7 @@ def bvtpoolcreateverify_newraidlevel(c):
     #raidlevel=("1","5","6")
     raidlevel = ("0","1", "5","6")
     raidlevel2 =("10", "50", "60")
+    poolcleanup(c)
     pdlist=getavailpd(c)
     i=j=0
     for hdtype in pdlist:
@@ -1839,6 +1952,11 @@ def sortedDictValues(adict):
     items.sort()
     return [value for key, value in items]
 
+def sortedDictKeys(adict):
+    items = adict.items()
+    items.sort()
+    return [key for key, value in items]
+
 def pooldelforce(c):
 
     count = 0
@@ -1850,9 +1968,9 @@ def pooldelforce(c):
         #poolnum = int(poolinfo.split("\r\n")[-3].split(" ")[0])
         itemdict=infodictret(c,"pool","",1)
 
-        itemod=sortedDictValues(itemdict)
-        poolnum=itemod.keys()[-1]
-        for i in range(0, poolnum + 1):
+        # itemod=sortedDictKeys(itemdict)
+        poolnum=len(itemdict.keys())
+        for i in range(0, poolnum):
             SendCmdconfirm(c, "pool -a del -i " + str(i) +" -f")
             # SendCmdconfirm(c, "y")
             count += 1
@@ -1883,9 +2001,9 @@ def volumedel(c):
 
         itemdict = infodictret(c, "volume", "", 1)
 
-        itemod = sortedDictValues(itemdict)
-        volnum = int(itemod.keys()[-1])
-        for i in range(0,volnum+1):
+        #itemod = sortedDictValues(itemdict)
+        volnum = len(itemdict.keys())
+        for i in range(0,volnum):
             SendCmd(c,"volume -a del -i "+str(i))
             count += 1
         volumenotdelete = infodictret(c, "volume", "", 1)
@@ -1912,10 +2030,10 @@ def snapshotdelete(c):
     while not "No snapshot exists" in snapshotinfo:
         itemdict = infodictret(c, "snapshot", "", 1)
 
-        itemod = sortedDictValues(itemdict)
-        snapshotnum = int(itemod.keys()[-1])
+        #itemod = sortedDictValues(itemdict)
+        snapshotnum = len(itemdict.keys())
 
-        for i in range(0, snapshotnum + 1):
+        for i in range(0, snapshotnum):
             SendCmd(c, "snapshot -a del -i " + str(i))
             count+=1
         snapshotnotdelete = infodictret(c, "snapshot", "", "")
@@ -1943,10 +2061,10 @@ def clonedelete(c):
     while not "No clone found" in cloneinfo:
         itemdict = infodictret(c, "clone", "", 1)
 
-        itemod = sortedDictValues(itemdict)
-        clonenum = int(itemod.keys()[-1])
+        #itemod = sortedDictValues(itemdict)
+        clonenum = len(itemdict.keys())
         #clonenum = int(cloneinfo.split("\r\n")[-3].split(" ")[0])
-        for i in range(0, clonenum + 1):
+        for i in range(0, clonenum):
             SendCmd(c, "clone -a del -i " + str(i))
             count+=1
         # if there's only one clone cannot be deleted
@@ -2103,10 +2221,10 @@ def bvtpooldel(c):
     while not "No pool in the subsystem" in poolinfo:
         itemdict = infodictret(c, "pool", "", 1)
 
-        itemod = sortedDictValues(itemdict)
-        poolnum = int(itemod.keys()[-1])
+        #itemod = sortedDictValues(itemdict)
+        poolnum = len(itemod.keys())
 
-        for i in range(0, poolnum + 1):
+        for i in range(0, poolnum ):
             SendCmd(c, "pool -a del -i " + str(i))
 
             count += 1
@@ -2131,9 +2249,9 @@ def bvtvolumedel(c):
 
         itemdict = infodictret(c, "volume", "", 1)
 
-        itemod = sortedDictValues(itemdict)
-        volnum = int(itemod.keys()[-1])
-        for i in range(0,volnum+1):
+        #itemod = sortedDictValues(itemdict)
+        volnum = len(itemdict.keys())
+        for i in range(0,volnum):
             SendCmd(c,"volume -a del -i "+str(i))
             count += 1
         volumenotdelete = infodictret(c, "volume", "", "")
@@ -2155,10 +2273,10 @@ def bvtsnapshotdelete(c):
     while not "No snapshot exists" in snapshotinfo:
         itemdict = infodictret(c, "snapshot", "", 1)
 
-        itemod = sortedDictValues(itemdict)
-        snapshotnum = int(itemod.keys()[-1])
+        #itemod = sortedDictValues(itemdict)
+        snapshotnum = len(itemod.keys())
 
-        for i in range(0, snapshotnum + 1):
+        for i in range(0, snapshotnum):
             SendCmd(c, "snapshot -a del -i " + str(i))
             count+=1
         snapshotnotdelete = infodictret(c, "snapshot", "", "")
@@ -2182,11 +2300,11 @@ def bvtclonedelete(c):
     while not "No clone found" in cloneinfo:
         itemdict = infodictret(c, "clone", "", 1)
 
-        itemod = sortedDictValues(itemdict)
-        clonenum = int(itemod.keys()[-1])
+        #itemod = sortedDictValues(itemdict)
+        clonenum = len(itemdict.keys())
 
 
-        for i in range(0, clonenum + 1):
+        for i in range(0, clonenum ):
             SendCmd(c, "clone -a del -i " + str(i))
             count+=1
         clonenotdelete = infodictret(c, "clone", "",1)
@@ -2236,19 +2354,24 @@ def infodictret(c, name,leading,tailing):
                 infolist.append(info[originaltab.find(table[i + 2]):- 1].rstrip())
 
         #print info,info.split(" ")[0]
+        # print "info,",info
+        # print "preinfolist,", preinfolist
         if info.split(" ")[0] != "":
             preinfolist=infolist[:]
             Outinfo[info.split(" ")[0]] = infolist
             key=info.split(" ")[0]
         else:
             i = 0
+            mergeinfolist=list()
             for item in infolist:
-
+                #print "preinfolist,",preinfolist
+                #print "infolist[i].",infolist[i]
                 mergeitem=""
                 mergeitem=preinfolist[i]+infolist[i]
                 mergeinfolist.append(mergeitem)
                 i += 1
             Outinfo[key]=mergeinfolist
+            preinfolist = list()
     return Outinfo
 
 def exportunexport(c,obj):
@@ -2504,8 +2627,9 @@ if __name__ == "__main__":
 
     # get avail pd without deleting any pool
     #getavailpd(c)
-
-    #poolcreateandlist(c,1)
+    print infodictret(c, "phydrv", "", 1)
+    poolcreateandlist(c,1)
+    poolmodifyandlist(c)
     #poolmodifyandlist(c)
     # poolcreateandlist(c,poolnum)
     # 0 - create as many as pools according to current available pds
@@ -2515,7 +2639,7 @@ if __name__ == "__main__":
     # pool name is renamed and extend with other available disks
     #poolmodifyandlist(c)
 
-    #volumecreateandlist(c, 10)
+    volumecreateandlist(c, 10)
     # volumecreateandlist(c,volnum)
     # create 3 volumes for each pool
 
@@ -2540,7 +2664,8 @@ if __name__ == "__main__":
     # forcedel(c,"pool")
 
     print infodictret(c,"pool","",1)
-    print infodictret(c,"phydrv","",1)
+    print sortedDictValues(infodictret(c,"phydrv","",1))
+    print sortedDictKeys(infodictret(c, "phydrv", "", 1))
     #poolcreateverify(c)
     #verify pool create with all options
     # stripe/sector/raid level
