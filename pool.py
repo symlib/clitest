@@ -398,7 +398,7 @@ def poolcreateandlist(c,poolnum):
                 #     break
             poollist=infodictret(c,"pool","",1)
             for key,value in poollist.items():
-                if key+1==poolcount:
+                if int(key)+1==poolcount:
                     if poolname in value:
                         tolog("pool with phydrvum " + str(phydrvnum) + " succeeded.")
                         break
@@ -1884,7 +1884,7 @@ def volumedel(c):
         itemdict = infodictret(c, "volume", "", 1)
 
         itemod = sortedDictValues(itemdict)
-        volnum = itemod.keys()[-1]
+        volnum = int(itemod.keys()[-1])
         for i in range(0,volnum+1):
             SendCmd(c,"volume -a del -i "+str(i))
             count += 1
@@ -1913,7 +1913,7 @@ def snapshotdelete(c):
         itemdict = infodictret(c, "snapshot", "", 1)
 
         itemod = sortedDictValues(itemdict)
-        snapshotnum = itemod.keys()[-1]
+        snapshotnum = int(itemod.keys()[-1])
 
         for i in range(0, snapshotnum + 1):
             SendCmd(c, "snapshot -a del -i " + str(i))
@@ -1944,7 +1944,7 @@ def clonedelete(c):
         itemdict = infodictret(c, "clone", "", 1)
 
         itemod = sortedDictValues(itemdict)
-        clonenum = itemod.keys()[-1]
+        clonenum = int(itemod.keys()[-1])
         #clonenum = int(cloneinfo.split("\r\n")[-3].split(" ")[0])
         for i in range(0, clonenum + 1):
             SendCmd(c, "clone -a del -i " + str(i))
@@ -2104,7 +2104,7 @@ def bvtpooldel(c):
         itemdict = infodictret(c, "pool", "", 1)
 
         itemod = sortedDictValues(itemdict)
-        poolnum = itemod.keys()[-1]
+        poolnum = int(itemod.keys()[-1])
 
         for i in range(0, poolnum + 1):
             SendCmd(c, "pool -a del -i " + str(i))
@@ -2132,7 +2132,7 @@ def bvtvolumedel(c):
         itemdict = infodictret(c, "volume", "", 1)
 
         itemod = sortedDictValues(itemdict)
-        volnum = itemod.keys()[-1]
+        volnum = int(itemod.keys()[-1])
         for i in range(0,volnum+1):
             SendCmd(c,"volume -a del -i "+str(i))
             count += 1
@@ -2156,7 +2156,7 @@ def bvtsnapshotdelete(c):
         itemdict = infodictret(c, "snapshot", "", 1)
 
         itemod = sortedDictValues(itemdict)
-        snapshotnum = itemod.keys()[-1]
+        snapshotnum = int(itemod.keys()[-1])
 
         for i in range(0, snapshotnum + 1):
             SendCmd(c, "snapshot -a del -i " + str(i))
@@ -2183,7 +2183,7 @@ def bvtclonedelete(c):
         itemdict = infodictret(c, "clone", "", 1)
 
         itemod = sortedDictValues(itemdict)
-        clonenum = itemod.keys()[-1]
+        clonenum = int(itemod.keys()[-1])
 
 
         for i in range(0, clonenum + 1):
