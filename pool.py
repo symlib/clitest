@@ -2366,7 +2366,7 @@ def infodictret(c, name,leading,tailing):
             tmp=""
             count=0
             update=False
-
+            update = False
             for tmp in infolist:
                 if tmp=="":
                     count+=1
