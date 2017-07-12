@@ -56,13 +56,13 @@ def factorydefaultsEncl(c):
     if factorydefaultsRestoreSetting(c, 'encl'):
         FailFlag =True
     checkResult = SendCmd(c, 'enclosure -v')
-    checkpoint = ['Enclosure                 51C/123F                 61C/141F',
-                  'Controller 1 Sensor 1     65C/149F                 72C/161F',
-                  'Controller 2 Sensor 2     70C/158F                 77C/170F',
-                  'Controller 1 Sensor 3     78C/172F                 88C/190F',
-                  'Controller 2 Sensor 4     65C/149F                 72C/161F',
-                  'Controller 1 Sensor 5     70C/158F                 77C/170F',
-                  'Controller 2 Sensor 6     78C/172F                 88C/190F'
+    checkpoint = ['Enclosure                  51C/123F                  61C/141F',
+                  'Controller 1 Sensor 1      65C/149F                  72C/161F',
+                  'Controller 1 Sensor 2      70C/158F                  77C/170F',
+                  'Controller 1 Sensor 3      78C/172F                  88C/190F',
+                  'Controller 2 Sensor 4      65C/149F                  72C/161F',
+                  'Controller 2 Sensor 5      70C/158F                  77C/170F',
+                  'Controller 2 Sensor 6      78C/172F                  88C/190F'
                   ]
     for cp in checkpoint:
         if cp not in checkResult:
@@ -417,13 +417,13 @@ def bvt_factorydefaultsEncl(c):
     if factorydefaultsRestoreSetting(c, 'encl'):
         FailFlag =True
     checkResult = SendCmd(c, 'enclosure -v')
-    checkpoint = ['Enclosure                 51C/123F                 61C/141F',
-                  'Controller 1 Sensor 1     65C/149F                 72C/161F',
-                  'Controller 2 Sensor 2     70C/158F                 77C/170F',
-                  'Controller 1 Sensor 3     78C/172F                 88C/190F',
-                  'Controller 2 Sensor 4     65C/149F                 72C/161F',
-                  'Controller 1 Sensor 5     70C/158F                 77C/170F',
-                  'Controller 2 Sensor 6     78C/172F                 88C/190F'
+    checkpoint = ['Enclosure                  51C/123F                  61C/141F',
+                  'Controller 1 Sensor 1      65C/149F                  72C/161F',
+                  'Controller 1 Sensor 2      70C/158F                  77C/170F',
+                  'Controller 1 Sensor 3      78C/172F                  88C/190F',
+                  'Controller 2 Sensor 4      65C/149F                  72C/161F',
+                  'Controller 2 Sensor 5      70C/158F                  77C/170F',
+                  'Controller 2 Sensor 6      78C/172F                  88C/190F'
                   ]
     for cp in checkpoint:
         if cp not in checkResult:
