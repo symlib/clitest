@@ -156,7 +156,7 @@ def verifyEventInvalidOption(c):
 def verifyEventInvalidParameters(c):
     FailFlag = False
     tolog("<b>Verify event invalid parameters</b>")
-    command = ['event test', 'event -a test', 'event -i 65536', 'event -i 0 -c 65536']
+    command = ['event test', 'event -a test', 'event -i test', 'event -i 0 -c test']
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
         result = SendCmd(c, com)
@@ -309,7 +309,7 @@ def bvt_verifyEventInvalidOption(c):
 def bvt_verifyEventInvalidParameters(c):
     FailFlag = False
     tolog("<b>Verify event invalid parameters</b>")
-    command = ['event test', 'event -a test', 'event -i 65536', 'event -i 0 -c 65536']
+    command = ['event test', 'event -a test', 'event -i test', 'event -i 0 -c test']
     for com in command:
         tolog('<b> Verify ' + com + '</b>')
         result = SendCmd(c, com)
