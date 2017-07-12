@@ -255,18 +255,6 @@ def factorydefaultsEmail(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
-def factorydefaultsCim(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'cim'):
-        FailFlag =True
-
-    if FailFlag:
-        tolog('\n<font color="red">Fail: factorydefaults -a restore -t cim </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-
 def factorydefaultsNtp(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'ntp'):
@@ -555,13 +543,6 @@ def bvt_factorydefaultsEmail(c):
 
     return FailFlag
 
-def bvt_factorydefaultsCim(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'cim'):
-        FailFlag =True
-
-    return FailFlag
-
 def bvt_factorydefaultsNtp(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'ntp'):
@@ -661,7 +642,6 @@ if __name__ == "__main__":
     factorydefaultsSnmp(c)
     factorydefaultsSsh(c)
     factorydefaultsEmail(c)
-    factorydefaultsCim(c)
     factorydefaultsNtp(c)
     factorydefaultsUser(c)
     factorydefaultsUps(c)
