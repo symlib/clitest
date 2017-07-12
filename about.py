@@ -40,7 +40,7 @@ def verifyAboutHelp(c):
 def verifyAboutInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify about Invalid Option</b>")
-    command = ['about -x', 'about -1']
+    command = ['about -x']
     for com in command:
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid option" not in result:
@@ -90,7 +90,7 @@ def bvt_verifyAboutHelp(c):
 def bvt_verifyAboutInvalidOption(c):
     FailFlag = False
     tolog("<b>Verify about Invalid Option</b>")
-    command = ['about -x', 'about -1']
+    command = ['about -x']
     for com in command:
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid" not in result:

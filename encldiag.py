@@ -11,8 +11,8 @@ def verifyEncldiag(c):
     FailFlag = False
     tolog("<b>Verify encldiag </b>")
     result = SendCmd(c, 'encldiag')
-    checkPoint = ['EnclosureId            PSUId            Type              Wattage ',
-                  'EnclosureId                Type                  PowerOnTime']
+    checkPoint = ['EnclosureId             PSUId             Type              Wattage',
+                  'EnclosureId                 Type                   PowerOnTime']
     if checkPoint[0] not in result or checkPoint[1] not in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: encldiag  </font>')
@@ -49,8 +49,8 @@ def verifyEncldiagList(c):
     FailFlag = False
     tolog("<b>Verify encldiag -a list</b>")
     result = SendCmd(c, 'encldiag -a list')
-    checkPoint = ['EnclosureId            PSUId            Type              Wattage ',
-                  'EnclosureId                Type                  PowerOnTime']
+    checkPoint = ['EnclosureId             PSUId             Type              Wattage',
+                  'EnclosureId                 Type                   PowerOnTime']
     if checkPoint[0] not in result or checkPoint[1] not in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: encldiag -a list </font>')
@@ -179,8 +179,8 @@ def bvt_verifyEncldiag(c):
     FailFlag = False
     tolog("<b>Verify encldiag </b>")
     result = SendCmd(c, 'encldiag')
-    checkPoint = ['EnclosureId            PSUId            Type              Wattage ',
-                  'EnclosureId                Type                  PowerOnTime']
+    checkPoint = ['EnclosureId             PSUId             Type              Wattage',
+                  'EnclosureId                 Type                   PowerOnTime']
 
     if checkPoint[0] not in result or checkPoint[1] not in result:
         FailFlag = True
@@ -216,8 +216,8 @@ def bvt_verifyEncldiagList(c):
     FailFlag = False
     tolog("<b>Verify encldiag -a list</b>")
     result = SendCmd(c, 'encldiag -a list')
-    checkPoint = ['EnclosureId            PSUId            Type              Wattage ',
-                  'EnclosureId                Type                  PowerOnTime']
+    checkPoint = ['EnclosureId             PSUId             Type              Wattage',
+                  'EnclosureId                 Type                   PowerOnTime']
 
     if checkPoint[0] not in result or checkPoint[1] not in result:
         FailFlag = True

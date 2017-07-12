@@ -57,6 +57,7 @@ def verifyIsnsMod(c):
         tolog('<font color="red"> Fail: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </font>')
 
     tolog('<b> cleaning environment </b>')
+    SendCmd(c, 'isns -a mod -t portal -s "isns=disable" -g ' + pID[0])
     SendCmd(c, 'iscsi -a del -t portal -i ' + pID[0])
 
     if FailFlag:
@@ -72,7 +73,7 @@ def verifyIsnsSpecifyInexistentId(c):
     pID = pInfor.split('\r\n')[-3][0]
     if int(pID[0]) < 31:
         tolog('<b> isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
-        result = SendCmd(c, 'isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1"')
+        result = SendCmd(c, 'isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
         if 'Error (' not in result or 'Invalid iSCSI portal id' not in result:
             tolog(' <font color="red">Fail: isns specify inexistent Id </font>')
     if FailFlag:
@@ -175,6 +176,7 @@ def bvt_verifyIsnsMod(c):
         tolog('<font color="red"> Fail: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </font>')
 
     tolog('<b> cleaning environment </b>')
+    SendCmd(c, 'isns -a mod -t portal -s "isns=disable" -g ' + pID[0])
     SendCmd(c, 'issi -a del -t portal -i ' + pID[0])
 
     return FailFlag
@@ -185,7 +187,7 @@ def bvt_verifyIsnsSpecifyInexistentId(c):
     pID = pInfor.split('\r\n')[-3][0]
     if int(pID[0]) < 31:
         tolog('<b> isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
-        result = SendCmd(c, 'isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1"')
+        result = SendCmd(c, 'isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
         if 'Error (' not in result or 'Invalid iSCSI portal id' not in result:
             tolog(' <font color="red">Fail: isns specify inexistent Id </font>')
 

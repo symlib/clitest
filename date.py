@@ -139,6 +139,7 @@ def verifyDateMissingParameters(c):
 def bvt_verifyDate(c):
     FailFlag = False
     tolog("<b>Verify date </b>")
+    c, ssh = ssh_conn()
     result = SendCmd(c, 'date')
     if 'Error (' in result or 'SystemDate:' not in result:
         FailFlag = True
@@ -149,6 +150,7 @@ def bvt_verifyDate(c):
 def bvt_verifyDateList(c):
     FailFlag = False
     tolog("<b>Verify date -a list </b>")
+    c, ssh = ssh_conn()
     result = SendCmd(c, 'date -a list')
     if 'Error (' in result or 'SystemDate:' not in result:
         FailFlag = True
@@ -209,7 +211,7 @@ def bvt_verifyDateInvalidOption(c):
 def bvt_verifyDateInvalidParameters(c):
     FailFlag = False
     tolog("<b>Verify date invalid parameters</b>")
-    c, ssh = ssh_conn()
+
     command = ['date test', 'date -a test', 'date -a mod -d 2017/13/30', 'date -a mod -d 2017/05/33',
                'date -a mod -t 24:00:00', 'date -a mod -t 00:61:00', 'date -a mod -t 00:00:61']
 
@@ -225,7 +227,6 @@ def bvt_verifyDateInvalidParameters(c):
 def bvt_verifyDateMissingParameters(c):
     FailFlag = False
     tolog("<b>Verify date missing parameters</b>")
-    c, ssh = ssh_conn()
     command = ['date -a mod -d', 'date -a mod -t']
 
     for com in command:

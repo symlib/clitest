@@ -10,32 +10,34 @@ Pass = "'result': 'p'"
 Fail = "'result': 'f'"
 # find configured PdId in phydrv list
 def findPdId(c):
-    result = SendCmd(c, "phydrv")
-    num = 4
-    PdId = []
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
-        PdId.append(row.split()[0])
-        num = num + 1
-    return PdId
+    result = SendCmd(c, 'phydrv')
+    PdID = []
+    row = result.split('\r\n')
+    if 'Error (' not in result:
+        for r in range(4, (len(row) -2)):
+            if len(row[r].split()) == 10:
+                PdID.append(row[r].split()[0])
+    return PdID
 
 def verifySmart(c):
     FailFlag = False
     tolog("<b>Verify smart</b>")
     PdId = findPdId(c)
     result = SendCmd(c, "smart")
-    num = 4
     smartPdId = []
+    row = result.split('\r\n')
     if "Error (" in result:
         tolog('\n<font color="red">Fail:smart Please check PD OpStatus</font>')
         exit()
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
-        smartPdId.append(row.split()[0])
-        num = num + 1
+
+    for i in range(4, len(row) - 2):
+        if len(row[i].split()) == 5:
+            smartPdId.append(row[i].split()[0])
+
     if smartPdId != PdId:
         FailFlag = True
         tolog('\n<font color="red">Fail: Verify smart</font>')
+
     tolog("<b>Verify smart -p </b>")
     PdId = findPdId(c)
     for m in PdId:
@@ -44,6 +46,7 @@ def verifySmart(c):
         if row[2] not in result or row[4].split()[0] != m:
             FailFlag = True
             tolog('\n<font color="red">Fail: Verify smart -p' + m + '</font>')
+
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify smart </font>')
         tolog(Fail)
@@ -65,15 +68,15 @@ def verifySmartV(c):
         exit()
     enablePdId = []
     disablePdId = []
-    num = 4
+    row = result.split('\r\n')
     # get the smart enable and disable Id list
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
-        if row.split()[-1] == "Disabled":
-            disablePdId.append(row.split()[0])
-        if row.split()[-1] == "Enabled":
-            enablePdId.append(row.split()[0])
-        num = num + 1
+    for i in range(4, len(row) - 2):
+        if len(row[i].split()) == 5:
+            if row[i].split()[-1] == "Disabled":
+                disablePdId.append(row[i].split()[0])
+            if row[i].split()[-1] == "Enabled":
+                enablePdId.append(row[i].split()[0])
+
     # When PD smart is enable, verify smart -v -p
     if len(enablePdId) != 0:
         for m in enablePdId:
@@ -94,6 +97,7 @@ def verifySmartV(c):
             if result.split("\r\n")[2] != "PdId: " + m or smartPDModel not in PDModel:
                 FailFlag = True
                 tolog('\n<font color="red">Fail: Verify smart -v -p ' + m + '</font>')
+
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify smart -v </font>')
         tolog(Fail)
@@ -106,15 +110,17 @@ def verifySmartList(c):
     tolog("<b>Verify smart -a list</b>")
     PdId = findPdId(c)
     result = SendCmd(c, "smart -a list")
-    num = 4
+    row = result.split('\r\n')
     smartPdId = []
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
-        smartPdId.append(row.split()[0])
-        num = num + 1
+
+    for i in range(4, len(row) - 2):
+        if len(row[i].split()) == 5:
+            smartPdId.append(row[i].split()[0])
+
     if smartPdId != PdId:
         FailFlag = True
         tolog('\n<font color="red">Fail: Verify smart -a list</font>')
+
     tolog("<b>Verify smart -a list -p </b>")
     PdId = findPdId(c)
     for m in PdId:
@@ -123,11 +129,13 @@ def verifySmartList(c):
         if row[2] not in result or row[4].split()[0] != m:
             FailFlag = True
             tolog('\n<font color="red">Fail: Verify smart -a list -p' + m + '</font>')
+
     tolog('<b>Verify smart -a list -v </b>')
     result = SendCmd(c, 'smart -a list -v')
     if "Error (" in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: Verify smart -a list -v</font>')
+
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify smart -a list</font>')
         tolog(Fail)
@@ -263,22 +271,22 @@ def bvt_verifySmart(c):
     tolog("<b>Verify smart</b>")
     PdId = findPdId(c)
     result = SendCmd(c, "smart")
-    num = 4
     smartPdId = []
-
+    row = result.split('\r\n')
     if "Error (" in result:
         tolog('\n<font color="red">Fail:smart Please check PD OpStatus</font>')
         exit()
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
-        smartPdId.append(row.split()[0])
-        num = num + 1
+
+    for i in range(4, len(row) - 2):
+        if len(row[i].split()) == 5:
+            smartPdId.append(row[i].split()[0])
+
     if smartPdId != PdId:
         FailFlag = True
         tolog('\n<font color="red">Fail: Verify smart</font>')
+
     tolog("<b>Verify smart -p </b>")
     PdId = findPdId(c)
-
     for m in PdId:
         result = SendCmd(c, "smart -p " + m)
         row = result.split("\r\n")
@@ -302,15 +310,15 @@ def bvt_verifySmartV(c):
         exit()
     enablePdId = []
     disablePdId = []
-    num = 4
+    row = result.split('\r\n')
     # get the smart enable and disable Id list
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
-        if row.split()[-1] == "Disabled":
-            disablePdId.append(row.split()[0])
-        if row.split()[-1] == "Enabled":
-            enablePdId.append(row.split()[0])
-        num = num + 1
+    for i in range(4, len(row) - 2):
+        if len(row[i].split()) == 5:
+            if row[i].split()[-1] == "Disabled":
+                disablePdId.append(row[i].split()[0])
+            if row[i].split()[-1] == "Enabled":
+                enablePdId.append(row[i].split()[0])
+
     # When PD smart is enable, verify smart -v -p
     if len(enablePdId) != 0:
         for m in enablePdId:
@@ -318,7 +326,8 @@ def bvt_verifySmartV(c):
             result = SendCmd(c, "smart -v -p " + m)
             PDModel = SendCmd(c, "phydrv -v -p " + m)
             smartPDModel = result.split("\r\n")[3].split()[-1]
-            if result.split("\r\n")[2] != "PdId: " + m or smartPDModel not in PDModel or "SMART Health Status: OK" not in result:
+            if result.split("\r\n")[
+                2] != "PdId: " + m or smartPDModel not in PDModel or "SMART Health Status: OK" not in result:
                 FailFlag = True
                 tolog('\n<font color="red">Fail: Verify smart -v -p ' + m + '</font>')
                 tolog('\n<font color="red">Checkpoint: PdId, PDModel, SMART Health Status </font>')
@@ -339,15 +348,17 @@ def bvt_verifySmartList(c):
     tolog("<b>Verify smart -a list</b>")
     PdId = findPdId(c)
     result = SendCmd(c, "smart -a list")
-    num = 4
+    row = result.split('\r\n')
     smartPdId = []
-    while result.split("\r\n")[num] != 'administrator@cli> ':
-        row = result.split("\r\n")[num]
-        smartPdId.append(row.split()[0])
-        num = num + 1
+
+    for i in range(4, len(row) - 2):
+        if len(row[i].split()) == 5:
+            smartPdId.append(row[i].split()[0])
+
     if smartPdId != PdId:
         FailFlag = True
         tolog('\n<font color="red">Fail: Verify smart -a list</font>')
+
     tolog("<b>Verify smart -a list -p </b>")
     PdId = findPdId(c)
     for m in PdId:
@@ -356,6 +367,7 @@ def bvt_verifySmartList(c):
         if row[2] not in result or row[4].split()[0] != m:
             FailFlag = True
             tolog('\n<font color="red">Fail: Verify smart -a list -p' + m + '</font>')
+
     tolog('<b>Verify smart -a list -v </b>')
     result = SendCmd(c, 'smart -a list -v')
     if "Error (" in result:

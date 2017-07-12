@@ -21,8 +21,9 @@ def findPdId(c):
     row = result.split('\r\n')
     if 'Error (' not in result:
         for r in range(4, (len(row) -2)):
-            if row[r].split()[-1] != 'Unconfigured':
-                pdID.append(row[r].split()[0])
+            if len(row[r].split()) == 10:
+                if row[r].split()[-1] != 'Unconfigured':
+                    pdID.append(row[r].split()[0])
 
     if len(pdID) == 0:
         SendCmd(c, 'pool -a add -s "name=Ptestbbm,raid=0" -p ' + row[4].split()[0] + ',' + row[5].split()[0] + ',' + row[6].split()[0])
@@ -66,15 +67,16 @@ def verifyBBMClear(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SATA":
-            tolog('\n<font color="red"> there is no SATA type PD</font>')
-            break
-        if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
-            pdid.append(row.split()[0])
-        elif row.split()[2] == "SATA" and row.split()[-1] == "Unconfigured":
-            SendCmd(c, 'pool -a add -s "name=PtestbbmClear,raid=0" -p ' + row.split()[0])
-            pdid.append(row.split()[0])
-            break
+        if len(row.split()) == 10:
+            if row.split()[2] != "SATA":
+                tolog('\n<font color="red"> there is no SATA type PD</font>')
+                break
+            if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
+                pdid.append(row.split()[0])
+            elif row.split()[2] == "SATA" and row.split()[-1] == "Unconfigured":
+                SendCmd(c, 'pool -a add -s "name=PtestbbmClear,raid=0" -p ' + row.split()[0])
+                pdid.append(row.split()[0])
+                break
 
     if len(pdid) != 0:
         for m in pdid:
@@ -110,11 +112,12 @@ def verifyBBMClearFailedTest(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SATA":
-            tolog('\n<font color="red"> there is no SATA type PD </font>')
-            break
-        if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
-            pdid.append(row.split()[0])
+        if len(row.split()) == 10:
+            if row.split()[2] != "SATA":
+                tolog('\n<font color="red"> there is no SATA type PD </font>')
+                break
+            if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
+                pdid.append(row.split()[0])
 
     if len(pdid) != 0:
         for m in pdid:
@@ -128,8 +131,9 @@ def verifyBBMClearFailedTest(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n"))-2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SATA" and row.split()[-1] != "Unconfigured":
-            pdid.append(row.split()[0])
+        if len(row.split()) == 10:
+            if row.split()[2] != "SATA" and row.split()[-1] != "Unconfigured":
+                pdid.append(row.split()[0])
 
     Rpdid = random.choice(pdid)
     result = SendCmd(c, "bbm -a clear -p " + Rpdid)
@@ -217,8 +221,9 @@ def cleanUp(c):
     result = SendCmd(c, 'pool')
     row = result.split('\r\n')
     for r in range(4, (len(row) -2)):
-        if row[r].split()[1] == 'Ptestbbm' or row[r].split()[1] == 'PtestbbmClear':
-            pdID.append(row[r].split()[0])
+        if len(row[r].split()) == 10:
+            if row[r].split()[1] == 'Ptestbbm' or row[r].split()[1] == 'PtestbbmClear':
+                pdID.append(row[r].split()[0])
 
     for p in pdID:
         SendCmd(c, 'pool -a del -i ' + p)
@@ -252,15 +257,16 @@ def bvt_verifyBBMClear(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SATA":
-            tolog('\n<font color="red"> there is no SATA type PD</font>')
-            break
-        if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
-            pdid.append(row.split()[0])
-        elif row.split()[2] == "SATA" and row.split()[-1] == "Unconfigured":
-            SendCmd(c, 'pool -a add -s "name=PtestbbmClear,raid=0" -p ' + row.split()[0])
-            pdid.append(row.split()[0])
-            break
+        if len(row.split()) == 10:
+            if row.split()[2] != "SATA":
+                tolog('\n<font color="red"> there is no SATA type PD</font>')
+                break
+            if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
+                pdid.append(row.split()[0])
+            elif row.split()[2] == "SATA" and row.split()[-1] == "Unconfigured":
+                SendCmd(c, 'pool -a add -s "name=PtestbbmClear,raid=0" -p ' + row.split()[0])
+                pdid.append(row.split()[0])
+                break
 
     if len(pdid) != 0:
         for m in pdid:
@@ -288,11 +294,12 @@ def bvt_verifyBBMClearFailedTest(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SATA":
-            tolog('\n<font color="red"> there is no SATA type PD </font>')
-            break
-        if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
-            pdid.append(row.split()[0])
+        if len(row.split()) == 10:
+            if row.split()[2] != "SATA":
+                tolog('\n<font color="red"> there is no SATA type PD </font>')
+                break
+            if row.split()[2] == "SATA" and row.split()[-1] != "Unconfigured":
+                pdid.append(row.split()[0])
 
     if len(pdid) != 0:
         for m in pdid:
@@ -306,8 +313,9 @@ def bvt_verifyBBMClearFailedTest(c):
     pdid = []
     for i in range(4, (len(result.split("\r\n")) - 2)):
         row = result.split("\r\n")[i]
-        if row.split()[2] != "SATA" and row.split()[-1] != "Unconfigured":
-            pdid.append(row.split()[0])
+        if len(row.split()) == 10:
+            if row.split()[2] != "SATA" and row.split()[-1] != "Unconfigured":
+                pdid.append(row.split()[0])
 
     Rpdid = random.choice(pdid)
     result = SendCmd(c, "bbm -a clear -p " + Rpdid)
@@ -374,8 +382,9 @@ def bvt_cleanUp(c):
     result = SendCmd(c, 'pool')
     row = result.split('\r\n')
     for r in range(4, (len(row) -2)):
-        if row[r].split()[1] == 'Ptestbbm' or row[r].split()[1] == 'PtestbbmClear':
-            pdID.append(row[r].split()[0])
+        if len(row.split()) == 7:
+            if row[r].split()[1] == 'Ptestbbm' or row[r].split()[1] == 'PtestbbmClear':
+                pdID.append(row[r].split()[0])
 
     for p in pdID:
         SendCmd(c, 'pool -a del -i ' + p)

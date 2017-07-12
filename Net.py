@@ -10,6 +10,10 @@ Fail = "'result': 'f'"
 def verifyNet(c):
     FailFlag = False
     tolog("<b>Verify net </b>")
+    result = SendCmd(c, 'net')
+    if 'Error (' in result or 'IPv4' not in result or 'IPv6' not in result:
+        FailFlag = True
+        tolog('<font color="red">Fail: net </font>')
 
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify net </font>')
@@ -21,7 +25,10 @@ def verifyNet(c):
 def verifyNetList(c):
     FailFlag = False
     tolog("<b>Verify net -a list </b>")
-
+    result = SendCmd(c, 'net -a list')
+    if 'Error (' in result or 'IPv4' not in result or 'IPv6' not in result:
+        FailFlag = True
+        tolog('<font color="red">Fail: net -a list </font>')
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify net -a list</font>')
         tolog(Fail)
@@ -32,7 +39,26 @@ def verifyNetList(c):
 def verifyNetMod(c):
     FailFlag = False
     tolog("<b>Verify net -a mod</b>")
+    command = lambda f, setting: 'net -a mod -f ' + f + setting
+    # modify ipv6 setting
+    # f = ['ipv6']
+    # setting = [' -s "primaryip=0:0:0:0:0:0:0:0,primaryipmask=0:0:0:0:0:0:0:0"',
+    #            ' -s "primaryip=0:0:0:0:0:0:10.84.2.164,primaryipmask=0:0:0:0:0:0:10.84.2.164"',
+    #            ' -s "primaryip=::,primaryipmask=::"'
+    #            ]
+    # for s in setting:
+    #     tolog('<b>' + command(f[0], s) + '</b>')
+    #     result = SendCmd(c, command(f[0], s))
+    #     if 'Error (' in result:
+    #         FailFlag = True
+    #         tolog('<font color="red">' + command(f[0], s) + '</font>')
 
+    values = ['Enable', 'Disable']
+
+    for v in values:
+        tolog('<b>' + '' + '</b>')
+        result = SendCmd(c, 'net -a mod -m -c 2 -s "physiclip=' + v + '"')
+        checkResult = SendCmd(c, 'net -m')
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify net -a mod </font>')
         tolog(Fail)

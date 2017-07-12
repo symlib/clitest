@@ -56,13 +56,13 @@ def factorydefaultsEncl(c):
     if factorydefaultsRestoreSetting(c, 'encl'):
         FailFlag =True
     checkResult = SendCmd(c, 'enclosure -v')
-    checkpoint = ['Enclosure                 51C/123F                 61C/141F',
-                  'Controller 1 Sensor 1     65C/149F                 72C/161F',
-                  'Controller 2 Sensor 2     70C/158F                 77C/170F',
-                  'Controller 1 Sensor 3     78C/172F                 88C/190F',
-                  'Controller 2 Sensor 4     65C/149F                 72C/161F',
-                  'Controller 1 Sensor 5     70C/158F                 77C/170F',
-                  'Controller 2 Sensor 6     78C/172F                 88C/190F'
+    checkpoint = ['Enclosure                  51C/123F                  61C/141F',
+                  'Controller 1 Sensor 1      65C/149F                  72C/161F',
+                  'Controller 1 Sensor 2      70C/158F                  77C/170F',
+                  'Controller 1 Sensor 3      78C/172F                  88C/190F',
+                  'Controller 2 Sensor 4      65C/149F                  72C/161F',
+                  'Controller 2 Sensor 5      70C/158F                  77C/170F',
+                  'Controller 2 Sensor 6      78C/172F                  88C/190F'
                   ]
     for cp in checkpoint:
         if cp not in checkResult:
@@ -139,8 +139,11 @@ def factorydefaultsPhydrv(c):
 
 def factorydefaultsSas(c):
     FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'sas'):
-        FailFlag =True
+    result = SendCmd(c, 'factorydefaults -a restore -t sas')
+    if 'Error (' in result:
+        if 'Command is not supported by this product type' not in result:
+            FailFlag = True
+            tolog('<font color="red">Fail: factorydefaults -a restore -t sas </font>')
 
     if FailFlag:
         tolog('\n<font color="red">Fail: factorydefaults -a restore -t sas </font>')
@@ -151,9 +154,11 @@ def factorydefaultsSas(c):
 
 def factorydefaultsScsi(c):
     FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'scsi'):
-        FailFlag =True
-
+    result = SendCmd(c, 'factorydefaults -a restore -t scsi')
+    if 'Error (' in result:
+        if 'Command is not supported by this product type' not in result:
+            FailFlag = True
+            tolog('<font color="red">Fail: factorydefaults -a restore -t scsi </font>')
 
     if FailFlag:
         tolog('\n<font color="red">Fail: factorydefaults -a restore -t scsi </font>')
@@ -226,18 +231,6 @@ def factorydefaultsSnmp(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
-def factorydefaultsTelnet(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'telnet'):
-        FailFlag =True
-
-    if FailFlag:
-        tolog('\n<font color="red">Fail: factorydefaults -a restore -t telnet </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-
 def factorydefaultsSsh(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'ssh'):
@@ -257,18 +250,6 @@ def factorydefaultsEmail(c):
 
     if FailFlag:
         tolog('\n<font color="red">Fail: factorydefaults -a restore -t email </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-
-def factorydefaultsCim(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'cim'):
-        FailFlag =True
-
-    if FailFlag:
-        tolog('\n<font color="red">Fail: factorydefaults -a restore -t cim </font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
@@ -308,18 +289,6 @@ def factorydefaultsUps(c):
 
     if FailFlag:
         tolog('\n<font color="red">Fail: factorydefaults -a restore -t ups </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-
-def factorydefaultsLdap(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'ldap'):
-        FailFlag =True
-
-    if FailFlag:
-        tolog('\n<font color="red">Fail: factorydefaults -a restore -t ldap </font>')
         tolog(Fail)
     else:
         tolog('\n<font color="green">Pass</font>')
@@ -436,13 +405,13 @@ def bvt_factorydefaultsEncl(c):
     if factorydefaultsRestoreSetting(c, 'encl'):
         FailFlag =True
     checkResult = SendCmd(c, 'enclosure -v')
-    checkpoint = ['Enclosure                 51C/123F                 61C/141F',
-                  'Controller 1 Sensor 1     65C/149F                 72C/161F',
-                  'Controller 2 Sensor 2     70C/158F                 77C/170F',
-                  'Controller 1 Sensor 3     78C/172F                 88C/190F',
-                  'Controller 2 Sensor 4     65C/149F                 72C/161F',
-                  'Controller 1 Sensor 5     70C/158F                 77C/170F',
-                  'Controller 2 Sensor 6     78C/172F                 88C/190F'
+    checkpoint = ['Enclosure                  51C/123F                  61C/141F',
+                  'Controller 1 Sensor 1      65C/149F                  72C/161F',
+                  'Controller 1 Sensor 2      70C/158F                  77C/170F',
+                  'Controller 1 Sensor 3      78C/172F                  88C/190F',
+                  'Controller 2 Sensor 4      65C/149F                  72C/161F',
+                  'Controller 2 Sensor 5      70C/158F                  77C/170F',
+                  'Controller 2 Sensor 6      78C/172F                  88C/190F'
                   ]
     for cp in checkpoint:
         if cp not in checkResult:
@@ -503,15 +472,21 @@ def bvt_factorydefaultsPhydrv(c):
 
 def bvt_factorydefaultsSas(c):
     FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'sas'):
-        FailFlag =True
+    result = SendCmd(c, 'factorydefaults -a restore -t sas')
+    if 'Error (' in result:
+        if 'Command is not supported by this product type' not in result:
+            FailFlag = True
+            tolog('<font color="red">Fail: factorydefaults -a restore -t sas </font>')
 
     return FailFlag
 
 def bvt_factorydefaultsScsi(c):
     FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'scsi'):
-        FailFlag =True
+    result = SendCmd(c, 'factorydefaults -a restore -t scsi')
+    if 'Error (' in result:
+        if 'Command is not supported by this product type' not in result:
+            FailFlag = True
+            tolog('<font color="red">Fail: factorydefaults -a restore -t scsi </font>')
 
     return FailFlag
 
@@ -554,13 +529,6 @@ def bvt_factorydefaultsSnmp(c):
 
     return FailFlag
 
-def bvt_factorydefaultsTelnet(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'telnet'):
-        FailFlag =True
-
-    return FailFlag
-
 def bvt_factorydefaultsSsh(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'ssh'):
@@ -571,13 +539,6 @@ def bvt_factorydefaultsSsh(c):
 def bvt_factorydefaultsEmail(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'email'):
-        FailFlag =True
-
-    return FailFlag
-
-def bvt_factorydefaultsCim(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'cim'):
         FailFlag =True
 
     return FailFlag
@@ -603,13 +564,6 @@ def bvt_factorydefaultsUser(c):
 def bvt_factorydefaultsUps(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'ups'):
-        FailFlag =True
-
-    return FailFlag
-
-def bvt_factorydefaultsLdap(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'ldap'):
         FailFlag =True
 
     return FailFlag
@@ -686,14 +640,11 @@ if __name__ == "__main__":
     factorydefaultsService(c)
     factorydefaultsWebserver(c)
     factorydefaultsSnmp(c)
-    factorydefaultsTelnet(c)
     factorydefaultsSsh(c)
     factorydefaultsEmail(c)
-    factorydefaultsCim(c)
     factorydefaultsNtp(c)
     factorydefaultsUser(c)
     factorydefaultsUps(c)
-    factorydefaultsLdap(c)
     factorydefaultsSyslog(c)
     verifyFactorydefaultsHelp(c)
     verifyFactorydefaultsInvalidOption(c)
