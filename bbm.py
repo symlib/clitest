@@ -10,8 +10,7 @@ from pool import bvtsparedelete
 from pool import poolcleanup
 from pool import poolcreateandlist
 from pool import sparedrvcreate
-from pool import infodictret
-from pool import getavailpd
+
 import random
 Pass = "'result': 'p'"
 Fail = "'result': 'f'"
@@ -26,12 +25,12 @@ def findPdId(c):
                 if row[r].split()[-1] != 'Unconfigured':
                     pdID.append(row[r].split()[0])
 
-
     if len(pdID) == 0:
-        pdlist=getavailpd(c)
-        pdhddlist=pdlist[0]
-        if len(pdhddlist) != 0:
-            SendCmd(c, 'pool -a add -s "name=Ptestbbm,raid=1" -p ' + str(pdhddlist[0]) + "," + str(pdhddlist[1]))
+        for r in range(4, (len(row) -2)):
+            if len(row[r].split()) == 10:
+                if row[r].split()[-1] == 'Unconfigured' and row[r].split()[-2] == 'OK':
+                    pdID.append(row[r].split()[0])
+        SendCmd(c, 'pool -a add -s "name=Ptestbbm,raid=0" -p ' + pdID[0] + ',' + pdID[1] + ',' + pdID[2])
         findPdId(c)
     return pdID
 
@@ -226,7 +225,7 @@ def cleanUp(c):
     result = SendCmd(c, 'pool')
     row = result.split('\r\n')
     for r in range(4, (len(row) -2)):
-        if len(row[r].split()) == 10:
+        if len(row[r].split()) == 9:
             if row[r].split()[1] == 'Ptestbbm' or row[r].split()[1] == 'PtestbbmClear':
                 pdID.append(row[r].split()[0])
 
@@ -387,7 +386,7 @@ def bvt_cleanUp(c):
     result = SendCmd(c, 'pool')
     row = result.split('\r\n')
     for r in range(4, (len(row) -2)):
-        if len(row.split()) == 7:
+        if len(row.split()) == 9:
             if row[r].split()[1] == 'Ptestbbm' or row[r].split()[1] == 'PtestbbmClear':
                 pdID.append(row[r].split()[0])
 
