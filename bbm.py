@@ -17,6 +17,22 @@ Fail = "'result': 'f'"
 
 def findPdId(c):
     result = SendCmd(c, 'phydrv')
+    pdID1 = []
+    row = result.split('\r\n')
+    if 'Error (' not in result:
+        for r in range(4, (len(row) -2)):
+            if len(row[r].split()) == 10:
+                if row[r].split()[-1] != 'Unconfigured':
+                    pdID1.append(row[r].split()[0])
+
+    if len(pdID1) == 0:
+        for r in range(4, (len(row) -2)):
+            if len(row[r].split()) == 10:
+                if row[r].split()[-1] == 'Unconfigured' and row[r].split()[-2] == 'OK':
+                    pdID1.append(row[r].split()[0])
+        SendCmd(c, 'pool -a add -s "name=Ptestbbm,raid=0" -p ' + pdID1[0] + ',' + pdID1[1] + ',' + pdID1[2])
+
+    result = SendCmd(c, 'phydrv')
     pdID = []
     row = result.split('\r\n')
     if 'Error (' not in result:
@@ -25,13 +41,6 @@ def findPdId(c):
                 if row[r].split()[-1] != 'Unconfigured':
                     pdID.append(row[r].split()[0])
 
-    if len(pdID) == 0:
-        for r in range(4, (len(row) -2)):
-            if len(row[r].split()) == 10:
-                if row[r].split()[-1] == 'Unconfigured' and row[r].split()[-2] == 'OK':
-                    pdID.append(row[r].split()[0])
-        SendCmd(c, 'pool -a add -s "name=Ptestbbm,raid=0" -p ' + pdID[0] + ',' + pdID[1] + ',' + pdID[2])
-        findPdId(c)
     return pdID
 
 def verifyBBM(c):
