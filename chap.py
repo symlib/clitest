@@ -315,6 +315,7 @@ def bvt_verifyChapAdd(c):
     tolog("<b>Verify CHAP legal name and type </b>")
     result = chapSend_cmd(c, 'chap -a add -s "name=a+-/(.)b,type=peer"', '111122221111')
     c.close()
+    ssh.close()
     time.sleep(3)
     c, ssh = ssh_conn()
     if 'Error (' in result:
@@ -386,8 +387,8 @@ def bvt_verifyChapList(c):
             FailFlag = True
             tolog('\n<font color="red">Fail: chap -a list</font>')
 
-    c.close()
-    ssh.close()
+    # c.close()
+    # ssh.close()
     time.sleep(3)
 
     return FailFlag

@@ -291,7 +291,7 @@ def BuildVerification(c):
         Failflaglist.append(factorydefaults.bvt_factorydefaultsWebserver(c))
         Failflaglist.append(factorydefaults.bvt_factorydefaultsSnmp(c))
         Failflaglist.append(factorydefaults.bvt_factorydefaultsSsh(c))
-        Failflaglist.append(factorydefaults.bvt_factorydefaultsEmail(c))
+        #Failflaglist.append(factorydefaults.bvt_factorydefaultsEmail(c))
         Failflaglist.append(factorydefaults.bvt_factorydefaultsNtp(c))
         Failflaglist.append(factorydefaults.bvt_factorydefaultsUser(c))
         Failflaglist.append(factorydefaults.bvt_factorydefaultsUps(c))

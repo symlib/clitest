@@ -210,15 +210,15 @@ def poolcleanup(c):
     arraysinfo = SendCmd(c, "arrays")
     while "Alias" in arraysinfo:
 
-        arraysnum = int(arraysinfo.split("\r\n")[-3].split(" ")[0])
-        for i in range(0, arraysnum + 1):
+        arraysnum = len(infodictret(c,"arrays","",1))
+        for i in range(0, arraysnum):
             SendCmd(c, "arrays -a del -d " + str(i))
         arraysinfo = SendCmd(c, "arrays")
         if "Subsystem lock by other is present" in arraysinfo:
             time.sleep(5)
     spareinfo = SendCmd(c, "spare")
     while "Revertible" in spareinfo:
-        sparenum = int(spareinfo.split("\r\n")[-3].split(" ")[0])
+        sparenum = arraysnum = len(infodictret(c,"spare","",1))
         for i in range(0, sparenum + 1):
             SendCmd(c, "spare -a del -i " + str(i))
         spareinfo = SendCmd(c, "spare")
