@@ -10,7 +10,8 @@ from pool import bvtsparedelete
 from pool import poolcleanup
 from pool import poolcreateandlist
 from pool import sparedrvcreate
-
+from pool import infodictret
+from pool import getavailpd
 import random
 Pass = "'result': 'p'"
 Fail = "'result': 'f'"
@@ -25,8 +26,12 @@ def findPdId(c):
                 if row[r].split()[-1] != 'Unconfigured':
                     pdID.append(row[r].split()[0])
 
+
     if len(pdID) == 0:
-        SendCmd(c, 'pool -a add -s "name=Ptestbbm,raid=0" -p ' + row[4].split()[0] + ',' + row[5].split()[0] + ',' + row[6].split()[0])
+        pdlist=getavailpd(c)
+        pdhddlist=pdlist[0]
+        if len(pdhddlist) != 0:
+            SendCmd(c, 'pool -a add -s "name=Ptestbbm,raid=1" -p ' + str(pdhddlist[0]) + "," + str(pdhddlist[1]))
         findPdId(c)
     return pdID
 

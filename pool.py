@@ -2644,7 +2644,7 @@ if __name__ == "__main__":
 
     # get avail pd without deleting any pool
     #getavailpd(c)
-    #print infodictret(c, "phydrv", "", 1)
+    print infodictret(c, "phydrv", "", 1)
     print infodictret(c, "volume", "", 1)
     print infodictret(c, "pool", "", 1)
     poolcreateandlist(c,1)
