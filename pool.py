@@ -2222,7 +2222,7 @@ def bvtpooldel(c):
         itemdict = infodictret(c, "pool", "", 1)
 
         #itemod = sortedDictValues(itemdict)
-        poolnum = len(itemod.keys())
+        poolnum = len(itemdict.keys())
 
         for i in range(0, poolnum ):
             SendCmd(c, "pool -a del -i " + str(i))
@@ -2274,7 +2274,7 @@ def bvtsnapshotdelete(c):
         itemdict = infodictret(c, "snapshot", "", 1)
 
         #itemod = sortedDictValues(itemdict)
-        snapshotnum = len(itemod.keys())
+        snapshotnum = len(itemdict.keys())
 
         for i in range(0, snapshotnum):
             SendCmd(c, "snapshot -a del -i " + str(i))
