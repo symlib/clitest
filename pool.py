@@ -907,7 +907,7 @@ def snapshotcreateandlist(c,snapshotnum):
 # 8    pool0_9                0      37.74 TB    16.38 KB    Exported   OK
 # 9    pool0_10               0      70.20 TB    16.38 KB    Exported   OK
     for volumeid,volumevalue in volumedct.items():
-        if (volumevalue[-1]=="OK" or volumevalue[-1]=="OK, Synchronizing") and volumevalue[-2]=="Exported":
+        if (volumevalue[-1]=="OK" or volumevalue[-1]=="OK,Synchronizing") and volumevalue[-2]=="Exported":
                 # and float(volumevalue[-2].split(" ")[0])<=float(volumevalue[-3].split(" ")[0]):
             for i in range(1,snapshotnum+1):
                 # snapshotcreate(c,volumeid,"volume"+volumeid+"_"+str(i),"","","")
@@ -950,7 +950,7 @@ def bvtsnapshotcreateandlist(c,snapshotnum):
 # 8    pool0_9                0      37.74 TB    16.38 KB    Exported   OK
 # 9    pool0_10               0      70.20 TB    16.38 KB    Exported   OK
     for volumeid,volumevalue in volumedct.items():
-        if (volumevalue[-1]=="OK" or volumevalue[-1]=="OK, Synchronizing") and volumevalue[-2]=="Exported":
+        if (volumevalue[-1]=="OK" or volumevalue[-1]=="OK,Synchronizing") and volumevalue[-2]=="Exported":
                 # and float(volumevalue[-2].split(" ")[0])<=float(volumevalue[-3].split(" ")[0]):
             for i in range(1,snapshotnum+1):
                 # snapshotcreate(c,volumeid,"volume"+volumeid+"_"+str(i),"","","")
@@ -2644,9 +2644,9 @@ if __name__ == "__main__":
 
     # get avail pd without deleting any pool
     #getavailpd(c)
-    print infodictret(c, "phydrv", "", 1)
-    print infodictret(c, "volume", "", 1)
-    print infodictret(c, "pool", "", 1)
+    # print infodictret(c, "phydrv", "", 1)
+    # print infodictret(c, "volume", "", 1)
+    # print infodictret(c, "pool", "", 1)
     poolcreateandlist(c,1)
     #poolmodifyandlist(c)
     #poolmodifyandlist(c)
