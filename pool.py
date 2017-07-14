@@ -207,15 +207,15 @@ def poolcleanup(c):
     # commented out on July, 12, 2017
     pooldelforce(c)
 
-    arraysinfo = SendCmd(c, "arrays")
-    while "Alias" in arraysinfo:
-
-        arraysnum = len(infodictret(c,"arrays","",1))
-        for i in range(0, arraysnum):
-            SendCmd(c, "arrays -a del -d " + str(i))
-        arraysinfo = SendCmd(c, "arrays")
-        if "Subsystem lock by other is present" in arraysinfo:
-            time.sleep(5)
+    # arraysinfo = SendCmd(c, "arrays")
+    # while "Alias" in arraysinfo:
+    #
+    #     arraysnum = len(infodictret(c,"arrays","",1))
+    #     for i in range(0, arraysnum):
+    #         SendCmd(c, "arrays -a del -d " + str(i))
+    #     arraysinfo = SendCmd(c, "arrays")
+    #     if "Subsystem lock by other is present" in arraysinfo:
+    #         time.sleep(5)
     spareinfo = SendCmd(c, "spare")
     while "Revertible" in spareinfo:
         sparenum = arraysnum = len(infodictret(c,"spare","",1))
