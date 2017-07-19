@@ -70,12 +70,18 @@ def verifyIsnsMod(c):
 def verifyIsnsSpecifyInexistentId(c):
     FailFlag = False
     pInfor = SendCmd(c, 'iscsi -t portal')
-    pID = pInfor.split('\r\n')[-3][0]
-    if int(pID[0]) < 31:
-        tolog('<b> isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
-        result = SendCmd(c, 'isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
+    if 'No portal in the subsystem' in pInfor:
+        result = SendCmd(c, 'isns -a mod -t portal -g 1 -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
         if 'Error (' not in result or 'Invalid iSCSI portal id' not in result:
             tolog(' <font color="red">Fail: isns specify inexistent Id </font>')
+    else:
+        pID = pInfor.split('\r\n')[-3][0]
+        if int(pID[0]) < 31:
+            tolog('<b> isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
+            result = SendCmd(c, 'isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
+            if 'Error (' not in result or 'Invalid iSCSI portal id' not in result:
+                tolog(' <font color="red">Fail: isns specify inexistent Id </font>')
+
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify isns specify inexistent Id </font>')
         tolog(Fail)
@@ -184,12 +190,17 @@ def bvt_verifyIsnsMod(c):
 def bvt_verifyIsnsSpecifyInexistentId(c):
     FailFlag = False
     pInfor = SendCmd(c, 'iscsi -t portal')
-    pID = pInfor.split('\r\n')[-3][0]
-    if int(pID[0]) < 31:
-        tolog('<b> isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
-        result = SendCmd(c, 'isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
+    if 'No portal in the subsystem' in pInfor:
+        result = SendCmd(c, 'isns -a mod -t portal -g 1 -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
         if 'Error (' not in result or 'Invalid iSCSI portal id' not in result:
             tolog(' <font color="red">Fail: isns specify inexistent Id </font>')
+    else:
+        pID = pInfor.split('\r\n')[-3][0]
+        if int(pID[0]) < 31:
+            tolog('<b> isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
+            result = SendCmd(c, 'isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
+            if 'Error (' not in result or 'Invalid iSCSI portal id' not in result:
+                tolog(' <font color="red">Fail: isns specify inexistent Id </font>')
 
     return FailFlag
 
