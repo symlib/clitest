@@ -593,7 +593,7 @@ def bvtpoolcreateandlist(c, poolnum):
     # july 12, 2017
     # cli output has changed
     # to ajust mutlilines for one pool
-    poolforceclean(c)
+    poolcleanup(c)
 
     pdhddssdlist = getavailpd(c)
     poolnum = int(poolnum)
