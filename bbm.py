@@ -241,6 +241,7 @@ def cleanUp(c):
     for p in pdID:
         SendCmd(c, 'pool -a del -i ' + p)
 
+
 def bvt_verifyBBM(c):
     FailFlag = False
     for i in findPdId(c):

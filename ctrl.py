@@ -101,9 +101,9 @@ def verifyCtrlL(c):
 def verifyCtrlModNormativeAlias(c):
     FailFlag = False
     tolog("<b> verify ctrl alias by character type and length </b>")
-    result = SendCmd(c, "ctrl")
-    for index in [4, 5]:
-        row = result.split("\r\n")[index]
+    ctrlInfo = SendCmd(c, "ctrl")
+    for i in [4, 5]:
+        row = ctrlInfo.split("\r\n")[i]
         if row.split()[-2] == "OK" or row.split()[-4][0:2] == "OK":
             CtrlID = row.split()[0]
             values = 'aaaa1aaaa2aaaa3aaaa4aaaa5aaaa6aaaa7aaaa8aaaa9aaa'
@@ -164,9 +164,9 @@ def verifyCtrlModValuesIsEnableOrDisable(c):
 def verifyCtrlModValuesIsTime(c):
     FailFlag = False
     tolog('<b>Verify ctrl -a mod -i CtrlId -s "Option = Time " </b>')
-    result = SendCmd(c, "ctrl")
+    ctrlInfo = SendCmd(c, "ctrl")
     for index in [4, 5]:
-        row = result.split("\r\n")[index]
+        row = ctrlInfo.split("\r\n")[index]
         # 2             test         OK                       Active
         # 2             test         OK, BGA Running          Active
         if row.split()[-2] == "OK" or row.split()[-4][0:2] == "OK":

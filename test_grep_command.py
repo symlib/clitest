@@ -17,7 +17,7 @@ def test_grep_command(c):
 
     for com in command:
         result = SendCmd(c, com + ' -h')
-        if 'list' in result and '(Default)' in result:
+        if 'list' in result:
             grepListResult = SendCmd(c, com + ' | grep Aaaaaaaaaaaaa')
             if len(grepListResult) != len(com + ' | grep Aaaaaaaaaaaaa') + 23:
                 list_no_grep.append(com)
