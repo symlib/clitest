@@ -166,15 +166,17 @@ def bvt_verifyIsnsMod(c):
     SendCmd(c, 'iscsi -a add -t portal -r 2 -p 2 -m phy  -s "iptype=4,dhcp=enable"')
     pInfor = SendCmd(c, 'iscsi -t portal')
     pID = pInfor.split('\r\n')[-3][0]
+    print pID
 
-    tolog('<b> verify: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
+    tolog('<b> Verify: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
     result = SendCmd(c, 'isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
     checkResult = SendCmd(c, 'isns')
     if 'Error (' in result or 'Enabled' not in checkResult or '1.1.1.1' not in checkResult:
         FailFlag = True
-        tolog('<font color="red">Fail: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1" </font>')
+        tolog(
+            '<font color="red">Fail: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1" </font>')
 
-    tolog('<b> verify: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </b>')
+    tolog('<b> Verify: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </b>')
     result = SendCmd(c, 'isns -a mod -t mgmt -s "isns=enable,serverip=255.255.255.255,serverport=1"')
     checkResult = SendCmd(c, 'isns')
     if 'Error (' in result or 'Enabled' not in checkResult or '255.255.255.255' not in checkResult:
@@ -183,7 +185,7 @@ def bvt_verifyIsnsMod(c):
 
     tolog('<b> cleaning environment </b>')
     SendCmd(c, 'isns -a mod -t portal -s "isns=disable" -g ' + pID[0])
-    SendCmd(c, 'issi -a del -t portal -i ' + pID[0])
+    SendCmd(c, 'iscsi -a del -t portal -i ' + pID[0])
 
     return FailFlag
 
@@ -246,13 +248,13 @@ def bvt_verifyIsnsMissingParameters(c):
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyIsns(c)
-    verifyIsnsList(c)
-    verifyIsnsMod(c)
-    verifyIsnsSpecifyInexistentId(c)
-    verifyIsnsInvalidOption(c)
-    verifyIsnsInvalidParameters(c)
-    verifyIsnsMissingParameters(c)
+    bvt_verifyIsns(c)
+    bvt_verifyIsnsList(c)
+    bvt_verifyIsnsMod(c)
+    bvt_verifyIsnsSpecifyInexistentId(c)
+    bvt_verifyIsnsInvalidOption(c)
+    bvt_verifyIsnsInvalidParameters(c)
+    bvt_verifyIsnsMissingParameters(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped
