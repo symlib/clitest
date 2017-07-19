@@ -211,18 +211,18 @@ def BuildVerification(c):
         Failflaglist.append(buzzer.bvt_verifyBuzzerInvalidParameters((c)))
         Failflaglist.append(buzzer.bvt_verifyBuzzerInvalidOption((c)))
 
-        tolog("Start verifying chap")
-        import chap
-        Failflaglist.append(chap.bvt_verifyChapAdd(c))
-        Failflaglist.append(chap.bvt_verifyChap(c))
-        Failflaglist.append(chap.bvt_verifyChapList(c))
-        Failflaglist.append(chap.bvt_verifyChapMod(c))
-        Failflaglist.append(chap.bvt_verifyChapDel(c))
-        Failflaglist.append(chap.bvt_verifyChapHelp(c))
-        Failflaglist.append(chap.bvt_verifyChapSpecifyErrorId(c))
-        Failflaglist.append(chap.bvt_verifyChapInvalidOption(c))
-        Failflaglist.append(chap.bvt_verifyChapInvalidParameters(c))
-        Failflaglist.append(chap.bvt_verifyChapMissingParameters(c))
+        #tolog("Start verifying chap")
+        #import chap
+        #Failflaglist.append(chap.bvt_verifyChapAdd(c))
+        #Failflaglist.append(chap.bvt_verifyChap(c))
+        #Failflaglist.append(chap.bvt_verifyChapList(c))
+        #Failflaglist.append(chap.bvt_verifyChapMod(c))
+        #Failflaglist.append(chap.bvt_verifyChapDel(c))
+        #Failflaglist.append(chap.bvt_verifyChapHelp(c))
+        #Failflaglist.append(chap.bvt_verifyChapSpecifyErrorId(c))
+        #Failflaglist.append(chap.bvt_verifyChapInvalidOption(c))
+        #Failflaglist.append(chap.bvt_verifyChapInvalidParameters(c))
+        #Failflaglist.append(chap.bvt_verifyChapMissingParameters(c))
 
         import ctrl
         tolog("Start verifying ctrl")
