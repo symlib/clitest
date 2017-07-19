@@ -100,7 +100,7 @@ def verifyCtrlL(c):
 
 def verifyCtrlModNormativeAlias(c):
     FailFlag = False
-    tolog("<b> verify ctrl alias by character type and length </b>")
+    tolog("<b> verify ctrl alias by character  type and length </b>")
     ctrlInfo = SendCmd(c, "ctrl")
     for i in [4, 5]:
         row = ctrlInfo.split("\r\n")[i]
