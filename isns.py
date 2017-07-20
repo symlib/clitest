@@ -37,28 +37,30 @@ def verifyIsnsList(c):
 
 def verifyIsnsMod(c):
     FailFlag = False
-    SendCmd(c, 'iscsi -a add -t portal -r 2 -p 2 -m phy  -s "iptype=4,dhcp=enable"')
-    pInfor = SendCmd(c, 'iscsi -t portal')
-    pID = pInfor.split('\r\n')[-3][0]
-    print pID
+    p = SendCmd(c, 'iscsi -a add -t portal -r 1 -p 2 -m phy  -s "iptype=4,dhcp=enable"')
+    if "Error (" in p:
+        tolog('<font color="red"> To add iscsi portal is failed </font>')
+    else:
+        pInfor = SendCmd(c, 'iscsi -t portal')
+        pID = pInfor.split('\r\n')[-3][0]
 
-    tolog('<b> Verify: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
-    result = SendCmd(c, 'isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
-    checkResult = SendCmd(c, 'isns')
-    if 'Error (' in result or 'Enabled' not in checkResult or '1.1.1.1' not in checkResult:
-        FailFlag = True
-        tolog('<font color="red">Fail: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1" </font>')
+        tolog('<b> Verify: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
+        result = SendCmd(c, 'isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
+        checkResult = SendCmd(c, 'isns')
+        if 'Error (' in result or 'Enabled' not in checkResult or '1.1.1.1' not in checkResult:
+            FailFlag = True
+            tolog('<font color="red">Fail: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1" </font>')
 
-    tolog('<b> Verify: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </b>')
-    result = SendCmd(c, 'isns -a mod -t mgmt -s "isns=enable,serverip=255.255.255.255,serverport=1"')
-    checkResult = SendCmd(c, 'isns')
-    if 'Error (' in result or 'Enabled' not in checkResult or '255.255.255.255' not in checkResult:
-        FailFlag = True
-        tolog('<font color="red"> Fail: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </font>')
+        tolog('<b> Verify: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </b>')
+        result = SendCmd(c, 'isns -a mod -t mgmt -s "isns=enable,serverip=255.255.255.255,serverport=1"')
+        checkResult = SendCmd(c, 'isns')
+        if 'Error (' in result or 'Enabled' not in checkResult or '255.255.255.255' not in checkResult:
+            FailFlag = True
+            tolog('<font color="red"> Fail: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </font>')
 
-    tolog('<b> cleaning environment </b>')
-    SendCmd(c, 'isns -a mod -t portal -s "isns=disable" -g ' + pID[0])
-    SendCmd(c, 'iscsi -a del -t portal -i ' + pID[0])
+        tolog('<b> cleaning environment </b>')
+        SendCmd(c, 'isns -a mod -t portal -s "isns=disable" -g ' + pID[0])
+        SendCmd(c, 'iscsi -a del -t portal -i ' + pID[0])
 
     if FailFlag:
         tolog('\n<font color="red">Fail: Verify isns -a mod </font>')
@@ -163,29 +165,31 @@ def bvt_verifyIsnsList(c):
 
 def bvt_verifyIsnsMod(c):
     FailFlag = False
-    SendCmd(c, 'iscsi -a add -t portal -r 2 -p 2 -m phy  -s "iptype=4,dhcp=enable"')
-    pInfor = SendCmd(c, 'iscsi -t portal')
-    pID = pInfor.split('\r\n')[-3][0]
-    print pID
+    p = SendCmd(c, 'iscsi -a add -t portal -r 1 -p 2 -m phy  -s "iptype=4,dhcp=enable"')
+    if 'Error (' in p:
+        tolog('To add iscsi portal is failed')
+    else:
+        pInfor = SendCmd(c, 'iscsi -t portal')
+        pID = pInfor.split('\r\n')[-3][0]
 
-    tolog('<b> Verify: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
-    result = SendCmd(c, 'isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
-    checkResult = SendCmd(c, 'isns')
-    if 'Error (' in result or 'Enabled' not in checkResult or '1.1.1.1' not in checkResult:
-        FailFlag = True
-        tolog(
-            '<font color="red">Fail: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1" </font>')
+        tolog('<b> Verify: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
+        result = SendCmd(c, 'isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
+        checkResult = SendCmd(c, 'isns')
+        if 'Error (' in result or 'Enabled' not in checkResult or '1.1.1.1' not in checkResult:
+            FailFlag = True
+            tolog(
+                '<font color="red">Fail: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1" </font>')
 
-    tolog('<b> Verify: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </b>')
-    result = SendCmd(c, 'isns -a mod -t mgmt -s "isns=enable,serverip=255.255.255.255,serverport=1"')
-    checkResult = SendCmd(c, 'isns')
-    if 'Error (' in result or 'Enabled' not in checkResult or '255.255.255.255' not in checkResult:
-        FailFlag = True
-        tolog('<font color="red"> Fail: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </font>')
+        tolog('<b> Verify: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </b>')
+        result = SendCmd(c, 'isns -a mod -t mgmt -s "isns=enable,serverip=255.255.255.255,serverport=1"')
+        checkResult = SendCmd(c, 'isns')
+        if 'Error (' in result or 'Enabled' not in checkResult or '255.255.255.255' not in checkResult:
+            FailFlag = True
+            tolog('<font color="red"> Fail: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </font>')
 
-    tolog('<b> cleaning environment </b>')
-    SendCmd(c, 'isns -a mod -t portal -s "isns=disable" -g ' + pID[0])
-    SendCmd(c, 'iscsi -a del -t portal -i ' + pID[0])
+        tolog('<b> cleaning environment </b>')
+        SendCmd(c, 'isns -a mod -t portal -s "isns=disable" -g ' + pID[0])
+        SendCmd(c, 'iscsi -a del -t portal -i ' + pID[0])
 
     return FailFlag
 

@@ -3,7 +3,7 @@
 # this section includes list pd
 from send_cmd import *
 from to_log import *
-from ssh_connect import ssh_conn
+from ssh_connect import *
 Pass = "'result': 'p'"
 Fail = "'result': 'f'"
 
@@ -49,7 +49,7 @@ def precondition(c):
         if 'testlunmapss' in row[i]:
             snapshotID.append(row[i].split()[0])
     for i in snapshotID:
-        if 'Exported' not in snapshotInfo:
+        if 'Un-Exported' in snapshotInfo:
             SendCmd(c, 'snapshot -a export -i ' + i)
 
     tolog('<b> add clone</b>')
@@ -61,9 +61,12 @@ def precondition(c):
     for i in range(4, (len(row)-2)):
         if 'testlunmapcl' in row[i]:
             cloneID.append(row[i].split()[0])
-    for i in snapshotID:
-        if 'Exported' not in cloneInfo:
+    for i in cloneID:
+        if 'Un-Exported' in cloneInfo:
             SendCmd(c, 'clone -a export -i ' + i)
+
+    tolog('<b> To enable lunmap</b>')
+    SendCmd(c, 'lunmap -a enable')
 
     return initID, volumeID, snapshotID, cloneID
 
@@ -478,7 +481,7 @@ def cleanUp(c):
             if 'Vtestlunmap' in row[i]:
                 volumeID.append(row[i].split()[0])
         for vID in volumeID:
-            SendCmd(c, 'volume -a del -i ' + vID)
+            SendCmd(c, 'volume -a del -i ' + vID + ' -f')
 
     initInfo = SendCmd(c, 'initiator')
     row = initInfo.split('Id: ')
@@ -842,7 +845,7 @@ def bvt_cleanUp(c):
             if 'Vtestlunmap' in row[i]:
                 volumeID.append(row[i].split()[0])
         for vID in volumeID:
-            SendCmd(c, 'volume -a del -i ' + vID)
+            SendCmdconfirm(c, 'volume -a del -i ' + vID + ' -f')
 
     initInfo = SendCmd(c, 'initiator')
     row = initInfo.split('Id: ')
@@ -853,19 +856,19 @@ def bvt_cleanUp(c):
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyLunmapAdd(c)
-    verifyLunmap(c)
-    verifyLunmapList(c)
-    verifyLunmapAddlun(c)
-    verifyLunmapDellun(c)
-    verifyLunmapEnable(c)
-    verifyLunmapDel(c)
-    verifyLunmapDisable(c)
-    verifyLunmapSpecifyInexistentId(c)
-    verifyLunmapInvalidOption(c)
-    verifyLunmapInvalidParameters(c)
-    verifyLunmapMissingParameters(c)
-    cleanUp(c)
+    bvt_verifyLunmapAdd(c)
+    bvt_verifyLunmap(c)
+    bvt_verifyLunmapList(c)
+    bvt_verifyLunmapAddlun(c)
+    bvt_verifyLunmapDellun(c)
+    bvt_verifyLunmapEnable(c)
+    bvt_verifyLunmapDel(c)
+    bvt_verifyLunmapDisable(c)
+    bvt_verifyLunmapSpecifyInexistentId(c)
+    bvt_verifyLunmapInvalidOption(c)
+    bvt_verifyLunmapInvalidParameters(c)
+    bvt_verifyLunmapMissingParameters(c)
+    bvt_cleanUp(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped
