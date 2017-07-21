@@ -1303,22 +1303,22 @@ def poolcreateverify_newraidlevel(c):
     pdlist=getavailpd(c)
     i=j=0
     for hdtype in pdlist:
-        if len(hdtype)>0:
-
+        hdnum = len(hdtype)
+        if hdnum > 0:
 
             for stripe in stripelst:
                 for sector in sectorlst:
                     for raid in raidlevel:
 
-                        if raid=="0":
+                        if raid == "0" and hdnum >= 1:
                             pdid = random.sample(hdtype, 1)
 
-                        elif raid=="1":
-                            pdid=random.sample(hdtype,2)
+                        elif raid == "1" and hdnum >= 2:
+                            pdid = random.sample(hdtype, 2)
 
-                        elif raid=="5":
-                            pdid = random.sample(hdtype,3)
-                        elif raid=="6":
+                        elif raid == "5" and hdnum >= 3:
+                            pdid = random.sample(hdtype, 3)
+                        elif raid == "6" and hdnum >= 4:
                             pdid = random.sample(hdtype, 4)
 
                         pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
@@ -1334,11 +1334,11 @@ def poolcreateverify_newraidlevel(c):
                             j += 1
 
                     for raid in raidlevel2:
-                        if raid=="10":
-                            pdid=random.sample(hdtype,4)
-                        elif raid=="50":
-                            pdid=random.sample(hdtype,6)
-                        elif raid=="60":
+                        if raid == "10" and hdnum >= 4:
+                            pdid = random.sample(hdtype, 4)
+                        elif raid == "50" and hdnum >= 6:
+                            pdid = random.sample(hdtype, 6)
+                        elif raid == "60" and hdnum >= 8:
                             pdid = random.sample(hdtype, 8)
 
                         pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
@@ -1372,22 +1372,23 @@ def bvtpoolcreateverify_newraidlevel(c):
     pdlist=getavailpd(c)
     i=j=0
     for hdtype in pdlist:
-        if len(hdtype)>0:
+        hdnum=len(hdtype)
+        if hdnum>0:
 
 
             for stripe in stripelst:
                 for sector in sectorlst:
                     for raid in raidlevel:
 
-                        if raid=="0":
+                        if raid=="0" and hdnum>=1:
                             pdid = random.sample(hdtype, 1)
 
-                        elif raid=="1":
+                        elif raid=="1" and hdnum>=2:
                             pdid=random.sample(hdtype,2)
 
-                        elif raid=="5":
+                        elif raid=="5" and hdnum>=3:
                             pdid = random.sample(hdtype,3)
-                        elif raid=="6":
+                        elif raid=="6" and hdnum>=4:
                             pdid = random.sample(hdtype, 4)
 
                         pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
@@ -1403,11 +1404,11 @@ def bvtpoolcreateverify_newraidlevel(c):
                             j += 1
 
                     for raid in raidlevel2:
-                        if raid=="10":
+                        if raid=="10" and hdnum>=4:
                             pdid=random.sample(hdtype,4)
-                        elif raid=="50":
+                        elif raid=="50" and hdnum>=6:
                             pdid=random.sample(hdtype,6)
-                        elif raid=="60":
+                        elif raid=="60" and hdnum>=8:
                             pdid = random.sample(hdtype, 8)
 
                         pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
