@@ -521,7 +521,7 @@ def bvt_verifyIscsiDel(c):
     result = SendCmd(c, 'iscsi -t portal')
     if 'No portal in the subsystem' not in result and 'Error (' not in result:
         row = result.split('\r\n')
-        for x in range(4, (len(row)-1)):
+        for x in range(4, (len(row) - 2)):
             element = row[x].split()
             PortalID.append(element[0])
     else:
@@ -537,26 +537,6 @@ def bvt_verifyIscsiDel(c):
         FailFlag = True
         tolog('<font color="red">Fail: iscsi -a del -t portal -i </font>')
 
-    # tolog("<b>Verify iscsi -a del -t session </b>")
-    # sessionID = []
-    # result = SendCmd(c, 'iscsi -t session')
-    # if 'No session in the subsystem' not in result and 'Error (' not in result:
-    #     row = result.split('\r\n')
-    #     for x in range(4, (len(row)-1)):
-    #         element = row[x].split()
-    #         sessionID.append(element[0])
-    # else:
-    #     FailFlag = True
-    #     tolog('<font color="red">Fail: There is no type session </font>')
-    # for i in sessionID:
-    #     result = SendCmd(c, 'iscsi -a del -t session -i ' + i)
-    #     if 'Error (' in result:
-    #         FailFlag = True
-    #         tolog('<font color="red">Fail: iscsi -a del -t session -i ' + i + '</font>')
-    # checkResult = SendCmd(c, 'iscsi -t session')
-    # if 'No session in the subsystem' not in checkResult:
-    #     FailFlag = True
-    #     tolog('<font color="red">Fail: iscsi -a del -t session </font>')
 
     return FailFlag
 
@@ -617,15 +597,15 @@ def bvt_verifyIscsiMissingParameters(c):
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyIscsi(c)
-    verifyIscsiList(c)
-    verifyIscsiAdd(c)
-    verifyIscsiMod(c)
-    verifyIscsiDel(c)
-    verifyIscsiSpecifyInexistentId(c)
-    verifyIscsiInvalidOption(c)
-    verifyIscsiInvalidParameters(c)
-    verifyIscsiMissingParameters(c)
+    # verifyIscsi(c)
+    # verifyIscsiList(c)
+    # verifyIscsiAdd(c)
+    # verifyIscsiMod(c)
+    bvt_verifyIscsiDel(c)
+    # verifyIscsiSpecifyInexistentId(c)
+    # verifyIscsiInvalidOption(c)
+    # verifyIscsiInvalidParameters(c)
+    # verifyIscsiMissingParameters(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped
