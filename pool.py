@@ -1440,7 +1440,7 @@ def poolcreateverifyoutputerror_newraidlevel(c):
     raid0results=list()
     Failflag=False
     for hdtype in pdlist:
-        if hdtype:
+        if hdtype and hdnum>4:
             raid="1"
             tolog("Verify 1,3,4,5 disks Raid 1")
             disknum=(1,3,4,5)
@@ -1585,7 +1585,7 @@ def bvtpoolcreateverifyoutputerror_newraidlevel(c):
     Failflag=False
     Failflaglist=list()
     for hdtype in pdlist:
-        if hdtype:
+        if hdtype  and hdnum>4:
             raid="1"
             tolog("Verify 1,3,4,5 disks Raid 1")
             disknum=(1,3,4,5)
