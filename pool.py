@@ -1730,7 +1730,7 @@ def poolcreateverifyoutputerror(c):
     results=list()
     Failflag=False
     for hdtype in pdlist:
-        if hdtype:
+        if hdtype and hdnum>4:
             raid="1"
             tolog("Verify 1 disk and 3 disks Raid 1")
             disknum=(1,3)
@@ -1815,7 +1815,7 @@ def bvtpoolcreateverifyoutputerror(c):
     Failflag=False
     Failflaglist=list()
     for hdtype in pdlist:
-        if hdtype:
+        if hdtype and hdnum>4:
             raid="1"
             tolog("Verify 1 disk and 3 disks Raid 1")
             disknum=(1,3)
