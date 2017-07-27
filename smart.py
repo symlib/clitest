@@ -84,7 +84,7 @@ def verifySmartV(c):
             result = SendCmd(c, "smart -v -p " + m)
             PDModel = SendCmd(c, "phydrv -v -p " + m)
             smartPDModel = result.split("\r\n")[3].split()[-1]
-            if result.split("\r\n")[2] != "PdId: " + m or smartPDModel not in PDModel or "SMART Health Status: OK" not in result:
+            if result.split("\r\n")[3] != "PdId: " + m or smartPDModel not in PDModel or "SMART Health Status: OK" not in result:
                 FailFlag = True
                 tolog('\n<font color="red">Fail: Verify smart -v -p ' + m + '</font>')
                 tolog('\n<font color="red">Checkpoint: PdId, PDModel, SMART Health Status </font>')
@@ -94,7 +94,7 @@ def verifySmartV(c):
             result = SendCmd(c, "smart -p " + m + " -v")
             PDModel = SendCmd(c, "phydrv -v -p " + m)
             smartPDModel = result.split("\r\n")[3].split()[-1]
-            if result.split("\r\n")[2] != "PdId: " + m or smartPDModel not in PDModel:
+            if result.split("\r\n")[3] != "PdId: " + m or smartPDModel not in PDModel:
                 FailFlag = True
                 tolog('\n<font color="red">Fail: Verify smart -v -p ' + m + '</font>')
 
@@ -327,8 +327,7 @@ def bvt_verifySmartV(c):
             result = SendCmd(c, "smart -v -p " + m)
             PDModel = SendCmd(c, "phydrv -v -p " + m)
             smartPDModel = result.split("\r\n")[3].split()[-1]
-            if result.split("\r\n")[
-                2] != "PdId: " + m or smartPDModel not in PDModel or "SMART Health Status: OK" not in result:
+            if result.split("\r\n")[3] != "PdId: " + m or smartPDModel not in PDModel or "SMART Health Status: OK" not in result:
                 FailFlag = True
                 tolog('Fail: Verify smart -v -p ' + m )
                 tolog('\nCheckpoint: PdId, PDModel, SMART Health Status ')
@@ -338,7 +337,7 @@ def bvt_verifySmartV(c):
             result = SendCmd(c, "smart -p " + m + " -v")
             PDModel = SendCmd(c, "phydrv -v -p " + m)
             smartPDModel = result.split("\r\n")[3].split()[-1]
-            if result.split("\r\n")[2] != "PdId: " + m or smartPDModel not in PDModel:
+            if result.split("\r\n")[3] != "PdId: " + m or smartPDModel not in PDModel:
                 FailFlag = True
                 tolog('Fail: Verify smart -v -p ' + m )
 
