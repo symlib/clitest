@@ -84,69 +84,71 @@ def verifyPasswordMissingParameters(c):
         tolog(Pass)
 
 
+
 def bvt_verifyChangePassword(c):
     FailFlag = False
-    tolog('\n<font color="red"> Need to manually test </font>')
+    tolog('\n Need to manually test ')
 
     return FailFlag
 
 def bvt_verifyPasswordSpecifyInexistentUsername(c):
     FailFlag = False
-    tolog("<b> Verify password specify inexistent username </b>")
+    tolog(" Verify password specify inexistent username ")
     result = SendCmd(c, 'password -u inexistentusername')
     if 'Username not found'not in result:
         FailFlag =True
-        tolog('\n<font color="red">Fail: password -u inexistentusername </font>')
+        tolog('Fail: password -u inexistentusername ')
 
     return FailFlag
 
 def bvt_verifyPasswordInvalidOption(c):
     FailFlag = False
-    tolog("<b>Verify password invalid option</b>")
+    tolog("Verify password invalid option")
     command = ['password -x']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com )
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid option" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com )
 
     return FailFlag
 
 def bvt_verifyPasswordInvalidParameters(c):
     FailFlag = False
-    tolog("<b>Verify password invalid parameters</b>")
+    tolog("Verify password invalid parameters")
     command = ['password test']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com )
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid setting parameters" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com )
 
     return FailFlag
 
 def bvt_verifyPasswordMissingParameters(c):
     FailFlag = False
-    tolog("<b>Verify password missing parameters</b>")
+    tolog("Verify password missing parameters")
     command = ['password -u ', 'password -u snmpuser -t', 'password -u snmpuser -t snmp -p']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com )
         result = SendCmd(c, com)
         if "Error (" not in result or "Missing parameter" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com )
 
     return FailFlag
+
 
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyChangePassword(c)
-    verifyPasswordSpecifyInexistentUsername(c)
-    verifyPasswordInvalidOption(c)
-    verifyPasswordInvalidParameters(c)
-    verifyPasswordMissingParameters(c)
+    bvt_verifyChangePassword(c)
+    bvt_verifyPasswordSpecifyInexistentUsername(c)
+    bvt_verifyPasswordInvalidOption(c)
+    bvt_verifyPasswordInvalidParameters(c)
+    bvt_verifyPasswordMissingParameters(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped

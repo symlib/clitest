@@ -185,153 +185,154 @@ def verifyNtpMissingParameters(c):
 
 def bvt_verifyNtpMod(c):
     FailFlag = False
-    tolog("<b>Verify ntp -a mod</b>")
-    values = ['8:00', '-8:00',
+    tolog("Verify ntp -a mod")
+    values = ['13:00', '-12:00',
               'enable', 'enable',
               'Jan-1st-Sun', 'Dec-Last-Sat',
               'Jun-3rd-Wed', 'Oct-Last-Sat',
               'disable', 'disable'
               ]
 
-    tolog('<b> modify NTP dst disable </b>')
+    tolog(' modify NTP dst disable ')
     for v in values[8:10]:
-        tolog('<b>' + 'ntp -a mod -s "ntp=' + v + '"' + '</b>')
+        tolog('' + 'ntp -a mod -s "ntp=' + v + '"' + '')
         result = SendCmd(c, 'ntp -a mod -s "ntp=' + v + '"')
         checkResult = SendCmd(c, 'ntp')
         if 'Error (' in result or 'Ntp: Disabled' not in checkResult:
             FailFlag = True
-            tolog('<font color="red"> Fail: ' + 'ntp -a mod -s "ntp=' + v + '"' + '</font>')
+            tolog(' Fail: ' + 'ntp -a mod -s "ntp=' + v + '"' )
 
     result = SendCmd(c, 'ntp -a mod -s "ntp=enable,timezone=5:00,server1=210.72.145.44"')
     checkResult = SendCmd(c, 'ntp')
-    if 'Error (' in result or 'Ntp: Enabled' not in checkResult:
+    if 'Ntp: Enabled' not in checkResult or "210.72.145.44" not in checkResult:
         FailFlag = True
-        tolog('<font color="red">Fail: ntp -a mod -s "ntp=enable,timezone=5:00,server1=210.72.145.44"</font>')
+        tolog('Fail: ntp -a mod -s "ntp=enable,timezone=5:00,server1=210.72.145.44"')
 
-    tolog('<b> modify NTP server timezone</b>')
+    tolog(' modify NTP server timezone')
     for v in values[:2]:
-        tolog('<b>' + 'ntp -a mod -s "timezone=' + v + '"' + '</b>')
+        tolog('Verify: ntp -a mod -s "timezone=' + v + '"')
         result = SendCmd(c, 'ntp -a mod -s "timezone=' + v + '"')
         checkResult = SendCmd(c, 'ntp')
-        if 'Error (' in result or v not in checkResult:
+        if v not in checkResult:
             FailFlag = True
-            tolog('<font color="red"> Fail: ' + 'ntp -a mod -s "timezone=' + v + '"' + '</font>')
+            tolog(' Fail: ' + 'ntp -a mod -s "timezone=' + v + '"' )
 
-    tolog('<b> modify NTP dst enable </b>')
+    tolog(' modify NTP dst enable ')
     for v in values[2:4]:
-        tolog('<b>' + 'ntp -a mod -s "dst=' + v + '"' + '</b>')
+        tolog('' + 'ntp -a mod -s "dst=' + v + '"' + '')
         result = SendCmd(c, 'ntp -a mod -s "dst=' + v + '"')
         checkResult = SendCmd(c, 'ntp')
-        if 'Error (' in result or 'Dst: Enabled' not in checkResult:
+        if 'Dst: Enabled' not in checkResult:
             FailFlag = True
-            tolog('<font color="red"> Fail: ' + 'ntp -a mod -s "dst=' + v + '"' + '</font>')
+            tolog(' Fail: ' + 'ntp -a mod -s "dst=' + v + '"' )
 
-    tolog('<b> modify dststarttime settings </b>')
+    tolog(' modify dststarttime settings ')
     for v in values[4:6]:
-        tolog('<b>' + 'ntp -a mod -s "dststarttime=' + v + '"' + '</b>')
+        tolog('' + 'ntp -a mod -s "dststarttime=' + v + '"' + '')
         result = SendCmd(c, 'ntp -a mod -s "dststarttime=' + v + '"')
         checkResult = SendCmd(c, 'ntp')
-        if 'Error (' in result or v not in checkResult:
+        if v not in checkResult:
             FailFlag = True
-            tolog('<font color="red"> Fail: ' + 'ntp -a mod -s "dststarttime=' + v + '"' + '</font>')
+            tolog(' Fail: ' + 'ntp -a mod -s "dststarttime=' + v + '"' )
 
-    tolog('<b> modify dstendtime settings </b>')
+    tolog(' modify dstendtime settings ')
     for v in values[6:8]:
-        tolog('<b>' + 'ntp -a mod -s "dstendtime=' + v + '"' + '</b>')
+        tolog('ntp -a mod -s "dstendtime=' + v + '"')
         result = SendCmd(c, 'ntp -a mod -s "dstendtime=' + v + '"')
         checkResult = SendCmd(c, 'ntp')
-        if 'Error (' in result or v not in checkResult:
+        if v not in checkResult:
             FailFlag = True
-            tolog('<font color="red"> Fail: ' + 'ntp -a mod -s "dstendtime=' + v + '"' + '</font>')
+            tolog(' Fail: ' + 'ntp -a mod -s "dstendtime=' + v + '"' )
 
     return FailFlag
 
 def bvt_verifyNtp(c):
     FailFlag = False
-    tolog("<b>Verify ntp </b>")
+    tolog("Verify ntp ")
     result = SendCmd(c, 'ntp')
     if 'Error (' in result:
         FailFlag = True
-        tolog('<font color="red"> Fail: ntp </font>')
+        tolog(' Fail: ntp ')
 
     return FailFlag
 
 def bvt_verifyNtpList(c):
     FailFlag = False
-    tolog("<b>Verify ntp -a list </b>")
+    tolog("Verify ntp -a list ")
     result = SendCmd(c, 'ntp -a list')
     if 'Error (' in result:
         FailFlag = True
-        tolog('<font color="red"> Fail: ntp -a list </font>')
+        tolog(' Fail: ntp -a list ')
 
     return FailFlag
 
 def bvt_verifyNtpTest(c):
     FailFlag = False
-    tolog("<b>Verify ntp -a test</b>")
+    tolog("Verify ntp -a test")
     result = SendCmd(c, 'ntp -a test -t 131.107.1.10'), SendCmd(c, 'ntp -a test -t abc')
     if 'unexpected error' in result:
         FailFlag = True
-        tolog('\n<font color="red"> Verify ntp -a test </font>')
+        tolog('\n Verify ntp -a test ')
 
     return FailFlag
 
 def bvt_verifyNtpSync(c):
     FailFlag = False
-    tolog('\n<font color="red"> Manual testing </font>')
+    tolog('\n Manual testing ')
 
     return FailFlag
 
 def bvt_verifyNtpInvalidOption(c):
     FailFlag = False
-    tolog("<b>Verify ntp invalid option</b>")
+    tolog("Verify ntp invalid option")
     command = ['ntp -x', 'ntp -a list -x', 'ntp -a mod -x', 'ntp -a test -x', 'ntp -a sync -x']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid option" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com )
 
     return FailFlag
 
 def bvt_verifyNtpInvalidParameters(c):
     FailFlag = False
-    tolog("<b>Verify ntp invalid parameters</b>")
+    tolog("Verify ntp invalid parameters")
     command = ['ntp test', 'ntp -a list test', 'ntp -a mod test', 'ntp -a test test', 'ntp -a sync test', 'ntp -a mod -s "dststarttime=enable"']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid setting parameters" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com )
 
     return FailFlag
 
 def bvt_verifyNtpMissingParameters(c):
     FailFlag = False
-    tolog("<b>Verify ntp missing parameters</b>")
+    tolog("Verify ntp missing parameters")
     command = ['ntp -a mod -s', 'ntp -a ', 'ntp -a test -t']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Missing parameter" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com )
 
     return FailFlag
+
 
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyNtpMod(c)
-    verifyNtp(c)
-    verifyNtpList(c)
-    verifyNtpTest(c)
-    verifyNtpSync(c)
-    verifyNtpInvalidOption(c)
-    verifyNtpInvalidParameters(c)
-    verifyNtpMissingParameters(c)
+    bvt_verifyNtpMod(c)
+    bvt_verifyNtp(c)
+    bvt_verifyNtpList(c)
+    bvt_verifyNtpTest(c)
+    bvt_verifyNtpSync(c)
+    bvt_verifyNtpInvalidOption(c)
+    bvt_verifyNtpInvalidParameters(c)
+    bvt_verifyNtpMissingParameters(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped
