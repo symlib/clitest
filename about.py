@@ -69,54 +69,55 @@ def verifyAboutInvalidParameters(c):
 
 def bvt_verifyAbout(c):
     FailFlag = False
-    tolog("<b>Verify about</b>")
+    tolog("Verify about")
     result = SendCmd(c, "about")
-    if "Version: 12.00.9999.92" not in result:
+    if "Version: " not in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: about</font>')
+        tolog('Fail: about')
 
     return FailFlag
 
 def bvt_verifyAboutHelp(c):
     FailFlag = False
-    tolog("<b>Verify about -h</b>")
+    tolog("Verify about -h")
     result = SendCmd(c, "about -h")
     if "Usage" not in result or "Summary" not in result or "about" not in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: about -h</font>')
+        tolog('Fail: about -h')
 
     return FailFlag
 
 def bvt_verifyAboutInvalidOption(c):
     FailFlag = False
-    tolog("<b>Verify about Invalid Option</b>")
+    tolog("Verify about Invalid Option")
     command = ['about -x']
     for com in command:
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + '</font>')
+            tolog('Fail: ' + com + '')
 
     return FailFlag
 
 def bvt_verifyAboutInvalidParameters(c):
     FailFlag = False
-    tolog("<b>Verify about Invalid Parameters</b>")
+    tolog("Verify about Invalid Parameters")
     result = SendCmd(c, "about x")
     if "Error (" not in result or "Invalid setting parameters" not in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: about x</font>')
+        tolog('Fail: about x')
 
     return FailFlag
+
 
 
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyAbout(c)
-    verifyAboutHelp(c)
-    verifyAboutInvalidOption(c)
-    verifyAboutInvalidParameters(c)
+    bvt_verifyAbout(c)
+    bvt_verifyAboutHelp(c)
+    bvt_verifyAboutInvalidOption(c)
+    bvt_verifyAboutInvalidParameters(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped

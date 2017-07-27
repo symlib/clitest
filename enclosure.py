@@ -10,7 +10,7 @@ Fail = "'result': 'f'"
 def verifyEnclosure(c):
     FailFlag = False
     command = ['enclosure', 'enclosure -e 1', 'enclosure -v']
-    listCheckPoint = ['SBB-SAS-12G-2U-12Bay', '> 2000 RPM']
+    listCheckPoint = ['EnclosureType', 'Enclosure Setting']
     for com in command[0:2]:
         tolog('<b>Verify ' + com + ' </b>')
         result = SendCmd(c, com)
@@ -18,7 +18,7 @@ def verifyEnclosure(c):
             FailFlag = True
             tolog('\n<font color="red">Fail: ' + com + '</font>')
     result = SendCmd(c, command[2])
-    if listCheckPoint[0] not in result or listCheckPoint[1] not in result:
+    if 'Error (' in result or listCheckPoint[0] not in result or listCheckPoint[1] not in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: ' + command[2] + '</font>')
 
@@ -32,7 +32,7 @@ def verifyEnclosure(c):
 def verifyEnclosureList(c):
     FailFlag = False
     command = ['enclosure -a list', 'enclosure -a list -e 1', 'enclosure -a list -v']
-    listCheckPoint = ['SBB-SAS-12G-2U-12Bay', '> 2000 RPM']
+    listCheckPoint = ['EnclosureType', 'Enclosure Setting']
     for com in command[0:2]:
         tolog('<b>Verify ' + com + ' </b>')
         result = SendCmd(c, com)
@@ -40,7 +40,7 @@ def verifyEnclosureList(c):
             FailFlag = True
             tolog('\n<font color="red">Fail: ' + com + '</font>')
     result = SendCmd(c, command[2])
-    if listCheckPoint[0] not in result or listCheckPoint[1] not in result:
+    if 'Error (' in result or listCheckPoint[0] not in result or listCheckPoint[1] not in result:
         FailFlag = True
         tolog('\n<font color="red">Fail: ' + command[2] + '</font>')
     if FailFlag:
@@ -221,62 +221,62 @@ def verifyEnclosureMissingParameters(c):
 def bvt_verifyEnclosure(c):
     FailFlag = False
     command = ['enclosure', 'enclosure -e 1', 'enclosure -v']
-    listCheckPoint = ['SBB-SAS-12G-2U-12Bay', '> 2000 RPM']
+    listCheckPoint = ['EnclosureType', 'Enclosure Setting']
 
     for com in command[0:2]:
-        tolog('<b>Verify ' + com + ' </b>')
+        tolog('Verify ' + com + ' ')
         result = SendCmd(c, com)
         if 'Error (' in result or listCheckPoint[0] not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + '</font>')
-    result = SendCmd(c, command[2])
+            tolog('Fail: ' + com + '')
 
-    if listCheckPoint[0] not in result or listCheckPoint[1] not in result:
+    result = SendCmd(c, command[2])
+    if 'Error (' in result or listCheckPoint[0] not in result or listCheckPoint[1] not in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: ' + command[2] + '</font>')
+        tolog('Fail: ' + command[2] + '')
 
     return FailFlag
 
 def bvt_verifyEnclosureList(c):
     FailFlag = False
     command = ['enclosure -a list', 'enclosure -a list -e 1', 'enclosure -a list -v']
-    listCheckPoint = ['SBB-SAS-12G-2U-12Bay', '> 2000 RPM']
+    listCheckPoint = ['EnclosureType', 'Enclosure Setting']
 
     for com in command[0:2]:
-        tolog('<b>Verify ' + com + ' </b>')
+        tolog('Verify ' + com + ' ')
         result = SendCmd(c, com)
         if 'Error (' in result or listCheckPoint[0] not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + '</font>')
-    result = SendCmd(c, command[2])
+            tolog('Fail: ' + com + '')
 
-    if listCheckPoint[0] not in result or listCheckPoint[1] not in result:
+    result = SendCmd(c, command[2])
+    if 'Error (' in result or listCheckPoint[0] not in result or listCheckPoint[1] not in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: ' + command[2] + '</font>')
+        tolog('Fail: ' + command[2] + '')
 
     return FailFlag
 
 def bvt_verifyEnclosureMod(c):
     FailFlag = False
-    tolog("<b>Verify enclosure -a mod </b>")
+    tolog("Verify: enclosure -a mod ")
     TW = [47, 51]
     TC = [57, 61]
     for index in range(0, 1):
-        tolog('<b> enclosure -a mod -s "tempwarning=' + str(TW[index]) + ',tempcritical=' + str(TC[index]) + '"</b>')
+        tolog('Verify: enclosure -a mod -s "tempwarning=' + str(TW[index]) + ',tempcritical=' + str(TC[index]) + '"')
         result = SendCmd(c, 'enclosure -a mod -s "tempwarning=' + str(TW[index]) + ',tempcritical=' + str(TC[index]) + '"')
         checkResult = SendCmd(c, 'enclosure -v')
         if "Error (" in result or str(TW[index]) + 'C' not in checkResult or str(TC[index]) + 'C' not in checkResult:
             FailFlag = True
-            tolog('\n<font color="red">Fail: enclosure -a mod -s "tempwarning=' + str(TW[index]) + ',tempcritical=' + str(TC[index]) + '"</font>')
+            tolog('Fail: enclosure -a mod -s "tempwarning=' + str(TW[index]) + ',tempcritical=' + str(TC[index]) + '"')
 
     def verifyCtrlTempSetting(c, option1, option2, i):
         FailFlag = False
-        tolog('<b> enclosure -a mod -s "ctrltempwarning=' + option1 + ',ctrltempcritical=' + option2 + '" -i ' + i + '"</b>')
+        tolog('Verify: enclosure -a mod -s "ctrltempwarning=' + option1 + ',ctrltempcritical=' + option2 + '" -i ' + i + '"')
         result = SendCmd(c, 'enclosure -a mod -s "ctrltempwarning=' + option1 + ',ctrltempcritical=' + option2 + '" -i '+ i)
         checkResult = SendCmd(c, 'enclosure -v')
         if "Error (" in result or option1 + 'C' not in checkResult or option2 + 'C' not in checkResult:
             FailFlag = True
-            tolog('\n<font color="red">Fail: enclosure -a mod -s "ctrltempwarning=' + option1 + ',ctrltempcritical=' + option2 + '" -i ' + i + '"</font>')
+            tolog('Fail: enclosure -a mod -s "ctrltempwarning=' + option1 + ',ctrltempcritical=' + option2 + '" -i ' + i + '"')
         return FailFlag
 
     if verifyCtrlTempSetting(c, '62', '69', '1'):
@@ -302,11 +302,11 @@ def bvt_verifyEnclosureMod(c):
 def bvt_verifyEnclosureLocate(c):
     FailFlag = False
     def locateSetting(c, t, f):
-        tolog('<b>Verify enclosure -a locate -t ' + t + ' -f ' + f + ' </b>')
+        tolog('Verify enclosure -a locate -t ' + t + ' -f ' + f + ' ')
         result = SendCmd(c, 'enclosure -a locate -t ' + t + ' -f ' + f)
         if "Error (" in result:
             FailFlag = True
-            tolog('\n<font color="red"> enclosure -a locate -t ' + t + ' -f ' + f + '</font>')
+            tolog(' enclosure -a locate -t ' + t + ' -f ' + f + '')
             return FailFlag
 
     locateSetting(c, 'ctrl', '1')
@@ -320,17 +320,17 @@ def bvt_verifyEnclosureLocate(c):
 
 def bvt_verifyEnclosureHelp(c):
     FailFlag = False
-    tolog("<b>Verify enclosure -h </b>")
+    tolog("Verify enclosure -h ")
     result = SendCmd(c, 'enclosure -h')
     if 'Error (' in result or 'enclosure' not in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: enclosure -h </font>')
+        tolog('Fail: enclosure -h ')
 
     return FailFlag
 
 def bvt_verifEnclosureSpecifyInexistentId(c):
     FailFlag = False
-    tolog("<b> Verify enclosure specify inexistent Id </b>")
+    tolog(" Verify enclosure specify inexistent Id ")
     # -e <encl id>  (1,16)
     # -i <sensor id> (1,6)
     # -f <FRU id>  1 and 2
@@ -342,31 +342,31 @@ def bvt_verifEnclosureSpecifyInexistentId(c):
                ]
 
     for com in command:
-        tolog('<b>' + com + '</b>')
+        tolog('' + com + '')
         result = SendCmd(c, com)
         if 'Error (' not in result or 'Invalid setting parameters' not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + '</font>')
+            tolog('Fail: ' + com + '')
 
 
     return FailFlag
 
 def bvt_verifyEnclosureInvalidOption(c):
     FailFlag = False
-    tolog("<b>Verify enclosure invalid option</b>")
+    tolog("Verify enclosure invalid option")
     command = ['enclosure -x', 'enclosure -a list -x', 'enclosure -a mod -x', 'enclosure -a locate -x']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid option" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com + ' ')
 
     return FailFlag
 
 def bvt_verifyEnclosureInvalidParameters(c):
     FailFlag = False
-    tolog("<b>Verify enclosure invalid parameters</b>")
+    tolog("Verify enclosure invalid parameters")
     command = ['enclosure test',
                'enclosure -a test',
                'enclosure -a mod -s test',
@@ -382,39 +382,42 @@ def bvt_verifyEnclosureInvalidParameters(c):
                ]
 
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid setting parameters" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com + ' ')
 
     return FailFlag
 
 def bvt_verifyEnclosureMissingParameters(c):
     FailFlag = False
-    tolog("<b>Verify enclosure missing parameters</b>")
+    tolog("Verify enclosure missing parameters")
     command = ['enclosure -a', 'enclosure -a mod -s ', 'enclosure -a list -i', 'enclosure -a locate -t']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Missing parameter" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com + ' ')
 
     return FailFlag
+
+
+
 
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyEnclosure(c)
-    verifyEnclosureList(c)
-    verifyEnclosureMod(c)
-    verifyEnclosureLocate(c)
-    verifyEnclosureHelp(c)
-    verifEnclosureSpecifyInexistentId(c)
-    verifyEnclosureInvalidOption(c)
-    verifyEnclosureInvalidParameters(c)
-    verifyEnclosureMissingParameters(c)
+    bvt_verifyEnclosure(c)
+    bvt_verifyEnclosureList(c)
+    bvt_verifyEnclosureMod(c)
+    bvt_verifyEnclosureLocate(c)
+    bvt_verifyEnclosureHelp(c)
+    bvt_verifEnclosureSpecifyInexistentId(c)
+    bvt_verifyEnclosureInvalidOption(c)
+    bvt_verifyEnclosureInvalidParameters(c)
+    bvt_verifyEnclosureMissingParameters(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped

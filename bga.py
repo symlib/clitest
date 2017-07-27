@@ -129,31 +129,31 @@ def verifyBgaMissingParameters(c):
 
 def bvt_verifyBga(c):
     FailFlag = False
-    tolog("<b>Verify bga</b>")
+    tolog("Verify bga")
     result = SendCmd(c, 'bga')
     checkPoint = ['NumberOfRebuild:', 'RebuildRate:', 'NumberOfRC:', 'RCRate:', 'NumberOfSC:', 'NumberOfSync:']
     for cp in checkPoint:
         if cp not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: bga </font>')
+            tolog('Fail: bga ')
 
     return FailFlag
 
 def bvt_verifyBgaList(c):
     FailFlag = False
-    tolog("<b>Verify bga -a list</b>")
+    tolog("Verify bga -a list")
     result = SendCmd(c, 'bga -a list')
     checkPoint = ['NumberOfRebuild:', 'RebuildRate:', 'NumberOfRC:', 'RCRate:', 'NumberOfSC:', 'NumberOfSync:']
     for cp in checkPoint:
         if cp not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: bga -a list</font>')
+            tolog('Fail: bga -a list')
 
     return FailFlag
 
 def bvt_verifyBgaMod(c):
     FailFlag = False
-    tolog("<b>Verify bga -a mod </b>")
+    tolog("Verify bga -a mod ")
     option = ['RebuildRate', 'RCRate']
     values = ['Low', 'High', 'Medium']
     for op in option:
@@ -163,69 +163,71 @@ def bvt_verifyBgaMod(c):
             checkResult = SendCmd(c, 'bga')
             if "Error (" in result or op + ': ' + v not in checkResult:
                 FailFlag = True
-                tolog('\n<font color="red">Fail: bga -a mod -s ' + setting + '</font>')
+                tolog('Fail: bga -a mod -s ' + setting + '')
 
     return FailFlag
 
 def bvt_verifyBgaHelp(c):
     FailFlag = False
-    tolog("<b>Verify bga -h </b>")
+    tolog("Verify bga -h ")
     result = SendCmd(c, 'bga -h')
     if "Error (" in result or 'bga' not in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: bga -h </font>')
+        tolog('Fail: bga -h ')
 
     return FailFlag
 
 def bvt_verifyBgaInvalidOption(c):
     FailFlag = False
-    tolog("<b>Verify bga invalid option</b>")
+    tolog("Verify bga invalid option")
     command = ['bga -x', 'bga -a list -x', 'bga -a mod -x']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid option" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com + ' ')
 
     return FailFlag
 
 def bvt_verifyBgaInvalidParameters(c):
     FailFlag = False
-    tolog("<b>Verify bga invalid parameters</b>")
+    tolog("Verify bga invalid parameters")
     command = ['bga test', 'bga -a test', 'bga -a mod -s test', 'bga -a mod -s "rebuildRate=test"', 'bga -a mod -s "RCRate=test"']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid setting parameters" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com + ' ')
 
     return FailFlag
 
 def bvt_verifyBgaMissingParameters(c):
     FailFlag = False
-    tolog("<b>Verify bga missing parameters</b>")
+    tolog("Verify bga missing parameters")
     command = ['bga -a ', 'bga -a mod -s']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Missing parameter" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com + ' ')
 
     return FailFlag
+
+
 
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyBga(c)
-    verifyBgaList(c)
-    verifyBgaMod(c)
-    verifyBgaHelp(c)
-    verifyBgaInvalidOption(c)
-    verifyBgaInvalidParameters(c)
-    verifyBgaMissingParameters(c)
+    bvt_verifyBga(c)
+    bvt_verifyBgaList(c)
+    bvt_verifyBgaMod(c)
+    bvt_verifyBgaHelp(c)
+    bvt_verifyBgaInvalidOption(c)
+    bvt_verifyBgaInvalidParameters(c)
+    bvt_verifyBgaMissingParameters(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped

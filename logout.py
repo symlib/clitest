@@ -53,45 +53,47 @@ def verifyLogout(c):
         tolog(Pass)
 
 
+
 def bvt_verifyLogoutInvalidOption(c):
     FailFlag = False
-    tolog("<b>Verify logout invalid option</b>")
+    tolog("Verify logout invalid option")
     command = ['logout -x']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid option" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com)
 
     return FailFlag
 
 def bvt_verifyLogoutInvalidParameters(c):
     FailFlag = False
-    tolog("<b>Verify logout invalid parameters</b>")
+    tolog("Verify logout invalid parameters")
     result = SendCmd(c, 'logout test')
     if "Error (" not in result or "Invalid setting parameters" not in result:
          FailFlag = True
-         tolog('\n<font color="red">Fail: logout </font>')
+         tolog('Fail: logout ')
 
     return FailFlag
 
 def bvt_verifyLogout(c):
     FailFlag = False
-    tolog("<b>Verify logout </b>")
+    tolog("Verify logout ")
     result = SendCmd(c, 'logout')
     if 'Error (' in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: logout </font>')
+        tolog('Fail: logout ')
 
     return FailFlag
+
 
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyLogoutInvalidOption(c)
-    verifyLogoutInvalidParameters(c)
-    verifyLogout(c)
+    bvt_verifyLogoutInvalidOption(c)
+    bvt_verifyLogoutInvalidParameters(c)
+    bvt_verifyLogout(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped

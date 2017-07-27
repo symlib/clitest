@@ -190,13 +190,13 @@ def verifyEventMissingParameters(c):
 
 def bvt_verifyEvent(c):
     FailFlag = False
-    tolog("<b>Verify event </b>")
+    tolog("Verify event ")
     result = SendCmd(c, 'event')
     if 'Error (' in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: event </font>')
+        tolog('Fail: event ')
 
-    tolog("<b>Verify event id is continuous </b>")
+    tolog("Verify event id is continuous ")
     eventId = []
     checkResult = ''
     row = result.split("\r\n")
@@ -207,28 +207,28 @@ def bvt_verifyEvent(c):
         checkResult = checkResult + '  ' + eventId[i]
         if int(eventId[i]) + 1 != int(eventId[i + 1]):
             FailFlag = True
-            tolog('\n<font color="red">Fail: event id is not continuous</font>')
-    tolog('<b>' + checkResult + '</b>')
+            tolog('Fail: event id is not continuous')
+    tolog('' + checkResult + '')
 
-    tolog("<b>Verify event -i id -c count</b>")
+    tolog("Verify event -i id -c count")
     eId = random.choice(eventId)
     for count in ['1', '65535']:
         result = SendCmd(c, 'event -i ' + eId + ' -c ' + count)
         if 'Error (' in result or eId not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: event -i ' + eId + ' -c' + count + '</font>')
+            tolog('Fail: event -i ' + eId + ' -c' + count + '')
 
     return FailFlag
 
 def bvt_verifyEventList(c):
     FailFlag = False
-    tolog("<b>Verify event -a list</b>")
+    tolog("Verify event -a list")
     result = SendCmd(c, 'event -a list')
     if 'Error (' in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: event -a list </font>')
+        tolog('Fail: event -a list ')
 
-    tolog("<b>Verify event id is continuous </b>")
+    tolog("Verify event id is continuous ")
     eventId = []
     checkResult = ''
     row = result.split("\r\n")
@@ -239,43 +239,43 @@ def bvt_verifyEventList(c):
         checkResult = checkResult + '  ' + eventId[i]
         if int(eventId[i]) + 1 != int(eventId[i + 1]):
             FailFlag = True
-            tolog('\n<font color="red">Fail: event id is not continuous</font>')
-    tolog('<b>' + checkResult + '</b>')
+            tolog('Fail: event id is not continuous')
+    tolog('' + checkResult + '')
 
-    tolog("<b>Verify event -a list -i id -c count</b>")
+    tolog("Verify event -a list -i id -c count")
     eId = random.choice(eventId)
     for count in ['1', '65535']:
         result = SendCmd(c, 'event -a list -i ' + eId + ' -c ' + count)
         if 'Error (' in result or eId not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: event -a list -i ' + eId + ' -c' + count + '</font>')
+            tolog('Fail: event -a list -i ' + eId + ' -c' + count + '')
 
     return FailFlag
 
 def bvt_verifyEventClear(c):
     FailFlag = False
-    tolog("<b>Verify event -a clear</b>")
+    tolog("Verify event -a clear")
     result = SendCmd(c, 'event -a clear')
     checkResult = SendCmd(c, 'event')
     if 'Error (' in result or 'Clear event log' not in checkResult or 'successfully' not in checkResult:
         FailFlag = True
-        tolog('\n<font color="red">Fail: event -a clear </font>')
+        tolog('Fail: event -a clear ')
 
     return FailFlag
 
 def bvt_verifyEventHelp(c):
     FailFlag = False
-    tolog("<b>Verify event -h </b>")
+    tolog("Verify event -h ")
     result = SendCmd(c, 'event -h')
     if "Error (" in result or 'Option' not in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: event -h </font>')
+        tolog('Fail: event -h ')
 
     return FailFlag
 
 def bvt_verifEventSpecifyInexistentId(c):
     FailFlag = False
-    tolog("<b> Verify event specify inexistent Id </b>")
+    tolog(" Verify event specify inexistent Id ")
     # -i <sequence ID>  (0,65535)
     result = SendCmd(c, 'event')
     eventId = []
@@ -289,60 +289,62 @@ def bvt_verifEventSpecifyInexistentId(c):
     result = SendCmd(c, 'event -i ' + eId)
     if 'Error (' not in result or 'Not found' not in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: event -i ' + eId + ' </font>')
+        tolog('Fail: event -i ' + eId + ' ')
 
     return FailFlag
 
 def bvt_verifyEventInvalidOption(c):
     FailFlag = False
-    tolog("<b>Verify event invalid option</b>")
+    tolog("Verify event invalid option")
     command = ['event -x', 'event -a list -x', 'event -a clear -x']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid option" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com + ' ')
 
     return FailFlag
 
 def bvt_verifyEventInvalidParameters(c):
     FailFlag = False
-    tolog("<b>Verify event invalid parameters</b>")
+    tolog("Verify event invalid parameters")
     command = ['event test', 'event -a test', 'event -i test', 'event -i 0 -c test']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid setting parameters" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com + ' ')
 
     return FailFlag
 
 def bvt_verifyEventMissingParameters(c):
     FailFlag = False
-    tolog("<b>Verify event missing parameters</b>")
+    tolog("Verify event missing parameters")
     command = ['event -a', 'event -a list -i ', 'event -a list -i 0 -c']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Missing parameter" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com + ' ')
 
     return FailFlag
+
+
 
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyEvent(c)
-    verifyEventList(c)
-    verifyEventClear(c)
-    verifyEventHelp(c)
-    verifEventSpecifyInexistentId(c)
-    verifyEventInvalidOption(c)
-    verifyEventInvalidParameters(c)
-    verifyEventMissingParameters(c)
+    bvt_verifyEvent(c)
+    bvt_verifyEventList(c)
+    bvt_verifyEventClear(c)
+    bvt_verifyEventHelp(c)
+    bvt_verifEventSpecifyInexistentId(c)
+    bvt_verifyEventInvalidOption(c)
+    bvt_verifyEventInvalidParameters(c)
+    bvt_verifyEventMissingParameters(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped

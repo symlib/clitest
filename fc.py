@@ -219,11 +219,11 @@ def bvt_verifyFc(c):
                'fc -t port -p 3'
                ]
     for com in command:
-        tolog('<b>Verify: ' + com + '</b>')
+        tolog('Verify: ' + com)
         result = SendCmd(c, com)
         if 'Error (' in result:
             FailFlag = True
-            tolog('<font color="red">Fail: ' + com + '</font>')
+            tolog('Fail: ' + com)
 
     return FailFlag
 
@@ -239,11 +239,11 @@ def bvt_verifyFcList(c):
                'fc -a list -t port -p 3'
                ]
     for com in command:
-        tolog('<b>Verify: ' + com + '</b>')
+        tolog('Verify: ' + com)
         result = SendCmd(c, com)
         if 'Error (' in result:
             FailFlag = True
-            tolog('<font color="red">Fail: ' + com + '</font>')
+            tolog('Fail: ' + com)
 
     return FailFlag
 
@@ -259,11 +259,11 @@ def bvt_verifyFcListV(c):
                'fc -a list -t port -p 3 -v'
                ]
     for com in command:
-        tolog('<b>Verify: ' + com + '</b>')
+        tolog('Verify: ' + com)
         result = SendCmd(c, com)
         if 'Error (' in result:
             FailFlag = True
-            tolog('<font color="red">Fail: ' + com + '</font>')
+            tolog('Fail: ' + com )
 
     return FailFlag
 
@@ -281,17 +281,17 @@ def bvt_verifyFcMod(c):
     for p in portID:
         index = 0
         for s in setting:
-            tolog('<b> Verify fc -a mod -i ' + ctrlID[0] + ' -t port -p ' + p + ' -s ' + s + '</b>')
+            tolog('Verify: fc -a mod -i ' + ctrlID[0] + ' -t port -p ' + p + ' -s ' + s)
             result = SendCmd(c, 'fc -a mod -i ' + ctrlID[0] + ' -t port -p ' + p + ' -s ' + s)
             if 'Controller is not accessible' not in result:
                 checkResult = SendCmd(c, 'fc -t port -i ' + ctrlID[0] + ' -t port -p ' + p + ' -v')
                 if 'Error (' in result:
                     FailFlag = True
-                    tolog('<font color="red">Fail: fc -a mod -i ' + ctrlID[0] + ' -t port -p ' + p + ' -s ' + s + '</font>')
+                    tolog('Fail: fc -a mod -i ' + ctrlID[0] + ' -t port -p ' + p + ' -s ' + s)
                 for i in range(index, (index + 3)):
                     if checkpoint[i] not in checkResult:
                         FailFlag = True
-                        tolog('<font color="red">Fail: fc -a mod -i ' + ctrlID[0] + ' -t port -p ' + p + ' -s ' + s + '</font>')
+                        tolog('Fail: fc -a mod -i ' + ctrlID[0] + ' -t port -p ' + p + ' -s ' + s )
             index = index + 3
 
     return FailFlag
@@ -301,12 +301,12 @@ def bvt_verifyFcReset(c):
     ctrlID = ['2']
     portID = ['1', '2', '3', '4']
     for p in portID:
-        tolog('<b>Verify: fc -a reset -i ' + ctrlID[0] + ' -p ' + p + '</b>')
+        tolog('Verify: fc -a reset -i ' + ctrlID[0] + ' -p ' + p )
         result = SendCmd(c, 'fc -a reset -i ' + ctrlID[0] + ' -p ' + p)
         checkResult = SendCmd(c, 'fc -v -t port -i ' + ctrlID[0] + ' -p ' +p)
         if "Error (" in result or checkResult.count(': Auto') != 2 or checkResult.count(': 255') !=1:
             FailFlag = True
-            tolog('<font color="red">Fail: fc -a reset -i ' + ctrlID[0] + ' -p ' + p + '</font>')
+            tolog('Fail: fc -a reset -i ' + ctrlID[0] + ' -p ' + p )
 
     return FailFlag
 
@@ -315,31 +315,31 @@ def bvt_verifyFcClear(c):
     ctrlID = ['2']
     portID = ['1', '2', '3', '4']
     for p in portID:
-        tolog('<b>Verify: fc -a clear -i ' + ctrlID[0] + ' -p ' + p + '</b>')
+        tolog('Verify: fc -a clear -i ' + ctrlID[0] + ' -p ' + p )
         result = SendCmd(c, 'fc -a clear -i ' + ctrlID[0] + ' -p ' + p)
         checkResult = SendCmd(c, 'fc -v -t stats -i ' + ctrlID[0] + ' -p ' + p)
         if "Error (" in result or checkResult.count(': 0') != 6:
             FailFlag = True
-            tolog('<font color="red">Fail: fc -a clear -i ' + ctrlID[0] + ' -p ' + p + '</font>')
+            tolog(' Fail: fc -a clear -i ' + ctrlID[0] + ' -p ' + p )
 
     return FailFlag
 
 def bvt_verifyFcInvalidOption(c):
     FailFlag = False
-    tolog("<b>Verify fc invalid option</b>")
+    tolog(" Verify fc invalid option ")
     command = ['fc -x', 'fc -a list -x', 'fc -a mod -x', 'fc -a reset -x', 'fc -a clear -x']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify:' + com)
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid option" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com )
 
     return FailFlag
 
 def bvt_verifyFcInvalidParameters(c):
     FailFlag = False
-    tolog("<b>Verify fc invalid parameters</b>")
+    tolog("Verify : fc invalid parameters")
     command = ['fc test',
                'fc -a list test',
                'fc -a mod test',
@@ -349,39 +349,41 @@ def bvt_verifyFcInvalidParameters(c):
                'fc -i 2 -t port -p 5'
                ]
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog('Verify ' + com )
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid setting parameters" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com )
 
     return FailFlag
 
 def bvt_verifyFcMissingParameters(c):
     FailFlag = False
-    tolog("<b>Verify fc missing parameters</b>")
+    tolog("Verify fc missing parameters")
     command = ['fc -a list -p', 'fc -a mod -i', 'fc -a reset -i', 'fc -a clear -p']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog('Verify ' + com )
         result = SendCmd(c, com)
         if "Error (" not in result or "Missing parameter" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com )
 
     return FailFlag
+
+
 
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    verifyFc(c)
-    verifyFcList(c)
-    verifyFcListV(c)
-    verifyFcMod(c)
-    verifyFcReset(c)
-    verifyFcClear(c)
-    verifyFcInvalidOption(c)
-    verifyFcInvalidParameters(c)
-    verifyFcMissingParameters(c)
+    bvt_verifyFc(c)
+    bvt_verifyFcList(c)
+    bvt_verifyFcListV(c)
+    bvt_verifyFcMod(c)
+    bvt_verifyFcReset(c)
+    bvt_verifyFcClear(c)
+    bvt_verifyFcInvalidOption(c)
+    bvt_verifyFcInvalidParameters(c)
+    bvt_verifyFcMissingParameters(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped
