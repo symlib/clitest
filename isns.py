@@ -37,7 +37,7 @@ def verifyIsnsList(c):
 
 def verifyIsnsMod(c):
     FailFlag = False
-    p = SendCmd(c, 'iscsi -a add -t portal -r 1 -p 2 -m phy  -s "iptype=4,dhcp=enable"')
+    p = SendCmd(c, 'iscsi -a add -t portal -r 2 -p 2 -m phy  -s "iptype=4,dhcp=enable"')
     if "Error (" in p:
         tolog('<font color="red"> To add iscsi portal is failed </font>')
     else:
@@ -143,51 +143,52 @@ def verifyIsnsMissingParameters(c):
         tolog(Pass)
 
 
+
 def bvt_verifyIsns(c):
     FailFlag = False
-    tolog("<b>Verify isns </b>")
+    tolog("Verify isns ")
     result = SendCmd(c, 'isns')
     if 'Error (' in result or 'Mgmt' not in result or result.count(' Portal ') != 2:
         FailFlag = True
-        tolog('\n<font color="red">Fail: isns </font>')
+        tolog('Fail: isns ')
 
     return FailFlag
 
 def bvt_verifyIsnsList(c):
     FailFlag = False
-    tolog("<b>Verify isns -a list </b>")
+    tolog("Verify isns -a list ")
     result = SendCmd(c, 'isns -a list')
     if 'Error (' in result or 'Mgmt' not in result or result.count(' Portal ') != 2:
         FailFlag = True
-        tolog('\n<font color="red">Fail: isns -a list </font>')
+        tolog('Fail: isns -a list ')
 
     return FailFlag
 
 def bvt_verifyIsnsMod(c):
     FailFlag = False
-    p = SendCmd(c, 'iscsi -a add -t portal -r 1 -p 2 -m phy  -s "iptype=4,dhcp=enable"')
+    p = SendCmd(c, 'iscsi -a add -t portal -r 2 -p 2 -m phy  -s "iptype=4,dhcp=enable"')
     if 'Error (' in p:
         tolog('To add iscsi portal is failed')
     else:
         pInfor = SendCmd(c, 'iscsi -t portal')
         pID = pInfor.split('\r\n')[-3][0]
 
-        tolog('<b> Verify: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
+        tolog(' Verify: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" ')
         result = SendCmd(c, 'isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
         checkResult = SendCmd(c, 'isns')
         if 'Error (' in result or 'Enabled' not in checkResult or '1.1.1.1' not in checkResult:
             FailFlag = True
             tolog(
-                '<font color="red">Fail: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1" </font>')
+                'Fail: isns -a mod -t portal -g ' + pID[0] + ' -s "isns=enable,serverip=1.1.1.1" ')
 
-        tolog('<b> Verify: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </b>')
+        tolog(' Verify: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" ')
         result = SendCmd(c, 'isns -a mod -t mgmt -s "isns=enable,serverip=255.255.255.255,serverport=1"')
         checkResult = SendCmd(c, 'isns')
         if 'Error (' in result or 'Enabled' not in checkResult or '255.255.255.255' not in checkResult:
             FailFlag = True
-            tolog('<font color="red"> Fail: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" </font>')
+            tolog(' Fail: isns -a mod -t mgmt -s "isns=enable,serverip=1.1.1.1,serverport=1" ')
 
-        tolog('<b> cleaning environment </b>')
+        tolog(' cleaning environment ')
         SendCmd(c, 'isns -a mod -t portal -s "isns=disable" -g ' + pID[0])
         SendCmd(c, 'iscsi -a del -t portal -i ' + pID[0])
 
@@ -199,55 +200,56 @@ def bvt_verifyIsnsSpecifyInexistentId(c):
     if 'No portal in the subsystem' in pInfor:
         result = SendCmd(c, 'isns -a mod -t portal -g 1 -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
         if 'Error (' not in result or 'Invalid iSCSI portal id' not in result:
-            tolog(' <font color="red">Fail: isns specify inexistent Id </font>')
+            tolog(' Fail: isns specify inexistent Id ')
     else:
         pID = pInfor.split('\r\n')[-3][0]
         if int(pID[0]) < 31:
-            tolog('<b> isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" </b>')
+            tolog(' isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535" ')
             result = SendCmd(c, 'isns -a mod -t portal -g ' + str(int(pID[0]) + 1) + ' -s "isns=enable,serverip=1.1.1.1,serverport=65535"')
             if 'Error (' not in result or 'Invalid iSCSI portal id' not in result:
-                tolog(' <font color="red">Fail: isns specify inexistent Id </font>')
+                tolog(' Fail: isns specify inexistent Id ')
 
     return FailFlag
 
 def bvt_verifyIsnsInvalidOption(c):
     FailFlag = False
-    tolog("<b>Verify isns invalid option</b>")
+    tolog("Verify isns invalid option")
     command = ['isns -x', 'isns -a list -x', 'isns -a mod -x']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid option" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com )
 
     return FailFlag
 
 def bvt_verifyIsnsInvalidParameters(c):
     FailFlag = False
-    tolog("<b>Verify isns invalid parameters</b>")
+    tolog("Verify isns invalid parameters")
     command = ['isns test', 'isns -a list test', 'isns -a mod test']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid setting parameters" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com )
 
     return FailFlag
 
 def bvt_verifyIsnsMissingParameters(c):
     FailFlag = False
-    tolog("<b>Verify isns missing parameters</b>")
+    tolog("Verify isns missing parameters")
     command = ['isns -g', 'iscsi -a mod -t', 'iscsi -a mod -s']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Missing parameter" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com )
 
     return FailFlag
+
 
 if __name__ == "__main__":
     start = time.clock()

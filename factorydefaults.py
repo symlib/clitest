@@ -8,11 +8,11 @@ Pass = "'result': 'p'"
 Fail = "'result': 'f'"
 def factorydefaultsRestoreSetting(c, type):
     FailFlag = False
-    tolog('<b> factorydefaults -a restore -t ' + type + '</b>')
+    tolog('factorydefaults -a restore -t ' + type)
     result = SendCmd(c, 'factorydefaults -a restore -t ' + type)
     if 'Error (' in result:
         FailFlag = True
-        tolog('<font color="red"> factorydefaults -a restore -t ' + type + '</font>')
+        tolog('factorydefaults -a restore -t ' + type)
     return FailFlag
 
 def factorydefaultsBga(c):
@@ -231,18 +231,6 @@ def factorydefaultsSnmp(c):
         tolog('\n<font color="green">Pass</font>')
         tolog(Pass)
 
-def factorydefaultsSsh(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'ssh'):
-        FailFlag =True
-
-    if FailFlag:
-        tolog('\n<font color="red">Fail: factorydefaults -a restore -t ssh </font>')
-        tolog(Fail)
-    else:
-        tolog('\n<font color="green">Pass</font>')
-        tolog(Pass)
-
 def factorydefaultsEmail(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'email'):
@@ -379,7 +367,7 @@ def bvt_factorydefaultsBga(c):
     checkResult = SendCmd(c, 'bga')
     if 'RebuildRate: High' not in checkResult or 'RCRate: Medium' not in checkResult:
         FailFlag = True
-        tolog('<font color="red"> Fail: factorydefaults -a restore -t bga </font>')
+        tolog(' Fail: factorydefaults -a restore -t bga ')
 
     return FailFlag
 
@@ -396,7 +384,7 @@ def bvt_factorydefaultsCtrl(c):
     for cp in checkpoint:
         if cp not in checkResult:
             FailFlag = True
-            tolog('<font color="red"> Fail: factorydefaults -a restore -t ctrl </font>')
+            tolog(' Fail: factorydefaults -a restore -t ctrl ')
 
     return FailFlag
 
@@ -416,7 +404,7 @@ def bvt_factorydefaultsEncl(c):
     for cp in checkpoint:
         if cp not in checkResult:
             FailFlag = True
-            tolog('<font color="red"> Fail: factorydefaults -a restore -t encl </font>')
+            tolog(' Fail: factorydefaults -a restore -t encl ')
 
     return FailFlag
 
@@ -432,7 +420,7 @@ def bvt_factorydefaultsFc(c):
     for cp in checkpoint:
         if cp not in checkResult:
             FailFlag = True
-            tolog('<font color="red"> Fail: factorydefaults -a restore -t fc </font>')
+            tolog(' Fail: factorydefaults -a restore -t fc ')
 
     return FailFlag
 
@@ -445,9 +433,9 @@ def bvt_factorydefaultsIscsi(c):
         checkResult2 = SendCmd(c, 'trunk')
         if 'No iSCSI trunks are available' not in checkResult2:
             FailFlag = True
-            tolog('<font color="red"> Fail: factorydefaults -a restore -t iscsi </font>')
+            tolog(' Fail: factorydefaults -a restore -t iscsi ')
     else:
-        tolog('\n<font color="red">Fail: Some iSCSI sessions are established on the portal </font>')
+        tolog('Fail: Some iSCSI sessions are established on the portal ')
 
     return FailFlag
 
@@ -466,7 +454,7 @@ def bvt_factorydefaultsPhydrv(c):
     for cp in checkpoint:
         if cp != countPD:
             FailFlag = True
-            tolog('<font color="red"> Fail: factorydefaults -a restore -t phydrv </font>')
+            tolog(' Fail: factorydefaults -a restore -t phydrv ')
 
     return FailFlag
 
@@ -476,7 +464,7 @@ def bvt_factorydefaultsSas(c):
     if 'Error (' in result:
         if 'Command is not supported by this product type' not in result:
             FailFlag = True
-            tolog('<font color="red">Fail: factorydefaults -a restore -t sas </font>')
+            tolog('Fail: factorydefaults -a restore -t sas ')
 
     return FailFlag
 
@@ -486,7 +474,7 @@ def bvt_factorydefaultsScsi(c):
     if 'Error (' in result:
         if 'Command is not supported by this product type' not in result:
             FailFlag = True
-            tolog('<font color="red">Fail: factorydefaults -a restore -t scsi </font>')
+            tolog('Fail: factorydefaults -a restore -t scsi ')
 
     return FailFlag
 
@@ -497,7 +485,7 @@ def bvt_factorydefaultsSubsys(c):
     checkResult = SendCmd(c, 'subsys -v')
     if 'Alias:  ' not in checkResult or 'RedundancyType: Active-Active' not in checkResult or 'CacheMirroring: Enabled' not in checkResult:
         FailFlag = True
-        tolog('<font color="red"> Fail: factorydefaults -a restore -t scsi </font>')
+        tolog(' Fail: factorydefaults -a restore -t scsi ')
 
     return FailFlag
 
@@ -529,13 +517,6 @@ def bvt_factorydefaultsSnmp(c):
 
     return FailFlag
 
-def bvt_factorydefaultsSsh(c):
-    FailFlag = False
-    if factorydefaultsRestoreSetting(c, 'ssh'):
-        FailFlag =True
-
-    return FailFlag
-
 def bvt_factorydefaultsEmail(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'email'):
@@ -547,10 +528,11 @@ def bvt_factorydefaultsNtp(c):
     FailFlag = False
     if factorydefaultsRestoreSetting(c, 'ntp'):
         FailFlag =True
+
     checkResult = SendCmd(c, 'ntp')
     if 'Ntp: Disabled' not in checkResult:
         FailFlag = True
-        tolog('<font color="red"> Fail: factorydefaults -a restore -t ntp </font>')
+        tolog(' Fail: factorydefaults -a restore -t ntp ')
 
     return FailFlag
 
@@ -577,79 +559,80 @@ def bvt_factorydefaultsSyslog(c):
 
 def bvt_verifyFactorydefaultsHelp(c):
     FailFlag = False
-    tolog("<b>Verify factorydefaults -h </b>")
+    tolog("Verify factorydefaults -h ")
     result = SendCmd(c, 'factorydefaults -h')
     if 'Error (' in result or 'restore' not in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: factorydefaults -h </font>')
+        tolog('Fail: factorydefaults -h ')
 
     return FailFlag
 
 def bvt_verifyFactorydefaultsInvalidOption(c):
     FailFlag = False
-    tolog("<b>Verify factorydefaults invalid option</b>")
+    tolog("Verify factorydefaults invalid option")
     command = ['factorydefaults -x', 'factorydefaults -a restore -x']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid option" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com + ' ')
 
     return FailFlag
 
 def bvt_verifyFactorydefaultsInvalidParameters(c):
     FailFlag = False
-    tolog("<b>Verify factorydefaults invalid parameters</b>")
+    tolog("Verify factorydefaults invalid parameters")
     command = ['factorydefaults test', 'factorydefaults -a restore test']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Invalid setting parameters" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com + ' ')
 
     return FailFlag
 
 def bvt_verifyFactorydefaultsMissingParameters(c):
     FailFlag = False
-    tolog("<b>Verify factorydefaults missing parameters</b>")
+    tolog("Verify factorydefaults missing parameters")
     command = ['factorydefaults -a', 'factorydefaults -a restore -t ']
     for com in command:
-        tolog('<b> Verify ' + com + '</b>')
+        tolog(' Verify ' + com + '')
         result = SendCmd(c, com)
         if "Error (" not in result or "Missing parameter" not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: ' + com + ' </font>')
+            tolog('Fail: ' + com + ' ')
 
     return FailFlag
+
+
 
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    factorydefaultsBga(c)
-    factorydefaultsCtrl(c)
-    factorydefaultsEncl(c)
-    factorydefaultsFc(c)
-    factorydefaultsIscsi(c)
-    factorydefaultsPhydrv(c)
-    factorydefaultsSas(c)
-    factorydefaultsScsi(c)
-    factorydefaultsSubsys(c)
-    factorydefaultsBgasched(c)
-    factorydefaultsService(c)
-    factorydefaultsWebserver(c)
-    factorydefaultsSnmp(c)
-    factorydefaultsSsh(c)
-    factorydefaultsEmail(c)
-    factorydefaultsNtp(c)
-    factorydefaultsUser(c)
-    factorydefaultsUps(c)
-    factorydefaultsSyslog(c)
-    verifyFactorydefaultsHelp(c)
-    verifyFactorydefaultsInvalidOption(c)
-    verifyFactorydefaultsInvalidParameters(c)
-    verifyFactorydefaultsMissingParameters(c)
+    bvt_factorydefaultsBga(c)
+    bvt_factorydefaultsCtrl(c)
+    bvt_factorydefaultsEncl(c)
+    bvt_factorydefaultsFc(c)
+    bvt_factorydefaultsIscsi(c)
+    bvt_factorydefaultsPhydrv(c)
+    bvt_factorydefaultsSas(c)
+    bvt_factorydefaultsScsi(c)
+    bvt_factorydefaultsSubsys(c)
+    bvt_factorydefaultsBgasched(c)
+    bvt_factorydefaultsService(c)
+    bvt_factorydefaultsWebserver(c)
+    bvt_factorydefaultsSnmp(c)
+    bvt_factorydefaultsEmail(c)
+    bvt_factorydefaultsNtp(c)
+    bvt_factorydefaultsUser(c)
+    bvt_factorydefaultsUps(c)
+    bvt_factorydefaultsSyslog(c)
+    bvt_verifyFactorydefaultsHelp(c)
+    bvt_verifyFactorydefaultsInvalidOption(c)
+    bvt_verifyFactorydefaultsInvalidParameters(c)
+    bvt_verifyFactorydefaultsMissingParameters(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped

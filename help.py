@@ -33,7 +33,7 @@ def verifyHelp(c):
 
 def bvt_verifyHelp(c):
     FailFlag = False
-    tolog("<b>Verify help </b>")
+    tolog("Verify help")
     result = SendCmd(c, 'help')
     command = ["about", "battery", "bbm", "bga", "buzz",  "chap", "clone", "ctrl", "date", "encldiag",
                 "enclosure", "event", "export", "factorydefaul", "fc", "import", "initiator", "iscsi",
@@ -43,11 +43,11 @@ def bvt_verifyHelp(c):
                 "topology", "trunk", "ups", "user", "volume", "wcache"]
     if 'Error (' in result:
         FailFlag = True
-        tolog('\n<font color="red">Fail: help </font>')
+        tolog('Fail: help ')
     for com in command:
         if com not in result:
             FailFlag = True
-            tolog('\n<font color="red">Fail: help </font>')
+            tolog('Fail: help')
 
     return FailFlag
 
