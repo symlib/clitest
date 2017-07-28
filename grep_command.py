@@ -4,15 +4,11 @@
 from send_cmd import *
 from ssh_connect import ssh_conn
 
-def test_grep_command(c):
+def grep_command(c):
     list_no_grep = []
     vList_no_grep =[]
     command = ["about", "battery", "bbm", "bga", "buzz",  "chap", "clone", "ctrl", "date", "encldiag",
-<<<<<<< HEAD
-                "enclosure", "event", "export", "factorydefaults", "fc", "import", "initiator", "iscsi",
-=======
                 "enclosure", "event", "export", "factorydefaul", "fc", "import", "initiator", "iscsi",
->>>>>>> 785374210ab481e9a192d85a0c0c53bd7ab7ce01
                 "isns", "logout", "lunmap", "maintenance", "net", "ntp", "password", "pcie", "perfstats",
                 "phydrv", "ping", "pool", "ptiflash", "rb", "rc", "rcache", "sc", "session", "shutdown",
                 "smart", "snapshot", "spare", "stats", "subscription", "subsys", "swmgt", "sync",
@@ -21,15 +17,7 @@ def test_grep_command(c):
 
     for com in command:
         result = SendCmd(c, com + ' -h')
-<<<<<<< HEAD
         if 'list' in result:
-=======
-<<<<<<< HEAD
-        if 'list' in result:
-=======
-        if 'list' in result and '(Default)' in result:
->>>>>>> 785374210ab481e9a192d85a0c0c53bd7ab7ce01
->>>>>>> ade15846b8fc30c91ca21834601f8ac9c1b61142
             grepListResult = SendCmd(c, com + ' | grep Aaaaaaaaaaaaa')
             if len(grepListResult) != len(com + ' | grep Aaaaaaaaaaaaa') + 23:
                 list_no_grep.append(com)
@@ -44,7 +32,7 @@ def test_grep_command(c):
 if __name__ == "__main__":
     start = time.clock()
     c, ssh = ssh_conn()
-    test_grep_command(c)
+    grep_command(c)
     ssh.close()
     elasped = time.clock() - start
     print "Elasped %s" % elasped
