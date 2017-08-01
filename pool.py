@@ -1309,7 +1309,7 @@ def poolcreateverify_newraidlevel(c):
             for stripe in stripelst:
                 for sector in sectorlst:
                     for raid in raidlevel:
-
+                        pdid=[]
                         if raid == "0" and hdnum >= 1:
                             pdid = random.sample(hdtype, 1)
 
@@ -1321,36 +1321,38 @@ def poolcreateverify_newraidlevel(c):
                         elif raid == "6" and hdnum >= 4:
                             pdid = random.sample(hdtype, 4)
 
-                        pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
-                        aliasname = random_key(4) + "_" + raid + "_" + stripe + "_" + sector
-                        settings = "name=" + aliasname + " ,raid=" + raid + ", stripe=" + stripe + ", sector=" + sector
-                        res = SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids)
-                        i += 1
-                        if "Error" in res or "Fail" in res:
-                            tolog(Failprompt + " creating " + aliasname + " with pd " + pdids)
+                        if len(pdid)>0:
+                            pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                            aliasname = random_key(4) + "_" + raid + "_" + stripe + "_" + sector
+                            settings = "name=" + aliasname + " ,raid=" + raid + ", stripe=" + stripe + ", sector=" + sector
+                            res = SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids)
+                            i += 1
+                            if "Error" in res or "Fail" in res:
+                                tolog(Failprompt + " creating " + aliasname + " with pd " + pdids)
 
-                        else:
-                            SendCmd(c, "pool -a del -i 0")
-                            j += 1
+                            else:
+                                SendCmd(c, "pool -a del -i 0")
+                                j += 1
 
                     for raid in raidlevel2:
+                        pdid = []
                         if raid == "10" and hdnum >= 4:
                             pdid = random.sample(hdtype, 4)
                         elif raid == "50" and hdnum >= 6:
                             pdid = random.sample(hdtype, 6)
                         elif raid == "60" and hdnum >= 8:
                             pdid = random.sample(hdtype, 8)
+                        if len(pdid) > 0:
+                            pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                            aliasname = random_key(4) + "_" + raid + "_" + stripe + "_" + sector
+                            settings = "name=" + aliasname + " ,raid=" + raid + ", stripe=" + stripe + ", sector=" + sector +", axle=2"
+                            res = SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids)
+                            i += 1
+                            if "Error" in res or "Fail" in res:
+                                tolog(Failprompt + " creating " + aliasname + " with pd " + pdids)
 
-                        pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
-                        aliasname = random_key(4) + "_" + raid + "_" + stripe + "_" + sector
-                        settings = "name=" + aliasname + " ,raid=" + raid + ", stripe=" + stripe + ", sector=" + sector +", axle=2"
-                        res = SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids)
-                        i += 1
-                        if "Error" in res or "Fail" in res:
-                            tolog(Failprompt + " creating " + aliasname + " with pd " + pdids)
-
-                        else:
-                            SendCmd(c, "pool -a del -i 0")
+                            else:
+                                SendCmd(c, "pool -a del -i 0")
                             j += 1
 
     tolog("Created %s and deleted %s" % (str(i),str(j)))
@@ -1379,48 +1381,50 @@ def bvtpoolcreateverify_newraidlevel(c):
             for stripe in stripelst:
                 for sector in sectorlst:
                     for raid in raidlevel:
-
-                        if raid=="0" and hdnum>=1:
+                        pdid = []
+                        if raid == "0" and hdnum >= 1:
                             pdid = random.sample(hdtype, 1)
 
-                        elif raid=="1" and hdnum>=2:
-                            pdid=random.sample(hdtype,2)
+                        elif raid == "1" and hdnum >= 2:
+                            pdid = random.sample(hdtype, 2)
 
-                        elif raid=="5" and hdnum>=3:
-                            pdid = random.sample(hdtype,3)
-                        elif raid=="6" and hdnum>=4:
+                        elif raid == "5" and hdnum >= 3:
+                            pdid = random.sample(hdtype, 3)
+                        elif raid == "6" and hdnum >= 4:
                             pdid = random.sample(hdtype, 4)
 
-                        pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
-                        aliasname = random_key(4) + "_" + raid + "_" + stripe + "_" + sector
-                        settings = "name=" + aliasname + " ,raid=" + raid + ", stripe=" + stripe + ", sector=" + sector
-                        res = SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids)
-                        i += 1
-                        if "Error" in res or "Fail" in res:
-                            tolog(Failprompt + " creating " + aliasname + " with pd " + pdids)
+                        if len(pdid) > 0:
+                            pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                            aliasname = random_key(4) + "_" + raid + "_" + stripe + "_" + sector
+                            settings = "name=" + aliasname + " ,raid=" + raid + ", stripe=" + stripe + ", sector=" + sector
+                            res = SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids)
+                            i += 1
+                            if "Error" in res or "Fail" in res:
+                                tolog(Failprompt + " creating " + aliasname + " with pd " + pdids)
 
-                        else:
-                            SendCmd(c, "pool -a del -i 0")
-                            j += 1
+                            else:
+                                SendCmd(c, "pool -a del -i 0")
+                                j += 1
 
                     for raid in raidlevel2:
-                        if raid=="10" and hdnum>=4:
-                            pdid=random.sample(hdtype,4)
-                        elif raid=="50" and hdnum>=6:
-                            pdid=random.sample(hdtype,6)
-                        elif raid=="60" and hdnum>=8:
+                        pdid = []
+                        if raid == "10" and hdnum >= 4:
+                            pdid = random.sample(hdtype, 4)
+                        elif raid == "50" and hdnum >= 6:
+                            pdid = random.sample(hdtype, 6)
+                        elif raid == "60" and hdnum >= 8:
                             pdid = random.sample(hdtype, 8)
+                        if len(pdid) > 0:
+                            pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
+                            aliasname = random_key(4) + "_" + raid + "_" + stripe + "_" + sector
+                            settings = "name=" + aliasname + " ,raid=" + raid + ", stripe=" + stripe + ", sector=" + sector + ", axle=2"
+                            res = SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids)
+                            i += 1
+                            if "Error" in res or "Fail" in res:
+                                tolog(Failprompt + " creating " + aliasname + " with pd " + pdids)
 
-                        pdids = str(pdid).replace("[", "").replace("]", "").replace(" ", "")
-                        aliasname = random_key(4) + "_" + raid + "_" + stripe + "_" + sector
-                        settings = "name=" + aliasname + " ,raid=" + raid + ", stripe=" + stripe + ", sector=" + sector +", axle=2"
-                        res = SendCmd(c, "pool -a add -s " + "\"" + settings + "\"" + " -p " + pdids)
-                        i += 1
-                        if "Error" in res or "Fail" in res:
-                            tolog(Failprompt + " creating " + aliasname + " with pd " + pdids)
-
-                        else:
-                            SendCmd(c, "pool -a del -i 0")
+                            else:
+                                SendCmd(c, "pool -a del -i 0")
                             j += 1
 
     tolog("Created %s and deleted %s" % (str(i),str(j)))
