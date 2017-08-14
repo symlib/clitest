@@ -2637,7 +2637,7 @@ if __name__ == "__main__":
     if not c:
         raise ValueError
 
-
+    poolcreateverify_newraidlevel(c)
     # record the version number of this time
     #SendCmd(c,"about")
     #print infodictret("clone")
@@ -2654,7 +2654,7 @@ if __name__ == "__main__":
     # print infodictret(c, "phydrv", "", 1)
     # print infodictret(c, "volume", "", 1)
     # print infodictret(c, "pool", "", 1)
-    poolcreateandlist(c,1)
+    #poolcreateandlist(c,1)
     #poolmodifyandlist(c)
     #poolmodifyandlist(c)
     # poolcreateandlist(c,poolnum)
@@ -2665,15 +2665,15 @@ if __name__ == "__main__":
     # pool name is renamed and extend with other available disks
     #poolmodifyandlist(c)
 
-    volumecreateandlist(c, 10)
+    #volumecreateandlist(c, 10)
     # volumecreateandlist(c,volnum)
     # create 3 volumes for each pool
 
-    snapshotcreateandlist(c,2)
+    #snapshotcreateandlist(c,2)
     # snapshotcreateandlist(c,snapshotnum)
     # create snapshotnum snapshots for each volume
     #SendCmd(c,"snapshot")
-    clonecreateandlist(c, 2)
+    #clonecreateandlist(c, 2)
     # clonecreateandlist(c,clonenum)
     # create clonenum for each snapshot
     #exportunexport(c, "volume")

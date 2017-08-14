@@ -170,7 +170,7 @@ if __name__ == "__main__":
                                 newbuildnum = open("/home/work/jackyl/Scripts/clitest/buildnum", "r").readline().rstrip()
                                 print "newbuildnum is %s, currentbuild is %s" %(newbuildnum,buildname)
 
-                                if buildname != newbuildnum:
+                                if buildname != newbuildnum and ("13.0" not in newbuildnum):
 
                                     buildname = tls.createBuild(testplan['id'], newbuildnum, "auto")
 
@@ -313,7 +313,7 @@ if __name__ == "__main__":
                                                 msg['From'] = 'jacky.li@cn.promise.com'
                                                 msg['To'] = 'jacky.li@cn.promise.com'
                                                 # rec = ['jacky.li@cn.promise.com', 'hulda.zhao@cn.promise.com']
-                                                rec = ['jacky.li@cn.promise.com','zach.feng@cn.promise.com']
+                                                rec = ['jacky.li@cn.promise.com','zach.feng@cn.promise.com','hulda.zhao@cn.promise.com']
                                                 # Send the message via our own SMTP server, but don't include the
                                                 # envelope header.
                                                 u = u.decode('base64')
