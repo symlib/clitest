@@ -2292,7 +2292,7 @@ def infodictret(c, name,leading,tailing):
             # update=False
             update = False
             # if the id column is null,
-            # count the ""
+            # count the "" a
             for tmp in infolist:
                 if tmp=="":
                     count+=1
