@@ -31,7 +31,7 @@ def BuildVerification(c):
     c, ssh = ssh_conn()
 
     versioninfo = SendCmd(c, "about")
-
+    print "versioninfo,",versioninfo
     currentbuild = versioninfo.split("Version: ")[1][:13]
 
 
@@ -40,13 +40,13 @@ def BuildVerification(c):
     print "currentbuild,",currentbuild
     print "tftpbuildnumber,",tftpbuildnumber
 
-    if ("13." in currentbuild and "13." in tftpbuildnumber) and (int(currentbuild.split(".")[-1])<int(tftpbuildnumber.split(".")[-1])) or (
+    if (("13." in currentbuild and "13." in tftpbuildnumber) and (int(currentbuild.split(".")[-1])<int(tftpbuildnumber.split(".")[-1]))) or ((
         "12.00" in currentbuild and "12.0" in tftpbuildnumber) and (
-        int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1])) or (
+        int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1]))) or ((
         "12.01" in currentbuild and "12.1" in tftpbuildnumber) and (
-        int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1])) or (
-        "12.00" in currentbuild and "12.1" in tftpbuildnumber) or (
-        "12.02" in currentbuild and "12.2" in tftpbuildnumber) :
+        int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1]))) or ((
+        "12.02" in currentbuild and "12.2" in tftpbuildnumber) and (
+        int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1]))) :
         #filename="d5k-multi-13_0_0000_"+tftpbuildnumber.split(".")[-1]
         if "13." in tftpbuildnumber:
 
@@ -92,7 +92,7 @@ def BuildVerification(c):
         if reconnectflag:
             tolog("Start verifying pool add")
             Failflaglist.append(pool.bvtpoolcreateandlist(c,1))
-            
+
             tolog("Start verifying pool global setting")
             Failflaglist.append(pool.bvtpoolglobalsetting(c))
 
@@ -251,16 +251,16 @@ def BuildVerification(c):
 
             tolog("Start verifying chap")
             import chap
-            Failflaglist.append(chap.bvt_verifyChapAdd(c))
-            Failflaglist.append(chap.bvt_verifyChap(c))
-            Failflaglist.append(chap.bvt_verifyChapList(c))
-            Failflaglist.append(chap.bvt_verifyChapMod(c))
-            Failflaglist.append(chap.bvt_verifyChapDel(c))
-            Failflaglist.append(chap.bvt_verifyChapHelp(c))
-            Failflaglist.append(chap.bvt_verifyChapSpecifyErrorId(c))
-            Failflaglist.append(chap.bvt_verifyChapInvalidOption(c))
-            Failflaglist.append(chap.bvt_verifyChapInvalidParameters(c))
-            Failflaglist.append(chap.bvt_verifyChapMissingParameters(c))
+            #Failflaglist.append(chap.bvt_verifyChapAdd(c))
+            #Failflaglist.append(chap.bvt_verifyChap(c))
+            #Failflaglist.append(chap.bvt_verifyChapList(c))
+            #Failflaglist.append(chap.bvt_verifyChapMod(c))
+            #Failflaglist.append(chap.bvt_verifyChapDel(c))
+            #Failflaglist.append(chap.bvt_verifyChapHelp(c))
+            #Failflaglist.append(chap.bvt_verifyChapSpecifyErrorId(c))
+            #Failflaglist.append(chap.bvt_verifyChapInvalidOption(c))
+            #Failflaglist.append(chap.bvt_verifyChapInvalidParameters(c))
+            #Failflaglist.append(chap.bvt_verifyChapMissingParameters(c))
 
             import ctrl
             tolog("Start verifying ctrl")
@@ -328,7 +328,7 @@ def BuildVerification(c):
             Failflaglist.append(factorydefaults.bvt_factorydefaultsService(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsWebserver(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsSnmp(c))
-            Failflaglist.append(factorydefaults.bvt_factorydefaultsSsh(c))
+            #Failflaglist.append(factorydefaults.bvt_factorydefaultsSsh(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsEmail(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsNtp(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsUser(c))
@@ -392,7 +392,7 @@ def BuildVerification(c):
             import logout
             Failflaglist.append(logout.bvt_verifyLogoutInvalidOption(c))
             Failflaglist.append(logout.bvt_verifyLogoutInvalidParameters(c))
-            Failflaglist.append(logout.bvt_verifyLogout(c))
+            #Failflaglist.append(logout.bvt_verifyLogout(c))
 
             tolog("Start verifying lunmap")
             import lunmap
