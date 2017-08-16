@@ -2584,9 +2584,9 @@ if __name__ == "__main__":
     # pool name is renamed and extend with other available disks
     #poolmodifyandlist(c)
     #poolcreateandlist(c,1)
-    print infodictret(c,"phydrv","",1)
+    print infodictret(c,"pool","",1)
 
-    print infodictret(c, "pool", "", 1)
+    print infodictret(c, "clone", "", 1)
     print infodictret(c, "ctrl", "", 2)
     print infodictret(c, "bgasched", "", 1)
 
