@@ -31,7 +31,7 @@ def BuildVerification(c):
     c, ssh = ssh_conn()
 
     versioninfo = SendCmd(c, "about")
-    print "versioninfo,",versioninfo
+
     currentbuild = versioninfo.split("Version: ")[1][:13]
 
 
@@ -40,13 +40,7 @@ def BuildVerification(c):
     print "currentbuild,",currentbuild
     print "tftpbuildnumber,",tftpbuildnumber
 
-    if (("13." in currentbuild and "13." in tftpbuildnumber) and (int(currentbuild.split(".")[-1])<int(tftpbuildnumber.split(".")[-1]))) or ((
-        "12.00" in currentbuild and "12.0" in tftpbuildnumber) and (
-        int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1]))) or ((
-        "12.01" in currentbuild and "12.1" in tftpbuildnumber) and (
-        int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1]))) or ((
-        "12.02" in currentbuild and "12.2" in tftpbuildnumber) and (
-        int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1]))) :
+    if (("13." in currentbuild and "13." in tftpbuildnumber) and (int(currentbuild.split(".")[-1])<int(tftpbuildnumber.split(".")[-1]))) or (("12.00" in currentbuild and "12.0" in tftpbuildnumber) and (int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1]))) or (("12.01" in currentbuild and "12.1" in tftpbuildnumber) and (int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1]))) or (("12.02" in currentbuild and "12.2" in tftpbuildnumber) and (int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1]))) :
         #filename="d5k-multi-13_0_0000_"+tftpbuildnumber.split(".")[-1]
         if "13." in tftpbuildnumber:
 
@@ -219,6 +213,7 @@ def BuildVerification(c):
             Failflaglist.append(bbm.bvt_verifyBBMList(c))
             Failflaglist.append(bbm.bvt_verifyBBMMissingParameters(c))
             Failflaglist.append(bbm.bvt_verifyBBMSpecifyInexistentId(c))
+            Failflaglist.append(bbm.bvt_cleanUp(c))
 
             tolog("Start verifying bga")
             import bga
@@ -251,16 +246,16 @@ def BuildVerification(c):
 
             tolog("Start verifying chap")
             import chap
-            #Failflaglist.append(chap.bvt_verifyChapAdd(c))
-            #Failflaglist.append(chap.bvt_verifyChap(c))
-            #Failflaglist.append(chap.bvt_verifyChapList(c))
-            #Failflaglist.append(chap.bvt_verifyChapMod(c))
-            #Failflaglist.append(chap.bvt_verifyChapDel(c))
-            #Failflaglist.append(chap.bvt_verifyChapHelp(c))
-            #Failflaglist.append(chap.bvt_verifyChapSpecifyErrorId(c))
-            #Failflaglist.append(chap.bvt_verifyChapInvalidOption(c))
-            #Failflaglist.append(chap.bvt_verifyChapInvalidParameters(c))
-            #Failflaglist.append(chap.bvt_verifyChapMissingParameters(c))
+            Failflaglist.append(chap.bvt_verifyChapAdd(c))
+            Failflaglist.append(chap.bvt_verifyChap(c))
+            Failflaglist.append(chap.bvt_verifyChapList(c))
+            Failflaglist.append(chap.bvt_verifyChapMod(c))
+            Failflaglist.append(chap.bvt_verifyChapDel(c))
+            Failflaglist.append(chap.bvt_verifyChapHelp(c))
+            Failflaglist.append(chap.bvt_verifyChapSpecifyErrorId(c))
+            Failflaglist.append(chap.bvt_verifyChapInvalidOption(c))
+            Failflaglist.append(chap.bvt_verifyChapInvalidParameters(c))
+            Failflaglist.append(chap.bvt_verifyChapMissingParameters(c))
 
             import ctrl
             tolog("Start verifying ctrl")
@@ -321,14 +316,11 @@ def BuildVerification(c):
             Failflaglist.append(factorydefaults.bvt_factorydefaultsFc(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsIscsi(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsPhydrv(c))
-            Failflaglist.append(factorydefaults.bvt_factorydefaultsSas(c))
-            Failflaglist.append(factorydefaults.bvt_factorydefaultsScsi(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsSubsys(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsBgasched(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsService(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsWebserver(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsSnmp(c))
-            #Failflaglist.append(factorydefaults.bvt_factorydefaultsSsh(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsEmail(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsNtp(c))
             Failflaglist.append(factorydefaults.bvt_factorydefaultsUser(c))
@@ -388,11 +380,11 @@ def BuildVerification(c):
             Failflaglist.append(isns.bvt_verifyIsnsInvalidParameters(c))
             Failflaglist.append(isns.bvt_verifyIsnsMissingParameters(c))
 
-            tolog("Start verifying logout")
-            import logout
-            Failflaglist.append(logout.bvt_verifyLogoutInvalidOption(c))
-            Failflaglist.append(logout.bvt_verifyLogoutInvalidParameters(c))
-            #Failflaglist.append(logout.bvt_verifyLogout(c))
+            # tolog("Start verifying logout")
+            # import logout
+            # Failflaglist.append(logout.bvt_verifyLogoutInvalidOption(c))
+            # Failflaglist.append(logout.bvt_verifyLogoutInvalidParameters(c))
+            # Failflaglist.append(logout.bvt_verifyLogout(c))
 
             tolog("Start verifying lunmap")
             import lunmap
@@ -448,6 +440,25 @@ def BuildVerification(c):
             Failflaglist.append(smart.bvt_verifySmartInvalidOption(c))
             Failflaglist.append(smart.bvt_verifySmartInvalidParameters(c))
             Failflaglist.append(smart.bvt_verifySmartMissingParameters(c))
+
+            tolog('Start verifying bgasched')
+            import bgasched
+            Failflaglist.append(bgasched.bvt_verifyBgaschedAdd(c))
+            Failflaglist.append(bgasched.bvt_verifyBgaschedMod(c))
+            Failflaglist.append(bgasched.bvt_verifyBgaschedList(c))
+            Failflaglist.append(bgasched.bvt_verifyBgaschedDel(c))
+            Failflaglist.append(bgasched.bvt_verifyBgaschedHelp(c))
+            Failflaglist.append(bgasched.bvt_verifyBgaschedInvalidOption(c))
+            Failflaglist.append(bgasched.bvt_verifyBgaschedInvalidParameters(c))
+            Failflaglist.append(bgasched.bvt_verifyBgaschedMissingParameters(c))
+            Failflaglist.append(bgasched.bvt_clearUp(c))
+
+            tolog('Start verifying rb')
+            import rb
+            Failflaglist.append(rb.bvt_verifyRbStartAndStopAndList(c))
+            Failflaglist.append(rb.bvt_verifyRbInvalidOption(c))
+            Failflaglist.append(rb.bvt_verifyRbInvalidParameters(c))
+            Failflaglist.append(rb.bvt_verifyRbMissingParameters(c))
 
         else:
             tolog("Failed to connect server after ptiflash.")
