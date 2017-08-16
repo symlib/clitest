@@ -213,6 +213,7 @@ if __name__ == "__main__":
                                         # if >= 2 steps, 2017-01-06
                                         stepsnum = len(tcsteps)
                                         for i in range(stepsnum):
+                                            wrongflag = False
                                             open(Notes, 'w').close()
                                             stepstr = (string.replace(
                                                 string.replace(string.replace(tcsteps[i]['actions'], '<p>\n\t', ''), '</p>',
@@ -248,6 +249,7 @@ if __name__ == "__main__":
                                             note = fp.read()
                                             fp.close()
                                             # determine the execution result that will be updated to testlink.
+
                                             while "'result':" in note:
                                                 if "'result': 'f'" in note:
                                                     step_Result = 'f'
@@ -255,9 +257,13 @@ if __name__ == "__main__":
                                                 else:
                                                     step_Result = 'p'
                                                     note = string.replace(note, "'result': 'p'", '')
+                                            else:
+                                                step_Result = 'f'
+                                                wrongflag=True
 
                                             TC_Result_Steps.append(
                                                 {'step_number': str(i + 1), 'result': step_Result, 'notes': note})
+
                                         for each in TC_Result_Steps:
                                             if each['result'] != 'p':
                                                 TC_Result = 'f'
@@ -276,6 +282,9 @@ if __name__ == "__main__":
                                         buildname = buildnamelist[-1]['name']
 
                                         # TC_Result_Steps=[{'step_number': '0', 'notes': 'step1', 'result': 'f'}, {'step_number': '1', 'notes': 'step2 ', 'result': 'p'}]
+                                        if wrongflag:
+                                            TC_Result='f'
+
                                         getExecution = tls.reportTCResult(testcase['tcase_id'], testplan['id'],
                                                                           buildname, TC_Result,
                                                                           'automated test cases', guess=True,
