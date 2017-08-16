@@ -232,15 +232,17 @@ if __name__ == "__main__":
                                             # the c is changed
                                             # 2016-12-30 to reestablish the ssh connection
 
-                                            if ssh.get_transport().is_active() != True:
-                                                c, ssh = ssh_conn()
-                                            if parameter:
-                                                abc(c, parameter)
-                                            else:
-                                                abc(c)
+                                            try:
+                                                if ssh.get_transport().is_active() != True:
+                                                    c, ssh = ssh_conn()
+                                                if parameter:
+                                                    abc(c, parameter)
+                                                else:
+                                                    abc(c)
 
 
-
+                                            except:
+                                                continue
                                             # read testcase notes from Notes
                                             fp = open(Notes, 'r')
                                             note = fp.read()
