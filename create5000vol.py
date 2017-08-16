@@ -119,6 +119,7 @@ if __name__ == "__main__":
     #verify pool create with all options
     # stripe/sector/raid level
     #poolcreateverifyoutputerror(c)
+    #poolcreateverify_newraidlevel(c)
     #SendCmd(c,"swmgt -a mod -n cli -s \"rawinput=disable\"")
     ssh.close()
     elasped = time.clock() - start
