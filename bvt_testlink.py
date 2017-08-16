@@ -250,6 +250,11 @@ if __name__ == "__main__":
                                             fp.close()
                                             # determine the execution result that will be updated to testlink.
 
+                                            if "'result':" not in note:
+                                                os.system("echo \'result\': \'f\' >> " + note)
+
+                                                print step_Result
+
                                             while "'result':" in note:
                                                 if "'result': 'f'" in note:
                                                     step_Result = 'f'
@@ -257,9 +262,8 @@ if __name__ == "__main__":
                                                 else:
                                                     step_Result = 'p'
                                                     note = string.replace(note, "'result': 'p'", '')
-                                            else:
-                                                step_Result = 'f'
-                                                wrongflag=True
+
+                                                # write "'result': 'f'" to the note file
 
                                             TC_Result_Steps.append(
                                                 {'step_number': str(i + 1), 'result': step_Result, 'notes': note})
@@ -282,8 +286,8 @@ if __name__ == "__main__":
                                         buildname = buildnamelist[-1]['name']
 
                                         # TC_Result_Steps=[{'step_number': '0', 'notes': 'step1', 'result': 'f'}, {'step_number': '1', 'notes': 'step2 ', 'result': 'p'}]
-                                        if wrongflag:
-                                            TC_Result='f'
+
+
 
                                         getExecution = tls.reportTCResult(testcase['tcase_id'], testplan['id'],
                                                                           buildname, TC_Result,
