@@ -213,6 +213,7 @@ def BuildVerification(c):
             Failflaglist.append(bbm.bvt_verifyBBMList(c))
             Failflaglist.append(bbm.bvt_verifyBBMMissingParameters(c))
             Failflaglist.append(bbm.bvt_verifyBBMSpecifyInexistentId(c))
+            Failflaglist.append(bbm.bvt_cleanUp(c))
 
             tolog("Start verifying bga")
             import bga
