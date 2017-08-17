@@ -2260,7 +2260,7 @@ def infodictret(c, name,leading,tailing):
         if  eachtab!="":
             table.append(eachtab.rstrip())
     data = data[(4+leading):-(1+tailing)]
-    lentab = len(table) + 2
+    lentab = len(table) - 2
     Outinfo = dict()
     key=""
     mergeinfolist=list()

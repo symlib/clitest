@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
                 #if testplan['name'] == '0cli cmd testcases sequence issue':  # 2016.11.24 represent the active test plan testplan['active']=='1' and
 
-                print testplan['name']
+                #print testplan['name']
                 if "BuildVerification" in testplan["name"]:
                     tcdict = tls.getTestCasesForTestPlan(testplan['id'])
 
@@ -166,7 +166,7 @@ if __name__ == "__main__":
                                 buildnamelist = tls.getBuildsForTestPlan(testplan['id'])
                                 buildname = buildnamelist[-1]['name']
                                 newbuildnum = open("/home/work/jackyl/Scripts/clitest/buildnum", "r").readline().rstrip()
-                                print "newbuildnum is %s, currentbuild is %s" %(newbuildnum,buildname)
+                                #print "newbuildnum is %s, currentbuild is %s" %(newbuildnum,buildname)
 
                                 if buildname != newbuildnum and ("13.0" not in newbuildnum or "12.1" not in newbuildnum):
 
@@ -237,7 +237,7 @@ if __name__ == "__main__":
                                             if parameter:
                                                 abc(c, parameter)
                                             else:
-                                                print "I am in func"
+                                                #print "I am in func"
                                                 try:
                                                     abc(c)
                                                 except:
@@ -246,10 +246,9 @@ if __name__ == "__main__":
                                                     fp.close()
                                                     # determine the execution result that will be updated to testlink.
 
-                                                    # if "'result':" not in note:
-                                                    #     os.system("echo \'result\': \'f\' >> " + note)
-                                                    #
-                                                    print "before check result in Notes"
+                                                    # On August 17, 2017
+                                                    # If there's some error in testing scripts
+                                                    # update the error to execution result
 
                                                     while "'result':" in note:
                                                         if "'result': 'f'" in note:
@@ -273,8 +272,6 @@ if __name__ == "__main__":
                                                          'notes': note})
 
 
-
-
                                             # read testcase notes from Notes
                                             fp = open(Notes, 'r')
                                             note = fp.read()
@@ -284,7 +281,7 @@ if __name__ == "__main__":
                                             # if "'result':" not in note:
                                             #     os.system("echo \'result\': \'f\' >> " + note)
                                             #
-                                            print "before check result in Notes"
+                                            #print "before check result in Notes"
 
                                             while "'result':" in note:
                                                 if "'result': 'f'" in note:
@@ -297,7 +294,7 @@ if __name__ == "__main__":
                                             else:
                                             # write "'result': 'f'" to the note file
                                                 step_Result = 'f'
-                                                print "add result if there's no"
+                                                #print "add result if there's no"
                                                 with open(Notes, "r+") as f:
                                                     content = f.read()
                                                     f.write(content + "\n" + "'result': 'f'")
@@ -305,7 +302,7 @@ if __name__ == "__main__":
 
                                             TC_Result_Steps.append(
                                                 {'step_number': str(i + 1), 'result': step_Result, 'notes': note})
-                                        print TC_Result_Steps
+                                        #print TC_Result_Steps
                                         for each in TC_Result_Steps:
                                             if each['result'] != 'p':
                                                 TC_Result = 'f'

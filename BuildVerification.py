@@ -46,7 +46,7 @@ def BuildVerification(c):
     if (("13." in currentbuild and "13." in tftpbuildnumber) and (int(currentbuild.split(".")[-1])<int(tftpbuildnumber.split(".")[-1]))) \
             or (("12.00" in currentbuild and "12.0" in tftpbuildnumber) and (int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1]))) or \
             (("12.01" in currentbuild and "12.1" in tftpbuildnumber) and (int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1]))) \
-            or (("12.02" in currentbuild and "12.2" in tftpbuildnumber) and (int(currentbuild.split(".")[-1]) <= int(tftpbuildnumber.split(".")[-1]))) :
+            or (("12.02" in currentbuild and "12.2" in tftpbuildnumber) and (int(currentbuild.split(".")[-1]) < int(tftpbuildnumber.split(".")[-1]))) :
         #filename="d5k-multi-13_0_0000_"+tftpbuildnumber.split(".")[-1]
         if "13." in tftpbuildnumber:
 
@@ -63,7 +63,7 @@ def BuildVerification(c):
 
         tolog("%s will be updated to the %s" % (filename, server))
         flashimage = True
-        #SendCmdRestart(c,"ptiflash -y -t -s 10.84.2.99 -f "+filename+".ptif")
+        SendCmdRestart(c,"ptiflash -y -t -s 10.84.2.99 -f "+filename+".ptif")
 
 
 
