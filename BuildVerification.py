@@ -38,6 +38,7 @@ def BuildVerification(c):
     LOG_FILENAME = '/home/work/jackyl/Scripts/clitest/testlink.notes'
     logging.basicConfig(filename=LOG_FILENAME, level=logging.ERROR)
     logging.debug('This message should go to the log file')
+
     tftpbuildnumber=open("/home/work/jackyl/Scripts/clitest/buildnum","r").readline().rstrip()
     print "currentbuild,",currentbuild
     print "tftpbuildnumber,",tftpbuildnumber
@@ -62,14 +63,14 @@ def BuildVerification(c):
 
         tolog("%s will be updated to the %s" % (filename, server))
         flashimage = True
-        SendCmdRestart(c,"ptiflash -y -t -s 10.84.2.99 -f "+filename+".ptif")
+        #SendCmdRestart(c,"ptiflash -y -t -s 10.84.2.99 -f "+filename+".ptif")
 
 
 
 
     if flashimage:
         i=1
-        while i< 160:
+        while i< 1:
             # wait for rebooting
            tolog("ptiflash is in progress, please wait, %d seconds elapse" %i)
            i+=1
