@@ -84,8 +84,6 @@ if __name__ == "__main__":
 
     c,ssh=ssh_conn()
 
-    Notes = 'testlink.notes.bvt'
-
 
     # print tls.whatArgs('getTestCase')
 
@@ -100,7 +98,7 @@ if __name__ == "__main__":
     # planname = raw_input('please input the test plan name to be executed:')
     cmd = ''
     stepsnum=0
-    Notes = '/home/work/jackyl/Scripts/clitest/testlink.notes'
+    #Notes = '/home/work/jackyl/Scripts/clitest/testlink.notes'
     #print tls.whatArgs('getTestCasesForTestSuite')
     #print tls.whatArgs('createBuild')
     #print tls.whatArgs("unassignTestCaseExecutionTask")
@@ -170,7 +168,7 @@ if __name__ == "__main__":
                                 newbuildnum = open("/home/work/jackyl/Scripts/clitest/buildnum", "r").readline().rstrip()
                                 print "newbuildnum is %s, currentbuild is %s" %(newbuildnum,buildname)
 
-                                if buildname != newbuildnum and ("13.0" not in newbuildnum):
+                                if buildname != newbuildnum and ("vi .0" not in newbuildnum):
 
                                     buildname = tls.createBuild(testplan['id'], newbuildnum, "auto")
 
@@ -250,10 +248,10 @@ if __name__ == "__main__":
                                             fp.close()
                                             # determine the execution result that will be updated to testlink.
 
-                                            if "'result':" not in note:
-                                                os.system("echo \'result\': \'f\' >> " + note)
-
-                                                print step_Result
+                                            # if "'result':" not in note:
+                                            #     os.system("echo \'result\': \'f\' >> " + note)
+                                            #
+                                            #     print step_Result
 
                                             while "'result':" in note:
                                                 if "'result': 'f'" in note:
@@ -263,7 +261,13 @@ if __name__ == "__main__":
                                                     step_Result = 'p'
                                                     note = string.replace(note, "'result': 'p'", '')
 
-                                                # write "'result': 'f'" to the note file
+                                            else:
+                                            # write "'result': 'f'" to the note file
+                                                step_Result = 'f'
+                                                with open(Notes, "r+") as f:
+                                                    content = f.read()
+                                                    f.write(content + "\n" + "'result': 'f'")
+                                                    f.close()
 
                                             TC_Result_Steps.append(
                                                 {'step_number': str(i + 1), 'result': step_Result, 'notes': note})
