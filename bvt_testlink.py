@@ -231,18 +231,50 @@ if __name__ == "__main__":
                                             # the c is changed
                                             # 2016-12-30 to reestablish the ssh connection
 
-                                            try:
-                                                if ssh.get_transport().is_active() != True:
-                                                    c, ssh = ssh_conn()
-                                                if parameter:
-                                                    abc(c, parameter)
-                                                else:
+
+                                            if ssh.get_transport().is_active() != True:
+                                                c, ssh = ssh_conn()
+                                            if parameter:
+                                                abc(c, parameter)
+                                            else:
+                                                print "I am in func"
+                                                try:
                                                     abc(c)
-                                                    print "I am in func"
+                                                except:
+                                                    fp = open(Notes, 'r')
+                                                    note = fp.read()
+                                                    fp.close()
+                                                    # determine the execution result that will be updated to testlink.
+
+                                                    # if "'result':" not in note:
+                                                    #     os.system("echo \'result\': \'f\' >> " + note)
+                                                    #
+                                                    print "before check result in Notes"
+
+                                                    while "'result':" in note:
+                                                        if "'result': 'f'" in note:
+                                                            step_Result = 'f'
+                                                            note = string.replace(note, "'result': 'f'", '')
+                                                        else:
+                                                            step_Result = 'p'
+                                                            note = string.replace(note, "'result': 'p'", '')
+
+                                                    else:
+                                                        # write "'result': 'f'" to the note file
+                                                        step_Result = 'f'
+                                                        print "add result if there's no"
+                                                        with open(Notes, "r+") as f:
+                                                            content = f.read()
+                                                            f.write(content + "\n" + "'result': 'f'")
+                                                            f.close()
+
+                                                    TC_Result_Steps.append(
+                                                        {'step_number': str(i + 1), 'result': step_Result,
+                                                         'notes': note})
 
 
-                                            except:
-                                                continue
+
+
                                             # read testcase notes from Notes
                                             fp = open(Notes, 'r')
                                             note = fp.read()
@@ -273,7 +305,7 @@ if __name__ == "__main__":
 
                                             TC_Result_Steps.append(
                                                 {'step_number': str(i + 1), 'result': step_Result, 'notes': note})
-
+                                        print TC_Result_Steps
                                         for each in TC_Result_Steps:
                                             if each['result'] != 'p':
                                                 TC_Result = 'f'
