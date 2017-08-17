@@ -70,7 +70,7 @@ def BuildVerification(c):
 
     if flashimage:
         i=1
-        while i< 1:
+        while i< 200:
             # wait for rebooting
            tolog("ptiflash is in progress, please wait, %d seconds elapse" %i)
            i+=1

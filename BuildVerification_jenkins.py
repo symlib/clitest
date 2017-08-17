@@ -40,7 +40,7 @@ def BuildVerification(c):
         SendCmdRestart(c,"ptiflash -y -t -s 10.84.2.66 -f "+filename)
 
         i=1
-        while i< 160:
+        while i< 200:
             # wait for rebooting
            tolog("ptiflash is in progress, please wait, %d seconds elapse" %i)
            i+=1
