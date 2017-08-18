@@ -168,7 +168,7 @@ if __name__ == "__main__":
                                 newbuildnum = open("/home/work/jackyl/Scripts/clitest/buildnum", "r").readline().rstrip()
                                 #print "newbuildnum is %s, currentbuild is %s" %(newbuildnum,buildname)
 
-                                if buildname != newbuildnum and ("13.0" not in newbuildnum or "12.1" not in newbuildnum):
+                                if buildname != newbuildnum and "12.2" in newbuildnum:
 
                                     buildname = tls.createBuild(testplan['id'], newbuildnum, "auto")
 

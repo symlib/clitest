@@ -135,7 +135,7 @@ def bvt_verifyRbStartAndStopAndList(c):
 
     else:
         tolog('\n\n The lack of pd')
-        exit()
+        #exit()
 
     if FailFlag:
         tolog('\n<font color="red">Fail: rb start and stop</font>')
