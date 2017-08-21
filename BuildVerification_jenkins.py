@@ -63,6 +63,13 @@ def BuildVerification(c):
         tolog("Start verifying pool add")
         Failflaglist.append(pool.bvtpoolcreateandlist(c, 1))
 
+        tolog("Start verifying spare add")
+        Failflaglist.append(pool.bvtsparedrvcreate(c, 2))
+
+
+        tolog("Start verifying delete spare")
+        Failflaglist.append(pool.bvtsparedelete(c))
+
         tolog("Start verifying pool global setting")
         Failflaglist.append(pool.bvtpoolglobalsetting(c))
 
@@ -117,11 +124,7 @@ def BuildVerification(c):
         tolog("Start verifying pool add for 3rd time")
         Failflaglist.append(pool.bvtpoolcreateandlist(c, 2))
 
-        tolog("Start verifying spare add")
-        Failflaglist.append(pool.bvtsparedrvcreate(c, 2))
 
-        tolog("Start verifying delete spare")
-        Failflaglist.append(pool.bvtsparedelete(c))
 
         tolog("Start verifying pool extend")
         Failflaglist.append(pool.bvtpoolmodifyandlist(c))
