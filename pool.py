@@ -43,7 +43,7 @@ def getavailpd(c):
 # 11    ST373455SS   SAS   73 GB        Encl1 Slot11  OK        Unconfigured
 # 12    HGST         SAS   4 TB         Encl1 Slot12  OK        Unconfigured
     #pddict=getpdlist(c)
-    pddict=infodictret(c,"phydrv","",1)
+    pddict=infodictret(c,"phydrv")
     pdhddlist=list()
     pdssdlist=list()
     # HDD and SSD cannot be mixed used in a pool, so return two list for HDD and SSD seperately.
@@ -71,7 +71,7 @@ def poolcleanup(c):
     # arraysinfo = SendCmd(c, "arrays")
     # while "Alias" in arraysinfo:
     #
-    #     arraysnum = len(infodictret(c,"arrays","",1))
+    #     arraysnum = len(infodictret(c,"arrays"))
     #     for i in range(0, arraysnum):
     #         SendCmd(c, "arrays -a del -d " + str(i))
     #     arraysinfo = SendCmd(c, "arrays")
@@ -79,7 +79,7 @@ def poolcleanup(c):
     #         time.sleep(5)
     spareinfo = SendCmd(c, "spare")
     while "Revertible" in spareinfo:
-        sparenum = arraysnum = len(infodictret(c,"spare","",1))
+        sparenum = arraysnum = len(infodictret(c,"spare"))
         for i in range(0, sparenum + 1):
             SendCmd(c, "spare -a del -i " + str(i))
         spareinfo = SendCmd(c, "spare")
@@ -112,7 +112,7 @@ def createpoolpd(c,aliasname,raidlevel,stripesize,sectorsize,pdlist):
 def getpoolinfo(c):
 
     #pooldata = SendCmd(c, "pool")
-    pooldict = infodictret(c, "pool", "", 1)
+    pooldict = infodictret(c, "pool")
 
     # administrator@cli> pool
     # ===============================================================================
@@ -165,7 +165,7 @@ def getsnapshotinfo(c):
 #             snapshotinfo[snapshottab.find("Status"):(snapshottab.find("OpStatus") - 1)].rstrip(),
 #             snapshotinfo[snapshottab.find("OpStatus"):].rstrip())
 
-    return infodictret(c, "snapshot", "", 1)
+    return infodictret(c, "snapshot")
 
 def getscloneinfo(c):
 
@@ -189,7 +189,7 @@ def getscloneinfo(c):
     #         cloneinfo[clonetab.find("UsedCapacity"):(clonetab.find("Status") - 1)].rstrip())
     #
     # return clonedict
-    return infodictret(c, "clone", "", 1)
+    return infodictret(c, "clone")
 
 
 
@@ -239,7 +239,7 @@ def poolcreateandlist(c,poolnum):
                 #     FailFlag = True
                 #     tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
                 #     break
-            poollist=infodictret(c,"pool","",1)
+            poollist=infodictret(c,"pool")
             # to verify the pool num
             if len(poollist.keys()) == poolcount:
 
@@ -261,7 +261,7 @@ def poolcreateandlist(c,poolnum):
                 poolname = random_key(maxnamelength) + str(phydrvnum)
                 createpoolpd(c, poolname, "0", "", "", str(pdlist[0]))
                 poolcount+=1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
                 if len(poollist.keys()) == poolcount:
 
                     # verify all pool names
@@ -283,7 +283,7 @@ def poolcreateandlist(c,poolnum):
                 poolname = random_key(maxnamelength) + str(phydrvnum)
                 createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
                 if len(poollist.keys()) == poolcount:
 
                     # verify all pool names
@@ -308,7 +308,7 @@ def poolcreateandlist(c,poolnum):
 
                 createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
                 if len(poollist.keys()) == poolcount:
 
                     # verify all pool names
@@ -329,7 +329,7 @@ def poolcreateandlist(c,poolnum):
                 poolname = random_key(maxnamelength) + str(phydrvnum - 1)
                 createpoolpd(c, poolname, "5", "", "", str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
                 if len(poollist.keys()) == poolcount:
 
                     # verify all pool names
@@ -356,7 +356,7 @@ def poolcreateandlist(c,poolnum):
                 createpoolpd(c, poolname, random.choice(["5", "6"]), "", "",
                              str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]) + "," + str(pdlist[3]))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
                 if len(poollist.keys()) == poolcount:
 
                     # verify all pool names
@@ -382,7 +382,7 @@ def poolcreateandlist(c,poolnum):
                 raidlevel = random.choice(["5", "6"])
                 createpoolpd(c, poolname, raidlevel, "", "", str(pdlist).replace("[", "").replace("]", "").replace(" ", ""))
                 poolcount+=1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
 
                 if len(poollist.keys()) == poolcount:
 
@@ -406,7 +406,7 @@ def poolcreateandlist(c,poolnum):
                 createpoolpd(c, poolname, raidlevel, "", "",
                              str(pdlist).replace("[", "").replace("]", "").replace(" ", ""))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
 
                 if len(poollist.keys()) == poolcount:
 
@@ -432,7 +432,7 @@ def poolcreateandlist(c,poolnum):
                 createpoolpd(c, poolname, raidlevel, "", "",
                              str(pdlist).replace("[", "").replace("]", "").replace(" ", ""))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
 
                 if len(poollist.keys()) == poolcount:
 
@@ -458,7 +458,7 @@ def poolcreateandlist(c,poolnum):
                 createpoolpd(c, poolname, raidlevel, "", "",
                              str(pdlist).replace("[", "").replace("]", "").replace(" ", ""))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
 
                 if len(poollist.keys()) == poolcount:
 
@@ -529,7 +529,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 #     FailFlag = True
                 #     tolog("Pool list with phydrvum " + str(phydrvnum) + "failed.")
                 #     break
-            poollist = infodictret(c, "pool", "", 1)
+            poollist = infodictret(c, "pool")
             # to verify the pool num
             if len(poollist.keys()) == poolcount:
 
@@ -551,7 +551,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 poolname = random_key(maxnamelength) + str(phydrvnum)
                 createpoolpd(c, poolname, "0", "", "", str(pdlist[0]))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
                 if len(poollist.keys()) == poolcount:
 
                     # verify all pool names
@@ -573,7 +573,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 poolname = random_key(maxnamelength) + str(phydrvnum)
                 createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
                 if len(poollist.keys()) == poolcount:
 
                     # verify all pool names
@@ -598,7 +598,7 @@ def bvtpoolcreateandlist(c, poolnum):
 
                 createpoolpd(c, poolname, "1", "", "", str(pdlist[0]) + "," + str(pdlist[1]))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
                 if len(poollist.keys()) == poolcount:
 
                     # verify all pool names
@@ -619,7 +619,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 poolname = random_key(maxnamelength) + str(phydrvnum - 1)
                 createpoolpd(c, poolname, "5", "", "", str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
                 if len(poollist.keys()) == poolcount:
 
                     # verify all pool names
@@ -646,7 +646,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 createpoolpd(c, poolname, random.choice(["5", "6"]), "", "",
                              str(pdlist[0]) + "," + str(pdlist[1]) + "," + str(pdlist[2]) + "," + str(pdlist[3]))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
                 if len(poollist.keys()) == poolcount:
 
                     # verify all pool names
@@ -673,7 +673,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 createpoolpd(c, poolname, raidlevel, "", "",
                              str(pdlist).replace("[", "").replace("]", "").replace(" ", ""))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
 
                 if len(poollist.keys()) == poolcount:
 
@@ -699,7 +699,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 createpoolpd(c, poolname, raidlevel, "", "",
                              str(pdlist).replace("[", "").replace("]", "").replace(" ", ""))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
 
                 if len(poollist.keys()) == poolcount:
 
@@ -725,7 +725,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 createpoolpd(c, poolname, raidlevel, "", "",
                              str(pdlist).replace("[", "").replace("]", "").replace(" ", ""))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
 
                 if len(poollist.keys()) == poolcount:
 
@@ -751,7 +751,7 @@ def bvtpoolcreateandlist(c, poolnum):
                 createpoolpd(c, poolname, raidlevel, "", "",
                              str(pdlist).replace("[", "").replace("]", "").replace(" ", ""))
                 poolcount += 1
-                poollist = infodictret(c, "pool", "", 1)
+                poollist = infodictret(c, "pool")
 
                 if len(poollist.keys()) == poolcount:
 
@@ -798,7 +798,7 @@ def volumecreateandlist(c,volnum):
     FailFlag=False
     volnum=int(volnum)
     # tolog("I am here")
-    pooldct=infodictret(c,"pool","",1)
+    pooldct=infodictret(c,"pool")
     # administrator@cli> pool
     # ===============================================================================
     # Id    Name    Status    TotalCapacity    UsedCapacity    FreeCapacity
@@ -846,7 +846,7 @@ def bvtvolumecreateandlist(c,volnum):
     FailFlag=False
     volnum=int(volnum)
     # tolog("I am here")
-    pooldct=infodictret(c,"pool","",1)
+    pooldct=infodictret(c,"pool")
     # administrator@cli> pool
     # ===============================================================================
     # Id    Name    Status    TotalCapacity    UsedCapacity    FreeCapacity
@@ -876,7 +876,7 @@ def bvtvolumecreateandlist(c,volnum):
 
 def snapshotcreateandlist(c,snapshotnum):
     snapshotnum=int(snapshotnum)
-    volumedct = infodictret(c,"volume","",1)
+    volumedct = infodictret(c,"volume")
     i=0
     FailFlag=False
 # administrator@cli> volume
@@ -903,7 +903,7 @@ def snapshotcreateandlist(c,snapshotnum):
     res=SendCmd(c,"snapshot")
     # because build 50 still has the problem RB-234122: cli "snapshot" can not get all snapshots listed
     # jusr commented this section to verify snapshots number
-    volnum=len(infodictret(c,"volume","",1))
+    volnum=len(infodictret(c,"volume"))
     if i==0:
         tolog("no snapshot")
     else:
@@ -919,7 +919,7 @@ def snapshotcreateandlist(c,snapshotnum):
 
 def bvtsnapshotcreateandlist(c,snapshotnum):
     snapshotnum=int(snapshotnum)
-    volumedct = infodictret(c,"volume","",1)
+    volumedct = infodictret(c,"volume")
     i=0
     FailFlag=False
 # administrator@cli> volume
@@ -946,7 +946,7 @@ def bvtsnapshotcreateandlist(c,snapshotnum):
     res=SendCmd(c,"snapshot")
     # because build 50 still has the problem RB-234122: cli "snapshot" can not get all snapshots listed
     # jusr commented this section to verify snapshots number
-    volnum=len(infodictret(c,"volume","",1))
+    volnum=len(infodictret(c,"volume"))
     if i==0:
         tolog("no snapshot")
     else:
@@ -978,14 +978,14 @@ def clonecreateandlist(c,clonenum):
 # 62    volume48_ 4      volume      48        0 Byte         Un-export
 # 63    volume48_ 4      volume      48        0 Byte         Un-export
 # 64    volume48_ 4      volume      48        0 Byte         Un-export
-    snapshotdct=infodictret(c,"snapshot","",1)
+    snapshotdct=infodictret(c,"snapshot")
     for snapshotid,snapshotvalue in snapshotdct.items():
         for i in range(1,clonenum+1):
             clonecreate(c,snapshotid,snapshotvalue[0]+random_key(3)+"_"+str(i))
 
     res=SendCmd(c,"clone")
     # volnum=len(getvolinfo(c))
-    snapnum=len(infodictret(c,"snapshot","",1))
+    snapnum=len(infodictret(c,"snapshot"))
     if i==0:
         tolog("no clone")
     else:
@@ -1014,13 +1014,13 @@ def bvtclonecreateandlist(c,clonenum):
 # 62    volume48_ 4      volume      48        0 Byte         Un-export
 # 63    volume48_ 4      volume      48        0 Byte         Un-export
 # 64    volume48_ 4      volume      48        0 Byte         Un-export
-    snapshotdct=infodictret(c,"snapshot","",1)
+    snapshotdct=infodictret(c,"snapshot")
     for snapshotid,snapshotvalue in snapshotdct.items():
         for i in range(1,clonenum+1):
             clonecreate(c,snapshotid,snapshotvalue[0]+random_key(3)+"_"+str(i))
     res=SendCmd(c,"clone")
     # volnum=len(getvolinfo(c))
-    snapnum=len(infodictret(c,"snapshot","",1))
+    snapnum=len(infodictret(c,"snapshot"))
     if i==0:
         tolog("no clone")
     else:
@@ -1077,7 +1077,7 @@ def poolmodifyandlist(c):
             #     if "Pool0" not in value:
             #         FailFlag=True
             #         break
-            pdinfo=infodictret(c,"phydrv","",1)
+            pdinfo=infodictret(c,"phydrv")
             for key,valule in pdinfo.items():
                 if key in pdlst and pdinfo[key][-1]!="Pool0":
                     FailFlag=True
@@ -1125,7 +1125,7 @@ def bvtpoolmodifyandlist(c):
                     pdids=str(pdlst).replace("[","").replace("]","")
                     SendCmd(c,"pool -a extend -i "+poolid +" -p "+pdids.replace(" ",""))
                     break
-            pdinfo = infodictret(c, "phydrv", "", 1)
+            pdinfo = infodictret(c, "phydrv")
             for key, valule in pdinfo.items():
                 if key in pdlst and pdinfo[key][-1] != "Pool0":
                     FailFlag = True
@@ -1850,7 +1850,7 @@ def spareinfo(c):
     #         spareinfo[sparetab.find("Type"):(sparetab.find("DedicatedToPool") - 1)].rstrip())
     #
     # return sparedict
-    return infodictret(c,"spare","",1)
+    return infodictret(c,"spare")
 
 def pooldel(c):
 
@@ -1902,7 +1902,7 @@ def pooldelforce(c):
     while not "No pool in the subsystem" in poolinfo:
 
         #poolnum = int(poolinfo.split("\r\n")[-3].split(" ")[0])
-        itemdict=infodictret(c,"pool","",1)
+        itemdict=infodictret(c,"pool")
 
         # itemod=sortedDictKeys(itemdict)
         poolnum=len(itemdict.keys())
@@ -1911,7 +1911,7 @@ def pooldelforce(c):
             # SendCmdconfirm(c, "y")
             count += 1
 
-        poolnotdelete = infodictret(c, "pool", "", 1)
+        poolnotdelete = infodictret(c, "pool")
         if count>poolnum+1:
             tolog("Some pools cannot be deleted.")
 
@@ -1935,14 +1935,14 @@ def volumedel(c):
     Failflag=False
     while not "No volume exists" in volinfo:
 
-        itemdict = infodictret(c, "volume", "", 1)
+        itemdict = infodictret(c, "volume")
 
         #itemod = sortedDictValues(itemdict)
         volnum = len(itemdict.keys())
         for i in range(0,volnum):
             SendCmd(c,"volume -a del -i "+str(i))
             count += 1
-        volumenotdelete = infodictret(c, "volume", "", 1)
+        volumenotdelete = infodictret(c, "volume")
         if count>volnum+1:
             tolog("Some volumes cannot be deleted.")
 
@@ -1964,7 +1964,7 @@ def snapshotdelete(c):
     count=0
     Failflag = False
     while not "No snapshot exists" in snapshotinfo:
-        itemdict = infodictret(c, "snapshot", "", 1)
+        itemdict = infodictret(c, "snapshot")
 
         #itemod = sortedDictValues(itemdict)
         snapshotnum = len(itemdict.keys())
@@ -1995,7 +1995,7 @@ def clonedelete(c):
     count=0
     Failflag=False
     while not "No clone found" in cloneinfo:
-        itemdict = infodictret(c, "clone", "", 1)
+        itemdict = infodictret(c, "clone")
 
         #itemod = sortedDictValues(itemdict)
         clonenum = len(itemdict.keys())
@@ -2142,7 +2142,7 @@ def bvtpooldel(c):
     Failflag=False
     poolinfo = SendCmd(c, "pool")
     while not "No pool in the subsystem" in poolinfo:
-        itemdict = infodictret(c, "pool", "", 1)
+        itemdict = infodictret(c, "pool")
 
         #itemod = sortedDictValues(itemdict)
         poolnum = len(itemdict.keys())
@@ -2170,7 +2170,7 @@ def bvtvolumedel(c):
     Failflag=False
     while not "No volume exists" in volinfo:
 
-        itemdict = infodictret(c, "volume", "", 1)
+        itemdict = infodictret(c, "volume")
 
         #itemod = sortedDictValues(itemdict)
         volnum = len(itemdict.keys())
@@ -2194,7 +2194,7 @@ def bvtsnapshotdelete(c):
     count=0
     Failflag = False
     while not "No snapshot exists" in snapshotinfo:
-        itemdict = infodictret(c, "snapshot", "", 1)
+        itemdict = infodictret(c, "snapshot")
 
         #itemod = sortedDictValues(itemdict)
         snapshotnum = len(itemdict.keys())
@@ -2221,7 +2221,7 @@ def bvtclonedelete(c):
     count=0
     Failflag=False
     while not "No clone found" in cloneinfo:
-        itemdict = infodictret(c, "clone", "", 1)
+        itemdict = infodictret(c, "clone")
 
         #itemod = sortedDictValues(itemdict)
         clonenum = len(itemdict.keys())
@@ -2230,7 +2230,7 @@ def bvtclonedelete(c):
         for i in range(0, clonenum ):
             SendCmd(c, "clone -a del -i " + str(i))
             count+=1
-        clonenotdelete = infodictret(c, "clone", "",1)
+        clonenotdelete = infodictret(c, "clone")
         if count>clonenum+1:
             tolog("Some clones cannot be deleted.")
 
@@ -2242,10 +2242,10 @@ def bvtclonedelete(c):
 
     return Failflag
 
-def infodictret(c, name,leading,tailing):
+def infodictret(c, name,leading=0,tailing=1):
 
-    if leading=="":leading=0
-    if tailing=="": tailing=0
+    # if leading=="":leading=0
+    # if tailing=="": tailing=0
     result = SendCmd(c, name)
 
     infolist = list()
@@ -2320,7 +2320,7 @@ def infodictret(c, name,leading,tailing):
 def exportunexport(c,obj):
     FailFlag = False
     i=j=0
-    objlist = infodictret(c, obj, "", 1)
+    objlist = infodictret(c, obj)
     objnum=len(objlist)
     print "before export/unexport ",objlist
     for id,value in objlist.items():
@@ -2332,7 +2332,7 @@ def exportunexport(c,obj):
             cmd = obj + " -a unexport -i " + str(id)
             j+=1
 
-    objlist = infodictret(c, obj, "", 1)
+    objlist = infodictret(c, obj)
     print "after export/unexport ", objlist
 
     for id, value in objlist.items():
@@ -2358,7 +2358,7 @@ def bvtexportunexport(c,obj):
     FailFlag = False
     Failflaglist=list()
     i = j = 0
-    objlist = infodictret(c, obj, "", 1)
+    objlist = infodictret(c, obj)
     objnum = len(objlist)
     #print "before export/unexport ", objlist
     for id, value in objlist.items():
@@ -2370,7 +2370,7 @@ def bvtexportunexport(c,obj):
             cmd = obj + " -a unexport -i " + str(id)
             j += 1
 
-    objlist = infodictret(c, obj, "", 1)
+    objlist = infodictret(c, obj)
     #print "after export/unexport ", objlist
 
     for id, value in objlist.items():
@@ -2400,7 +2400,7 @@ def forcedel(c,obj):
     # for force delete pool, volume, snapshot, clone.
     # both -y -f and -f with interactive input are tested
     FailFlag=False
-    objlist=infodictret(c,obj,"",1)
+    objlist=infodictret(c,obj)
 
     objnum=len(objlist)
     i=0
@@ -2431,7 +2431,7 @@ def bvtforcedel(c, obj):
     # for force delete pool, volume, snapshot, clone.
     # both -y -f and -f with interactive input are tested
     FailFlag = False
-    objlist = infodictret(c, obj, "", 1)
+    objlist = infodictret(c, obj)
 
     objnum = len(objlist)
     i = 0
@@ -2459,7 +2459,7 @@ def volumeaddmany(c,n):
     originalname="test_many_vol"
     i=0
 
-    poollist = infodictret(c, "pool", "", 1)
+    poollist = infodictret(c, "pool")
     #print poollist,type(poollist)
     if len(poollist) > 0:
         for poolid in poollist:
@@ -2504,7 +2504,7 @@ def bvtvolumeaddmany(c,n):
     originalname = "test_many_vol"
     i = 0
     count=0
-    poollist = infodictret(c, "pool", "", 1)
+    poollist = infodictret(c, "pool")
     if len(poollist)>0:
         for poolid in poollist:
             while i < 5:
@@ -2541,7 +2541,7 @@ def bvtvolumeaddmany(c,n):
                 FailFlag = True
                 tolog("Create many volumes failed")
 
-        volumenum=len(infodictret(c,"volume","",1))
+        volumenum=len(infodictret(c,"volume"))
         if count!=volumenum:
             FailFlag=True
             tolog("Expected volume number is %d, actual number is %d" %(count,volumenum))
@@ -2574,10 +2574,10 @@ if __name__ == "__main__":
 
     # get avail pd without deleting any pool
     #getavailpd(c)
-    # print infodictret(c, "phydrv", "", 1)
-    # print infodictret(c, "volume", "", 1)
-    # print infodictret(c, "pool", "", 1)
-    #poolcreateandlist(c,1)
+    # print infodictret(c, "phydrv")
+    # print infodictret(c, "volume")
+    # print infodictret(c, "pool")
+    poolcreateandlist(c,1)
     #poolmodifyandlist(c)
     #poolmodifyandlist(c)
     # poolcreateandlist(c,poolnum)
@@ -2588,11 +2588,11 @@ if __name__ == "__main__":
     # pool name is renamed and extend with other available disks
     #poolmodifyandlist(c)
     #poolcreateandlist(c,1)
-    print infodictret(c,"pool","",1)
+    print infodictret(c,"pool")
 
-    print infodictret(c, "clone", "", 1)
-    print infodictret(c, "ctrl", "", 2)
-    print infodictret(c, "bgasched", "", 1)
+    print infodictret(c, "clone")
+    print infodictret(c, "ctrl", tailing= 2)
+    print infodictret(c, "bgasched")
 
     #volumecreateandlist(c, 10)
     # volumecreateandlist(c,volnum)
@@ -2618,9 +2618,9 @@ if __name__ == "__main__":
     #
     # forcedel(c,"pool")
 
-    # print infodictret(c,"pool","",1)
-    # print sortedDictValues(infodictret(c,"phydrv","",1))
-    # print sortedDictKeys(infodictret(c, "phydrv", "", 1))
+    # print infodictret(c,"pool")
+    # print sortedDictValues(infodictret(c,"phydrv"))
+    # print sortedDictKeys(infodictret(c, "phydrv"))
     #poolcreateverify(c)
     #verify pool create with all options
     # stripe/sector/raid level
