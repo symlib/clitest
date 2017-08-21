@@ -15,6 +15,7 @@ def check_ping():
     # else:
     #     pingstatus = "Network Error"
 
+    time.sleep(2)
     return response
 
 def ssh_conn():
