@@ -32,6 +32,7 @@ def precondition(c):
         for i in range(1, 35):
             SendCmd(c, 'volume -a add -p 0 -s "name=Vtestlunmap' + str(i) + ',capacity=1GB"')
     else:
+        poolinfo = SendCmd(c, 'pool')
         poolID = poolinfo.split('\r\n')[4].split()[0]
         for i in range(1, 35):
             SendCmd(c, 'volume -a add -p ' + poolID + ' -s "name=Vtestlunmap' + str(i) + ',capacity=1GB"')

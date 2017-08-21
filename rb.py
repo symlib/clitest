@@ -52,9 +52,9 @@ def bvt_verifyRbStartAndStopAndList(c):
     if 'No spare drive exists' not in spareInfo:
         spareId = []
         spareRow = spareInfo.split('\r\n')
-        for i in range(4, len(spareInfo) - 2):
-            if len(spareRow[i]) >= 8 :
-                spareId.append(spareRow[i].split()[0])
+        for i in range(4, len(spareRow) - 2):
+            # if len(spareRow[i]) >= 8 :
+            spareId.append(spareRow[i].split()[0])
 
         for i in spareId:
             SendCmd(c, 'spare -a del -i ' + i)
@@ -135,7 +135,7 @@ def bvt_verifyRbStartAndStopAndList(c):
 
     else:
         tolog('\n\n The lack of pd')
-        #exit()
+        exit()
 
     if FailFlag:
         tolog('\n<font color="red">Fail: rb start and stop</font>')
