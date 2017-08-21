@@ -40,11 +40,11 @@ def BuildVerification(c):
         SendCmdRestart(c,"ptiflash -y -t -s 10.84.2.66 -f "+filename)
 
         i=1
-        while i< 200:
+        while i< 50:
             # wait for rebooting
-           tolog("ptiflash is in progress, please wait, %d seconds elapse" %i)
+           tolog("ptiflash is in progress, please wait, %d seconds elapse" %(i*4))
            i+=1
-           sleep(1)
+           sleep(4)
 
     # check if ssh connection is ok.
     # wait for another 120 seconds

@@ -240,15 +240,48 @@ if __name__ == "__main__":
                                                 #print "I am in func"
                                                 try:
                                                     abc(c)
-                                                except:
+                                                # except:
+                                                #     fp = open(Notes, 'r')
+                                                #     note = fp.read()
+                                                #     fp.close()
+                                                #     # determine the execution result that will be updated to testlink.
+                                                #
+                                                #     # On August 17, 2017
+                                                #     # If there's some error in testing scripts
+                                                #     # update the error to execution result
+                                                #
+                                                #     while "'result':" in note:
+                                                #         if "'result': 'f'" in note:
+                                                #             step_Result = 'f'
+                                                #             note = string.replace(note, "'result': 'f'", '')
+                                                #         else:
+                                                #             step_Result = 'p'
+                                                #             note = string.replace(note, "'result': 'p'", '')
+                                                #
+                                                #     else:
+                                                #         # write "'result': 'f'" to the note file
+                                                #         step_Result = 'f'
+                                                #         print "add result if there's no"
+                                                #         with open(Notes, "r+") as f:
+                                                #             content = f.read()
+                                                #             f.write(content + "\n" + "'result': 'f'")
+                                                #             f.close()
+                                                #
+                                                #     TC_Result_Steps.append(
+                                                #         {'step_number': str(i + 1), 'result': step_Result,
+                                                #          'notes': note})
+
+                                                finally:
+                                            # read testcase notes from Notes
                                                     fp = open(Notes, 'r')
                                                     note = fp.read()
                                                     fp.close()
                                                     # determine the execution result that will be updated to testlink.
 
-                                                    # On August 17, 2017
-                                                    # If there's some error in testing scripts
-                                                    # update the error to execution result
+                                                    # if "'result':" not in note:
+                                                    #     os.system("echo \'result\': \'f\' >> " + note)
+                                                    #
+                                                    #print "before check result in Notes"
 
                                                     while "'result':" in note:
                                                         if "'result': 'f'" in note:
@@ -259,49 +292,16 @@ if __name__ == "__main__":
                                                             note = string.replace(note, "'result': 'p'", '')
 
                                                     else:
-                                                        # write "'result': 'f'" to the note file
+                                                    # write "'result': 'f'" to the note file
                                                         step_Result = 'f'
-                                                        print "add result if there's no"
+                                                        #print "add result if there's no"
                                                         with open(Notes, "r+") as f:
                                                             content = f.read()
                                                             f.write(content + "\n" + "'result': 'f'")
                                                             f.close()
 
                                                     TC_Result_Steps.append(
-                                                        {'step_number': str(i + 1), 'result': step_Result,
-                                                         'notes': note})
-
-
-                                            # read testcase notes from Notes
-                                            fp = open(Notes, 'r')
-                                            note = fp.read()
-                                            fp.close()
-                                            # determine the execution result that will be updated to testlink.
-
-                                            # if "'result':" not in note:
-                                            #     os.system("echo \'result\': \'f\' >> " + note)
-                                            #
-                                            #print "before check result in Notes"
-
-                                            while "'result':" in note:
-                                                if "'result': 'f'" in note:
-                                                    step_Result = 'f'
-                                                    note = string.replace(note, "'result': 'f'", '')
-                                                else:
-                                                    step_Result = 'p'
-                                                    note = string.replace(note, "'result': 'p'", '')
-
-                                            else:
-                                            # write "'result': 'f'" to the note file
-                                                step_Result = 'f'
-                                                #print "add result if there's no"
-                                                with open(Notes, "r+") as f:
-                                                    content = f.read()
-                                                    f.write(content + "\n" + "'result': 'f'")
-                                                    f.close()
-
-                                            TC_Result_Steps.append(
-                                                {'step_number': str(i + 1), 'result': step_Result, 'notes': note})
+                                                        {'step_number': str(i + 1), 'result': step_Result, 'notes': note})
                                         #print TC_Result_Steps
                                         for each in TC_Result_Steps:
                                             if each['result'] != 'p':
