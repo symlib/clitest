@@ -1972,7 +1972,7 @@ def snapshotdelete(c):
         for i in range(0, snapshotnum):
             SendCmd(c, "snapshot -a del -i " + str(i))
             count+=1
-        snapshotnotdelete = infodictret(c, "snapshot", "", "")
+        snapshotnotdelete = infodictret(c, "snapshot")
         if count>snapshotnum+1:
             tolog("Some snapshots cannot be deleted.")
 
@@ -2006,7 +2006,7 @@ def clonedelete(c):
         # if there's only one clone cannot be deleted
         # all cloneids will be deleted once again.
         # 2017-05-15
-        clonenotdelete = infodictret(c, "clone", "", "")
+        clonenotdelete = infodictret(c, "clone")
         if count>clonenum+1:
             tolog("Some clones cannot be deleted.")
 
@@ -2152,7 +2152,7 @@ def bvtpooldel(c):
 
             count += 1
 
-        poolnotdelete = infodictret(c, "pool", "", "")
+        poolnotdelete = infodictret(c, "pool")
         if count>poolnum+1:
             tolog("Some pools cannot be deleted.")
 
@@ -2177,7 +2177,7 @@ def bvtvolumedel(c):
         for i in range(0,volnum):
             SendCmd(c,"volume -a del -i "+str(i))
             count += 1
-        volumenotdelete = infodictret(c, "volume", "", "")
+        volumenotdelete = infodictret(c, "volume"")
         if count>volnum+1:
             tolog("Some volumes cannot be deleted.")
 
@@ -2202,7 +2202,7 @@ def bvtsnapshotdelete(c):
         for i in range(0, snapshotnum):
             SendCmd(c, "snapshot -a del -i " + str(i))
             count+=1
-        snapshotnotdelete = infodictret(c, "snapshot", "", "")
+        snapshotnotdelete = infodictret(c, "snapshot")
         if count>snapshotnum+1:
             tolog("Some snapshots cannot be deleted.")
 
@@ -2588,21 +2588,21 @@ if __name__ == "__main__":
     # pool name is renamed and extend with other available disks
     #poolmodifyandlist(c)
     #poolcreateandlist(c,1)
-    print infodictret(c,"pool")
+    # print infodictret(c,"pool")
+    #
+    # print infodictret(c, "clone")
+    # print infodictret(c, "ctrl", tailing= 2)
+    # print infodictret(c, "bgasched")
 
-    print infodictret(c, "clone")
-    print infodictret(c, "ctrl", tailing= 2)
-    print infodictret(c, "bgasched")
-
-    #volumecreateandlist(c, 10)
+    volumecreateandlist(c, 10)
     # volumecreateandlist(c,volnum)
     # create 3 volumes for each pool
 
-    #snapshotcreateandlist(c,2)
+    snapshotcreateandlist(c,2)
     # snapshotcreateandlist(c,snapshotnum)
     # create snapshotnum snapshots for each volume
     #SendCmd(c,"snapshot")
-    #clonecreateandlist(c, 2)
+    clonecreateandlist(c, 2)
     # clonecreateandlist(c,clonenum)
     # create clonenum for each snapshot
     #exportunexport(c, "volume")
