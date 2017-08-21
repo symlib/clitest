@@ -424,7 +424,7 @@ def BuildVerification(c):
 
         tolog('Start verifying rb')
         import rb
-        Failflaglist.append(rb.bvt_verifyRbStartAndStopAndList(c))
+        #Failflaglist.append(rb.bvt_verifyRbStartAndStopAndList(c))
         Failflaglist.append(rb.bvt_verifyRbInvalidOption(c))
         Failflaglist.append(rb.bvt_verifyRbInvalidParameters(c))
         Failflaglist.append(rb.bvt_verifyRbMissingParameters(c))
