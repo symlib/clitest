@@ -2461,39 +2461,41 @@ def volumeaddmany(c,n):
 
     poollist = infodictret(c, "pool", "", 1)
     #print poollist,type(poollist)
-    for poolid in poollist:
-        while i<5:
-            if i==0:
-                res.append(SendCmd(c,"volume -a add -p " + str(poolid)+ " -s \"name="+originalname +",capacity=1GB\" -c "+str(n)))
-            elif i==1:
-                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test" + ",capacity=1GB\" -c "+str(n)))
-            elif i==2:
-                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "many" + ",capacity=1GB\" -c "+str(n)))
-            elif i==3:
-                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "vol" + ",capacity=1GB\" -c "+str(n)))
-            elif i==4:
-                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test_many_vol_" + ",capacity=1GB\" -c "+str(n)))
-            else:
-                pass
-            i+=1
-        break
-    res1=SendCmd(c,"volume -a add -p " + str(poolid)+ " -s \"name="+originalname +",capacity=1GB\" -c "+str(n))
-    if "Error" in res1 or "Volume prefix_name is duplicated." in res1:
-        pass
+    if len(poollist) > 0:
+        for poolid in poollist:
+            while i<5:
+                if i==0:
+                    res.append(SendCmd(c,"volume -a add -p " + str(poolid)+ " -s \"name="+originalname +",capacity=1GB\" -c "+str(n)))
+                elif i==1:
+                    res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test" + ",capacity=1GB\" -c "+str(n)))
+                elif i==2:
+                    res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "many" + ",capacity=1GB\" -c "+str(n)))
+                elif i==3:
+                    res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "vol" + ",capacity=1GB\" -c "+str(n)))
+                elif i==4:
+                    res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test_many_vol_" + ",capacity=1GB\" -c "+str(n)))
+                else:
+                    pass
+                i+=1
+            break
+        res1=SendCmd(c,"volume -a add -p " + str(poolid)+ " -s \"name="+originalname +",capacity=1GB\" -c "+str(n))
+        if "Error" in res1 or "Volume prefix_name is duplicated." in res1:
+            pass
+        else:
+            FailFlag = True
+            tolog("Verify duplicated add many volumes failed")
+
+        for r in res:
+            if "Error" in r or "Volume prefix_name is duplicated." in r:
+                FailFlag=True
+                tolog("Create many volumes failed")
+
+        if FailFlag:
+            tolog(Fail)
+        else:
+            tolog(Pass)
     else:
-        FailFlag = True
-        tolog("Verify duplicated add many volumes failed")
-
-    for r in res:
-        if "Error" in r or "Volume prefix_name is duplicated." in r:
-            FailFlag=True
-            tolog("Create many volumes failed")
-
-    if FailFlag:
-        tolog(Fail)
-    else:
-        tolog(Pass)
-
+        tolog("There's no pool in the subsystem.")
 
 def bvtvolumeaddmany(c,n):
 
@@ -2503,46 +2505,48 @@ def bvtvolumeaddmany(c,n):
     i = 0
     count=0
     poollist = infodictret(c, "pool", "", 1)
+    if len(poollist)>0:
+        for poolid in poollist:
+            while i < 5:
+                if i == 0:
+                    res.append(
+                        SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + originalname + ",capacity=1GB\" -c "+str(n)))
+                    count+=n
+                elif i == 1:
+                    res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test" + ",capacity=1GB\" -c "+str(n)))
+                    count += n
+                elif i == 2:
+                    res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "many" + ",capacity=1GB\" -c "+str(n)))
+                    count += n
+                elif i == 3:
+                    res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "vol" + ",capacity=1GB\" -c "+str(n)))
+                    count += n
+                elif i == 4:
+                    res.append(SendCmd(c, "volume -a add -p " + str(
+                        poolid) + " -s \"name=" + "test_many_vol_" + ",capacity=1GB\" -c "+str(n)))
+                    count += n
+                else:
+                    pass
+                i += 1
+            break
 
-    for poolid in poollist:
-        while i < 5:
-            if i == 0:
-                res.append(
-                    SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + originalname + ",capacity=1GB\" -c "+str(n)))
-                count+=n
-            elif i == 1:
-                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "test" + ",capacity=1GB\" -c "+str(n)))
-                count += n
-            elif i == 2:
-                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "many" + ",capacity=1GB\" -c "+str(n)))
-                count += n
-            elif i == 3:
-                res.append(SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + "vol" + ",capacity=1GB\" -c "+str(n)))
-                count += n
-            elif i == 4:
-                res.append(SendCmd(c, "volume -a add -p " + str(
-                    poolid) + " -s \"name=" + "test_many_vol_" + ",capacity=1GB\" -c "+str(n)))
-                count += n
-            else:
-                pass
-            i += 1
-        break
-
-    res1 = SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + originalname + ",capacity=1GB\" -c " + str(n))
-    if "Error" in res1 or "Volume prefix_name is duplicated." in res1:
-        pass
-    else:
-        FailFlag = True
-        tolog("Verify duplicated add many volumes failed")
-    for r in res:
-        if "Error" in r or "Volume prefix_name is duplicated." in r:
+        res1 = SendCmd(c, "volume -a add -p " + str(poolid) + " -s \"name=" + originalname + ",capacity=1GB\" -c " + str(n))
+        if "Error" in res1 or "Volume prefix_name is duplicated." in res1:
+            pass
+        else:
             FailFlag = True
-            tolog("Create many volumes failed")
+            tolog("Verify duplicated add many volumes failed")
+        for r in res:
+            if "Error" in r or "Volume prefix_name is duplicated." in r:
+                FailFlag = True
+                tolog("Create many volumes failed")
 
-    volumenum=len(infodictret(c,"volume","",1))
-    if count!=volumenum:
-        FailFlag=True
-        tolog("Expected volume number is %d, actual number is %d" %(count,volumenum))
+        volumenum=len(infodictret(c,"volume","",1))
+        if count!=volumenum:
+            FailFlag=True
+            tolog("Expected volume number is %d, actual number is %d" %(count,volumenum))
+    else:
+        tolog("There's no pool in the subsystem.")
 
 
     return FailFlag
