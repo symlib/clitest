@@ -1913,7 +1913,7 @@ def pooldelforce(c):
 
         poolnotdelete = infodictret(c, "pool")
         if count>poolnum+1:
-            tolog("Some pools cannot be deleted.")
+            tolog("Some pools cannot be deleted.And try to delete them forcely.")
 
             for key in poolnotdelete.keys():
                 SendCmdconfirm(c, "pool -a del -i " + key+" -f")
@@ -1938,19 +1938,13 @@ def volumedel(c):
         itemdict = infodictret(c, "volume")
 
         #itemod = sortedDictValues(itemdict)
-        volnum = len(itemdict.keys())
-        for i in range(0,volnum):
-            SendCmd(c,"volume -a del -i "+str(i))
-            count += 1
         volumenotdelete = infodictret(c, "volume")
-        if count>volnum+1:
-            tolog("Some volumes cannot be deleted.")
-
+        if count > volnum + 1:
+            tolog("Some volumes cannot be deleted.And try to delete them forcely.")
 
             for key in volumenotdelete.keys():
-                SendCmd(c, "volume -a del -i " + key)
+                SendCmd(c, "volume -a del -y -f -i " + key)
             Failflag = True
-
             break
         volinfo = SendCmd(c, "volume")
     if Failflag:
@@ -1974,11 +1968,11 @@ def snapshotdelete(c):
             count+=1
         snapshotnotdelete = infodictret(c, "snapshot")
         if count>snapshotnum+1:
-            tolog("Some snapshots cannot be deleted.")
+            tolog("Some snapshots cannot be deleted.And try to delete them forcely.")
 
 
             for key in snapshotnotdelete.keys():
-                SendCmd(c, "snapshot -a del -i " + key)
+                SendCmd(c, "snapshot -a del -f -y -i " + key)
             Failflag=True
             break
         snapshotinfo = SendCmd(c, "snapshot")
@@ -2008,10 +2002,10 @@ def clonedelete(c):
         # 2017-05-15
         clonenotdelete = infodictret(c, "clone")
         if count>clonenum+1:
-            tolog("Some clones cannot be deleted.")
+            tolog("Some clones cannot be deleted.And try to delete them forcely.")
 
             for key in clonenotdelete.keys():
-                SendCmd(c, "clone -a del -i " + key)
+                SendCmd(c, "clone -a del -f -y -i " + key)
 
 
             Failflag=True
@@ -2154,10 +2148,10 @@ def bvtpooldel(c):
 
         poolnotdelete = infodictret(c, "pool")
         if count>poolnum+1:
-            tolog("Some pools cannot be deleted.")
+            tolog("Some pools cannot be deleted.And try to delete them forcely.")
 
             for key in poolnotdelete.keys():
-                SendCmd(c, "pool -a del -i " + key)
+                SendCmd(c, "pool -a del -f -y -i " + key)
             Failflag=True
             break
         poolinfo = SendCmd(c, "pool")
@@ -2177,12 +2171,12 @@ def bvtvolumedel(c):
         for i in range(0,volnum):
             SendCmd(c,"volume -a del -i "+str(i))
             count += 1
-        volumenotdelete = infodictret(c, "volume"")
+        volumenotdelete = infodictret(c, "volume")
         if count>volnum+1:
-            tolog("Some volumes cannot be deleted.")
+            tolog("Some volumes cannot be deleted.And try to delete them forcely.")
 
             for key in volumenotdelete.keys():
-                SendCmd(c, "volume -a del -i " + key)
+                SendCmd(c, "volume -a del -y -f -i " + key)
             Failflag=True
             break
         volinfo = SendCmd(c, "volume")
@@ -2204,10 +2198,10 @@ def bvtsnapshotdelete(c):
             count+=1
         snapshotnotdelete = infodictret(c, "snapshot")
         if count>snapshotnum+1:
-            tolog("Some snapshots cannot be deleted.")
+            tolog("Some snapshots cannot be deleted.And try to delete them forcely.")
 
             for key in snapshotnotdelete.keys():
-                SendCmd(c, "snapshot -a del -i " + key)
+                SendCmd(c, "snapshot -a del -f -y -i " + key)
             Failflag=True
             break
         snapshotinfo = SendCmd(c, "snapshot")
@@ -2232,10 +2226,10 @@ def bvtclonedelete(c):
             count+=1
         clonenotdelete = infodictret(c, "clone")
         if count>clonenum+1:
-            tolog("Some clones cannot be deleted.")
+            tolog("Some clones cannot be deleted.And try to delete them forcely.")
 
             for key in clonenotdelete.keys():
-                SendCmd(c, "clone -a del -i " + key)
+                SendCmd(c, "clone -a del -f -y -i " + key)
             Failflag=True
             break
         cloneinfo = SendCmd(c, "clone")
@@ -2577,6 +2571,7 @@ if __name__ == "__main__":
     # print infodictret(c, "phydrv")
     # print infodictret(c, "volume")
     # print infodictret(c, "pool")
+    bvtvolumedel(c)
     poolcreateandlist(c,1)
     #poolmodifyandlist(c)
     #poolmodifyandlist(c)
